@@ -75,6 +75,8 @@ class CountingController extends GetxController {
     });
   }
 
+  // test commit
+
   void showResultDialog() {
     final progress = Get.find<ProgressController>();
 
