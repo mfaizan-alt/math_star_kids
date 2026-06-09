@@ -4,6 +4,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:confetti/confetti.dart';
 import 'package:get/get.dart';
 import '../../../core/colors/colors.dart';
+import '../../../core/commonWidgets/ads/ad_Manager.dart';
+import '../../../core/commonWidgets/ads/reward_ad.dart';
+import '../../../core/services/stars_service.dart';
 import 'number_pop_controller.dart';
 
 class NumberPopScreen extends StatefulWidget {
@@ -17,6 +20,7 @@ class NumberPopScreen extends StatefulWidget {
 // must be generated once and never regenerated on rebuild
 class _NumberPopScreenState extends State<NumberPopScreen> {
   final NumberPopController controller = Get.put(NumberPopController());
+  late final StarsService starsService;
 
   // Generated once; purely decorative, needs no reactivity
   late final List<({double x, double y})> _starPositions;
@@ -24,6 +28,7 @@ class _NumberPopScreenState extends State<NumberPopScreen> {
   @override
   void initState() {
     super.initState();
+    starsService = Get.find<StarsService>();
     _starPositions = List.generate(20, (_) => (
     x: (controller.random.nextDouble() * 400),
     y: (controller.random.nextDouble() * 800),
@@ -31,6 +36,18 @@ class _NumberPopScreenState extends State<NumberPopScreen> {
   }
 
   void _onStartGame(BuildContext context) {
+    // ADD THIS CHECK:
+    if (starsService.totalStars.value < 10) {
+      Get.snackbar(
+        '🔒 Locked',
+        'You need 10 stars to play this game!',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
     final size = MediaQuery.of(context).size;
     controller.screenWidth = size.width;
     controller.screenHeight = size.height;
@@ -339,23 +356,81 @@ class _NumberPopScreenState extends State<NumberPopScreen> {
                 ),
               ),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: 24),
+
+            // ── Rewarded ad button ──
+            _buildRewardedButton(
+              emoji: '❤️',
+              label: 'Watch Ad → Get 1 Life',
+              onTap: () {
+                RewardedAdService.instance.showAd(() {
+                  controller.reviveWithLife();
+                });
+              },
+            ),
+
+            const SizedBox(height: 16),
+
+            // ── Free buttons ──
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 _buildBtn('🏠 Home', () => Navigator.pop(context)),
                 const SizedBox(width: 16),
-                _buildBtn(
-                  '🔄 Retry',
-                      () => _onStartGame(context),
-                  isPrimary: true,
-                ),
+                _buildBtn('🔄 Retry', () {
+                  AdManager.instance.show();
+                  Future.delayed(const Duration(milliseconds: 300), () {
+                    _onStartGame(context);
+                  });
+                }, isPrimary: true),
               ],
             ),
           ],
         ),
       ),
     ).animate().fadeIn().scale(begin: const Offset(0.8, 0.8));
+  }
+
+  Widget _buildRewardedButton({
+    required String emoji,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 14),
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [Colors.redAccent, Colors.deepOrange],
+          ),
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.redAccent.withValues(alpha: 0.4),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(emoji, style: const TextStyle(fontSize: 20)),
+            const SizedBox(width: 10),
+            Text(
+              label,
+              style: GoogleFonts.poppins(
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildBtn(String label, VoidCallback onTap, {bool isPrimary = false}) {

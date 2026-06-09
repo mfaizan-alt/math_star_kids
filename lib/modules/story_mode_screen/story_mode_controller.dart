@@ -1,17 +1,15 @@
-// story_mode_controller.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../core/routes/routes.dart';
 import '../../core/services/stars_service.dart';
-import '../story_detail_screen/story_detail_view.dart';
 
 class StoryModeController extends GetxController {
   final selectedType = 'math'.obs;
 
   final RxList<Map<String, dynamic>> stories = <Map<String, dynamic>>[
 
-   // Story 1 Mango Orchard story (MATH)
+    // Story 1 Mango Orchard story (MATH)
     {
       "title": "The Mango Orchard Adventure",
       "description": "A boy collects mangoes in a sunny orchard.",
@@ -24,21 +22,21 @@ class StoryModeController extends GetxController {
           "image": "assets/images/mangoOrchard/mangoOrchardScene1.jpeg",
           "bg": "green",
           "text":
-              "Ali went to his grandfather's big farm. He saw a huge mango tree full of juicy mangoes!",
+          "Ali went to his grandfather's big farm. He saw a huge mango tree full of juicy mangoes!",
           "hasQuestion": false,
         },
         {
           "image": "assets/images/mangoOrchard/mangoOrchardScene2.jpeg",
           "bg": "yellow",
           "text":
-              "Ali got 4 big wooden boxes ready. He was going to fill each one carefully.",
+          "Ali got 4 big wooden boxes ready. He was going to fill each one carefully.",
           "hasQuestion": false,
         },
         {
           "image": "assets/images/mangoOrchard/mangoOrchardScene3.jpeg",
           "bg": "orange",
           "text":
-              "Ali has 4 boxes and puts 3 mangoes in each box. How many mangoes does Ali have in total?",
+          "Ali has 4 boxes and puts 3 mangoes in each box. How many mangoes does Ali have in total?",
           "hasQuestion": true,
           "options": [8, 10, 12, 14],
           "answer": 12,
@@ -47,7 +45,7 @@ class StoryModeController extends GetxController {
           "image": "assets/images/mangoOrchard/mangoOrchardScene4.jpeg",
           "bg": "coral",
           "text":
-              "Ali had 12 mangoes! He shared them with all his friends. Everyone was so happy!",
+          "Ali had 12 mangoes! He shared them with all his friends. Everyone was so happy!",
           "hasQuestion": false,
         },
       ],
@@ -179,28 +177,28 @@ class StoryModeController extends GetxController {
           "image": "assets/images/lostDog/scene1.jpeg",
           "bg": "blue",
           "text":
-              "One rainy day, a little puppy got lost in the park. He was cold, wet, and very sad. He could not find his home and sat under a tree, looking around..",
+          "One rainy day, a little puppy got lost in the park. He was cold, wet, and very sad. He could not find his home and sat under a tree, looking around..",
           "hasQuestion": false,
         },
         {
           "image": "assets/images/lostDog/scene2.jpeg",
           "bg": "purple",
           "text":
-              "Sara heard the puppy crying softly. She cared about him and decided to help. She looked around the park carefully to find where the sound was coming from.",
+          "Sara heard the puppy crying softly. She cared about him and decided to help. She looked around the park carefully to find where the sound was coming from.",
           "hasQuestion": false,
         },
         {
           "image": "assets/images/lostDog/scene3.jpeg",
           "bg": "pink",
           "text":
-              "Sara found the puppy hiding under a big tree. She gently picked him up and gave him warmth. The puppy felt safe with her.",
+          "Sara found the puppy hiding under a big tree. She gently picked him up and gave him warmth. The puppy felt safe with her.",
           "hasQuestion": false,
         },
         {
           "image": "assets/images/lostDog/scene4.jpeg",
           "bg": "green",
           "text":
-              "Sara helped the puppy find his home. His family was very happy to see him again. The puppy wagged his tail and everyone smiled!",
+          "Sara helped the puppy find his home. His family was very happy to see him again. The puppy wagged his tail and everyone smiled!",
           "hasQuestion": false,
         },
       ],
@@ -210,7 +208,7 @@ class StoryModeController extends GetxController {
     {
       "title": "Anaya & Zain and the Glowing Cave",
       "description":
-          "Two brave siblings discover a magical cave and rescue an injured baby bird.",
+      "Two brave siblings discover a magical cave and rescue an injured baby bird.",
       "cover": "assets/images/glowingCave/cover.jpeg",
       "type": "reading",
       "stars": 2,
@@ -219,28 +217,28 @@ class StoryModeController extends GetxController {
           "image": "assets/images/glowingCave/scene1.jpeg",
           "bg": "blue",
           "text":
-              "One sunny day, the whole family went for a picnic in the green hills. While eating, Anaya suddenly saw a strange glowing light coming from far away. 'Zain, look! What is that?' she whispered with big curious eyes.",
+          "One sunny day, the whole family went for a picnic in the green hills. While eating, Anaya suddenly saw a strange glowing light coming from far away. 'Zain, look! What is that?' she whispered with big curious eyes.",
           "hasQuestion": false,
         },
         {
           "image": "assets/images/glowingCave/scene2.jpeg",
           "bg": "purple",
           "text":
-              "They walked closer and found a dark cave with a soft glow coming from inside. Anaya and Zain held hands tightly — they were a little scared. But they took a deep breath and walked in together, brave and bold.",
+          "They walked closer and found a dark cave with a soft glow coming from inside. Anaya and Zain held hands tightly — they were a little scared. But they took a deep breath and walked in together, brave and bold.",
           "hasQuestion": false,
         },
         {
           "image": "assets/images/glowingCave/scene3.jpeg",
           "bg": "pink",
           "text":
-              "Inside the cave, they saw beautiful glowing mushrooms lighting up the walls like tiny stars. Then they heard a soft sound — cheep, cheep! A little baby bird was sitting on the ground with a hurt wing. Anaya gently picked it up and said, 'Don't worry little one, we will help you!",
+          "Inside the cave, they saw beautiful glowing mushrooms lighting up the walls like tiny stars. Then they heard a soft sound — cheep, cheep! A little baby bird was sitting on the ground with a hurt wing. Anaya gently picked it up and said, 'Don't worry little one, we will help you!",
           "hasQuestion": false,
         },
         {
           "image": "assets/images/glowingCave/scene4.jpeg",
           "bg": "green",
           "text":
-              "Outside in the warm sunshine, the family helped nurse the little bird back to health. Mama and Baba smiled with proud and happy hearts. And just then, a big beautiful rainbow appeared in the sky — as if nature itself was saying thank you!",
+          "Outside in the warm sunshine, the family helped nurse the little bird back to health. Mama and Baba smiled with proud and happy hearts. And just then, a big beautiful rainbow appeared in the sky — as if nature itself was saying thank you!",
           "hasQuestion": false,
         },
       ],
@@ -391,6 +389,44 @@ class StoryModeController extends GetxController {
           "image": "assets/images/lostLantern/scene4.jpeg",
           "bg": "yellow",
           "text": "The shopkeeper helps Bilal find his family. His grandfather hugs him tight and says the lantern did its job — it guided Bilal back home through his bravery.",
+          "hasQuestion": false
+        }
+      ]
+    },
+
+    // Star Jar Story MATH
+    {
+      "title": "The Star Jars",
+      "description": "Zaid collects shiny stars and learns to share them equally.",
+      "cover": "assets/images/starJar/starJarsCover.jpeg",
+      "type": "math",
+      "subject": "÷",
+      "stars": 3,
+      "scenes": [
+        {
+          "image": "assets/images/starJar/scene1.jpeg",
+          "bg": "purple",
+          "text": "Zaid loves collecting shiny little stars. He has a big jar full of golden stars on his shelf!",
+          "hasQuestion": false
+        },
+        {
+          "image": "assets/images/starJar/scene2.jpeg",
+          "bg": "blue",
+          "text": "Zaid wants to share his stars equally with his 4 friends. He gets 4 empty jars ready.",
+          "hasQuestion": false
+        },
+        {
+          "image": "assets/images/starJar/scene3.jpeg",
+          "bg": "teal",
+          "text": "Zaid has 20 stars and 4 jars. He wants each jar to have the same number. How many stars go in each jar?",
+          "hasQuestion": true,
+          "options": [3, 4, 5, 6],
+          "answer": 5
+        },
+        {
+          "image": "assets/images/starJar/scene4.jpeg",
+          "bg": "yellow",
+          "text": "5 stars in each jar! Zaid gave one jar to each friend. Sharing equally makes everyone smile!",
           "hasQuestion": false
         }
       ]
@@ -587,23 +623,13 @@ class StoryModeController extends GetxController {
   ].obs;
 
   List<Map<String, dynamic>> get filteredStories {
-    return stories
-        .where((story) {
-          // First, check if story matches selected type
-          if (story["type"] != selectedType.value) return false;
-          
-          // Then, check if premium story is unlocked
-          if (story["isPremium"] == true) {
-            return isStoryUnlocked();
-          }
-          
-          // Regular stories are always available
-          return true;
-        })
-        .toList();
+    return stories.where((story) {
+      if (story["type"] != selectedType.value) return false;
+      if (story["isPremium"] == true) return isStoryUnlocked();
+      return true;
+    }).toList();
   }
 
-  /// Check if premium stories are unlocked (40+ stars achieved)
   bool isStoryUnlocked() {
     if (Get.isRegistered<StarsService>()) {
       return StarsService.to.arePremiumStoriesUnlocked();
@@ -616,7 +642,6 @@ class StoryModeController extends GetxController {
   }
 
   void openStory(Map<String, dynamic> story) {
-    // Check if story is locked
     if (story["isPremium"] == true && !isStoryUnlocked()) {
       Get.snackbar(
         '🔒 Story Locked',
@@ -628,7 +653,66 @@ class StoryModeController extends GetxController {
       );
       return;
     }
-    
+
     Get.toNamed(Routes.storyDetail, arguments: story);
   }
 }
+
+
+
+
+
+
+
+
+
+// import 'package:flutter/material.dart';
+// import 'package:get/get.dart';
+//
+// import '../../core/routes/routes.dart';
+// import '../../core/services/stars_service.dart';
+//
+// class StoryModeController extends GetxController {
+//   final selectedType = 'math'.obs;
+//
+//   final RxList<Map<String, dynamic>> stories = <Map<String, dynamic>>[
+//     // your stories here
+//   ].obs;
+//
+//   List<Map<String, dynamic>> get filteredStories {
+//     return stories.where((story) {
+//       if (story["type"] != selectedType.value) return false;
+//       if (story["isPremium"] == true) {
+//         return isStoryUnlocked();
+//       }
+//       return true;
+//     }).toList();
+//   }
+//
+//   bool isStoryUnlocked() {
+//     if (Get.isRegistered<StarsService>()) {
+//       return StarsService.to.arePremiumStoriesUnlocked();
+//     }
+//     return false;
+//   }
+//
+//   void changeTab(String type) {
+//     selectedType.value = type;
+//   }
+//
+//   void openStory(Map<String, dynamic> story) {
+//     if (story["isPremium"] == true && !isStoryUnlocked()) {
+//       Get.snackbar(
+//         '🔒 Story Locked',
+//         'Complete 40 ⭐ stars to unlock this premium story!',
+//         snackPosition: SnackPosition.BOTTOM,
+//         backgroundColor: const Color(0xFF2C3E50),
+//         colorText: Colors.white,
+//         duration: const Duration(seconds: 3),
+//       );
+//       return;
+//     }
+//
+//     Get.toNamed(Routes.storyDetail, arguments: story);
+//   }
+// }

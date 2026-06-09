@@ -78,21 +78,20 @@ class AdditionController extends GetxController {
     num2 = _random.nextInt(maxNum) + 1;
     correctAnswer = num1 + num2;
 
-    options = [correctAnswer];
+    final Set<int> optionSet = {correctAnswer};
 
-    while (options.length < 4) {
-      int option = correctAnswer + _random.nextInt(11) - 5;
+    while (optionSet.length < 4) {
+      int offset = _random.nextInt(11) - 5;
+      if (offset == 0) continue;
 
-      if (option > 0 && !options.contains(option)) {
-        options.add(option);
-      }
+      int option = correctAnswer + offset;
+      if (option > 0) optionSet.add(option);
     }
 
-    options.shuffle();
+    options = optionSet.toList()..shuffle();
 
     selectedOption = null;
     isCorrect = null;
-
     update();
   }
 
@@ -125,10 +124,9 @@ class AdditionController extends GetxController {
   void showResults() {
     int stars = 0;
     if (score >= 9) stars = 3;
-    if (score >= 7) stars = 2;
-    if (score >= 5) stars = 1;
+    else if (score >= 7) stars = 2;
+    else if (score >= 5) stars = 1;
 
-    // Add stars to ProgressController
     progressController.addStars('addition', stars);
 
     if (score == totalQuestions) {

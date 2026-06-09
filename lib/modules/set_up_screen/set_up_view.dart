@@ -194,53 +194,53 @@ class SetupScreenView extends GetView<SetUpScreenController> {
   //     ],
   //   );
   // }
-
-  Widget _langButton(String label, String value) {
-    return Obx(() {
-      final isSelected = controller.selectedLanguage.value == value;
-      return GestureDetector(
-        onTap: () => controller.selectLanguage(value),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          padding: const EdgeInsets.symmetric(vertical: 14),
-          decoration: BoxDecoration(
-            color: isSelected
-                ? AppColors.skyBlue.withOpacity(0.08)
-                : AppColors.white,
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(
-              color: isSelected
-                  ? AppColors.skyBlue      // ← clean
-                  : AppColors.lightGrey,   // ← clean
-              width: 3,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: isSelected
-                    ? AppColors.blueShadow  // ← clean
-                    : Colors.black.withOpacity(0.04),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Center(
-            child: Text(
-              label,
-              style: GoogleFonts.aBeeZee(
-                fontSize: 16,
-                color: isSelected
-                    ? AppColors.skyBlue   // ← clean
-                    : AppColors.grey,     // ← clean
-              ),
-            ),
-          ),
-        ),
-      );
-    });
-  }
+  // Widget _langButton(String label, String value) {
+  //   return Obx(() {
+  //     final isSelected = controller.selectedLanguage.value == value;
+  //     return GestureDetector(
+  //       onTap: () => controller.selectLanguage(value),
+  //       child: AnimatedContainer(
+  //         duration: const Duration(milliseconds: 200),
+  //         padding: const EdgeInsets.symmetric(vertical: 14),
+  //         decoration: BoxDecoration(
+  //           color: isSelected
+  //               ? AppColors.skyBlue.withOpacity(0.08)
+  //               : AppColors.white,
+  //           borderRadius: BorderRadius.circular(14),
+  //           border: Border.all(
+  //             color: isSelected
+  //                 ? AppColors.skyBlue      // ← clean
+  //                 : AppColors.lightGrey,   // ← clean
+  //             width: 3,
+  //           ),
+  //           boxShadow: [
+  //             BoxShadow(
+  //               color: isSelected
+  //                   ? AppColors.blueShadow  // ← clean
+  //                   : Colors.black.withOpacity(0.04),
+  //               blurRadius: 10,
+  //               offset: const Offset(0, 4),
+  //             ),
+  //           ],
+  //         ),
+  //         child: Center(
+  //           child: Text(
+  //             label,
+  //             style: GoogleFonts.aBeeZee(
+  //               fontSize: 16,
+  //               color: isSelected
+  //                   ? AppColors.skyBlue   // ← clean
+  //                   : AppColors.grey,     // ← clean
+  //             ),
+  //           ),
+  //         ),
+  //       ),
+  //     );
+  //   });
+  // }
 
   // ── Lets Go Button ──────────────────────────────
+
   Widget _buildLetsGoButton() {
     return GestureDetector(
       onTap: controller.onLetsGo,

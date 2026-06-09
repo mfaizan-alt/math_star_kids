@@ -5,6 +5,7 @@ import 'package:confetti/confetti.dart';
 import 'package:get/get.dart';
 
 import '../../../core/commonWidgets/ads/ad_Manager.dart';
+import '../../../core/commonWidgets/ads/reward_ad.dart';
 
 class Bubble {
   double x;
@@ -71,6 +72,8 @@ class NumberPopController extends GetxController {
     confettiController = ConfettiController(
       duration: const Duration(seconds: 2),
     );
+    RewardedAdService.instance.loadAd();
+    AdManager.instance.load();
   }
 
   @override
@@ -161,6 +164,15 @@ class NumberPopController extends GetxController {
         if (!isGameOver.value && isGameStarted.value) _spawnBubble();
       },
     );
+  }
+  void reviveWithLife() {
+    lives.value = 1;
+    isGameOver.value = false;
+    isGameStarted.value = true;
+    bubbles.clear();
+    generateQuestion();
+    _startSpawning();
+    _startMoving();
   }
 
   void _spawnBubble() {

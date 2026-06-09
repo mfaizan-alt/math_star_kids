@@ -246,8 +246,10 @@ class MultiplicationResultDialog extends StatelessWidget {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {
-                      Get.back(); // close dialog
-                      Get.back(); // go home
+                      AdManager.instance.show();
+                      Future.delayed(const Duration(milliseconds: 300), () {
+                        Get.offAllNamed('/gameScreen');
+                      }); // go home
                     },
                     child: const Text('Home'),
                   ),

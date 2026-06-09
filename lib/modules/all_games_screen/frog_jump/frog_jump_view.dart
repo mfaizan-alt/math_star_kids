@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:confetti/confetti.dart';
 
+import '../../../core/commonWidgets/ads/ad_Manager.dart';
+import '../../../core/commonWidgets/ads/reward_ad.dart';
 import 'frog_jump_controller.dart';
 
 class FrogJumpScreen extends StatelessWidget {
@@ -18,21 +19,45 @@ class FrogJumpScreen extends StatelessWidget {
       body: Obx(() {
         return Stack(
           children: [
-            // Container(color: Colors.green.shade300),
-            Container(color: Color(0xFF81C784)),
-
+            Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Color(0xFFB3E5FC),
+                    Color(0xFFC8E6C9),
+                    Color(0xFF81C784),
+                  ],
+                ),
+              ),
+            ),
+            Positioned(
+              top: 42,
+              left: -30,
+              child: _bubble(90, Colors.white.withValues(alpha: 0.15)),
+            ),
+            Positioned(
+              top: 120,
+              right: -20,
+              child: _bubble(70, Colors.white.withValues(alpha: 0.12)),
+            ),
+            Positioned(
+              bottom: 140,
+              left: -18,
+              child: _bubble(60, Colors.white.withValues(alpha: 0.10)),
+            ),
             SafeArea(
               child: Column(
                 children: [
                   _topBar(),
-
-                  if (!controller.isGameStarted.value &&
-                      !controller.isGameOver.value)
-                    _startScreen(),
-
-                  if (controller.isGameStarted.value) _gameUI(),
-
-                  if (controller.isGameOver.value) _gameOver(),
+                  const SizedBox(height: 8),
+                  if (!controller.isGameStarted.value && !controller.isGameOver.value)
+                    Expanded(child: _startScreen()),
+                  if (controller.isGameStarted.value)
+                    Expanded(child: _gameUI()),
+                  if (controller.isGameOver.value)
+                    Expanded(child: _gameOver()),
                 ],
               ),
             ),
@@ -42,87 +67,346 @@ class FrogJumpScreen extends StatelessWidget {
     );
   }
 
+  Widget _bubble(double size, Color color) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        color: color,
+        shape: BoxShape.circle,
+      ),
+    );
+  }
+
   Widget _topBar() {
     return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          IconButton(
-            onPressed: () => Get.back(),
-            icon: const Icon(Icons.arrow_back),
-          ),
-
-          Text("⭐ ${controller.score.value}",style: TextStyle(fontSize: 22),),
-
-          Row(
-            children: List.generate(
-              3,
-                  (i) => Icon(
-                i < controller.lives.value
-                    ? Icons.favorite
-                    : Icons.favorite_border,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.88),
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.08),
+              blurRadius: 16,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            IconButton(
+              onPressed: () => Get.back(),
+              icon: const Icon(Icons.arrow_back_rounded),
+              color: const Color(0xFF1B5E20),
+            ),
+            Row(
+              children: [
+                const Text('⭐', style: TextStyle(fontSize: 20)),
+                const SizedBox(width: 6),
+                Text(
+                  '${controller.score.value}',
+                  style: GoogleFonts.poppins(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF1B5E20),
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              children: List.generate(
+                3,
+                    (i) => Icon(
+                  i < controller.lives.value
+                      ? Icons.favorite_rounded
+                      : Icons.favorite_border_rounded,
+                  color: i < controller.lives.value
+                      ? Colors.redAccent
+                      : Colors.grey.shade400,
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
   Widget _startScreen() {
-    // SizedBox(height: 400);
-    return Column(
-      children: [
-        SizedBox(height: 400),
-        Container(
-          width: 100,
-          height: 50,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.green
-          ),
-          child: TextButton(onPressed:controller.startGame, child: Text('START',style:TextStyle(fontSize: 16,color: Colors.white))),
+    return Center(
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 24),
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.92),
+          borderRadius: BorderRadius.circular(28),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.08),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
+            ),
+          ],
         ),
-      ],
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 92,
+              height: 92,
+              decoration: BoxDecoration(
+                color: const Color(0xFFE8F5E9),
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.green.shade300, width: 3),
+              ),
+              child: const Center(
+                child: Text('🐸', style: TextStyle(fontSize: 54)),
+              ),
+            ),
+            const SizedBox(height: 14),
+            Text(
+              'Frog Jump',
+              style: GoogleFonts.poppins(
+                fontSize: 32,
+                fontWeight: FontWeight.bold,
+                color: const Color(0xFF1B5E20),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Hop to the correct answer before time runs out!',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.poppins(
+                fontSize: 14,
+                color: Colors.grey[700],
+              ),
+            ),
+            const SizedBox(height: 18),
+            _buildStartButton(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStartButton() {
+    return GestureDetector(
+      onTap: controller.startGame,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [Color(0xFF43A047), Color(0xFF2E7D32)],
+          ),
+          borderRadius: BorderRadius.circular(22),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.green.withValues(alpha: 0.3),
+              blurRadius: 12,
+              offset: const Offset(0, 6),
+            ),
+          ],
+        ),
+        child: Text(
+          'START',
+          style: GoogleFonts.poppins(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _answerPad(String text, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          color: const Color(0xFF66BB6A),
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.green.shade900.withValues(alpha: 0.2),
+              blurRadius: 10,
+              offset: const Offset(0, 6),
+            ),
+          ],
+          border: Border.all(color: Colors.white, width: 3),
+        ),
+        child: Center(
+          child: Text(
+            text,
+            style: GoogleFonts.poppins(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ),
     );
   }
 
   Widget _gameUI() {
-    return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 100,horizontal: 10),
-        child: Column(
-          children: [
-            Text(
-              "${controller.num1.value} ${controller.operator.value} ${controller.num2.value}",
-              style: GoogleFonts.poppins(fontSize: 35),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      child: Column(
+        children: [
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.88),
+              borderRadius: BorderRadius.circular(28),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.08),
+                  blurRadius: 18,
+                  offset: const Offset(0, 8),
+                ),
+              ],
             ),
-
-            const SizedBox(height: 20),
-
-            Text("⏱ ${controller.timeLeft.value}'s ",style: TextStyle(fontSize: 30),),
-
-            const Spacer(),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: List.generate(
-                5,
-                    (i) => GestureDetector(
-                  onTap: () => controller.jumpTo(i),
-                  child: CircleAvatar(
-                    child: Text("${controller.padAnswers[i]}"),
+            child: Column(
+              children: [
+                Text(
+                  "🐸 ${controller.num1.value} ${controller.operator.value} ${controller.num2.value}",
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.poppins(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF1B5E20),
                   ),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  'Choose the right lily pad!',
+                  style: GoogleFonts.poppins(
+                    fontSize: 14,
+                    color: Colors.grey[700],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.18),
+              borderRadius: BorderRadius.circular(22),
+            ),
+            child: Text(
+              "⏱ ${controller.timeLeft.value}s",
+              style: GoogleFonts.poppins(
+                fontSize: 28,
+                fontWeight: FontWeight.w700,
+                color: Colors.white,
+              ),
+            ),
+          ),
+          const Spacer(),
+          GridView.count(
+            crossAxisCount: 2,
+            shrinkWrap: true,
+            crossAxisSpacing: 14,
+            mainAxisSpacing: 14,
+            childAspectRatio: 1.4,
+            physics: const NeverScrollableScrollPhysics(),
+            children: List.generate(
+              5,
+                  (i) => _answerPad(
+                "${controller.padAnswers[i]}",
+                    () => controller.jumpTo(i),
+              ),
+            ),
+          ),
+          const SizedBox(height: 14),
+          if (controller.showFeedback.value)
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+              decoration: BoxDecoration(
+                color: controller.isCorrect.value ? Colors.green : Colors.redAccent,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                controller.isCorrect.value ? "Correct 🎉" : "Oops, try again!",
+                style: GoogleFonts.poppins(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
                 ),
               ),
             ),
-            SizedBox(height: 10,),
-            if (controller.showFeedback.value)
-              Text(
-                controller.isCorrect.value ? "Correct" : "Wrong",
-              ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRewardedButton({
+    required String emoji,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 14),
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [Colors.redAccent, Colors.deepOrange],
+          ),
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.redAccent.withValues(alpha: 0.4),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
           ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(emoji, style: const TextStyle(fontSize: 20)),
+            const SizedBox(width: 10),
+            Text(
+              label,
+              style: GoogleFonts.poppins(
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildGameOverBtn(String label, VoidCallback onTap,
+      {bool isPrimary = false}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+        decoration: BoxDecoration(
+          color: isPrimary ? Colors.teal : Colors.grey[100],
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Text(
+          label,
+          style: GoogleFonts.poppins(
+            fontSize: 15,
+            fontWeight: FontWeight.w600,
+            color: isPrimary ? Colors.white : const Color(0xFF2D3142),
+          ),
         ),
       ),
     );
@@ -130,30 +414,64 @@ class FrogJumpScreen extends StatelessWidget {
 
   Widget _gameOver() {
     return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-           Text("Game Over",style: GoogleFonts.aBeeZee(fontSize: 35),),
-          Text("Score: ${controller.score.value}",style: GoogleFonts.abel(fontSize: 25),),
-          SizedBox(height: 400,),
-          Container(
-            width: 100,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.green
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 24),
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.95),
+          borderRadius: BorderRadius.circular(28),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.1),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
             ),
-            child: TextButton(onPressed: controller.restart, child: Text('Restart',style:TextStyle(fontSize: 16,color: Colors.white))),
-          ),
-          SizedBox(height: 10,),
-          Container(
-            width: 100,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.green
+          ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('🪷', style: TextStyle(fontSize: 58)),
+            const SizedBox(height: 10),
+            Text(
+              'Game Over',
+              style: GoogleFonts.poppins(
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+                color: const Color(0xFF1B5E20),
+              ),
             ),
-            child: TextButton(onPressed:()=> Get.back(), child: Text('Home',style:TextStyle(fontSize: 16,color: Colors.white))),
-          ),
-        ],
+            const SizedBox(height: 8),
+            Text(
+              'Score: ${controller.score.value}',
+              style: GoogleFonts.poppins(fontSize: 18),
+            ),
+            const SizedBox(height: 18),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _buildGameOverBtn('🏠 Home', () {
+                  AdManager.instance.show();
+                  Future.delayed(const Duration(milliseconds: 300), () {
+                    Get.back();
+                  });
+                }),
+                const SizedBox(width: 12),
+                _buildGameOverBtn('🔄 Retry', controller.restart, isPrimary: true),
+              ],
+            ),
+            const SizedBox(height: 16),
+            _buildRewardedButton(
+              emoji: '❤️',
+              label: 'Watch Ad → Get 1 Life',
+              onTap: () {
+                RewardedAdService.instance.showAd(() {
+                  controller.reviveWithLife();
+                });
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

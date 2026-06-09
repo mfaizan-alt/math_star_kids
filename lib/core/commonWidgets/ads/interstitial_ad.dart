@@ -1,9 +1,5 @@
 // adUnitId: "ca-app-pub-2983283750660362/3759469533",
 
-
-
-
-
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class InterstitialAdService {

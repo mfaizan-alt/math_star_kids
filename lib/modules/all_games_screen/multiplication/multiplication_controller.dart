@@ -107,8 +107,9 @@ class MultiplicationController extends GetxController {
   void resetGame() {
     score = 0;
     questionNumber = 0;
+    selectedOption = null;
+    isCorrect = null;
     generateQuestion();
-    Get.back();
     update();
   }
 

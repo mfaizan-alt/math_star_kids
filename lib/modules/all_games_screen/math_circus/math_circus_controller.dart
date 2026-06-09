@@ -16,6 +16,25 @@ class MathCircusController extends GetxController {
 
   RxBool isBalanced = false.obs;
   RxDouble tiltAngle = 0.0.obs;
+  bool get showTutorial => level.value == 1 && !isBalanced.value;
+
+  @override
+  void onInit() {
+    super.onInit();
+    AdManager.instance.load();
+    generateLevel();
+  }
+
+  void nextLevel() {
+    if (level.value % 3 == 0) {
+      Future.delayed(const Duration(milliseconds: 300), () {
+        AdManager.instance.show();
+        AdManager.instance.load();
+      });
+    }
+    level.value++;
+    generateLevel();
+  }
 
   void initGame() {
     generateLevel();
@@ -60,7 +79,7 @@ class MathCircusController extends GetxController {
 
     if (currentWeight.value == targetWeight.value) {
       isBalanced.value = true;
-      score.value += 10 + level.value * 5;
+      score.value += 5 + level.value * 5;
     }
   }
 
@@ -77,19 +96,8 @@ class MathCircusController extends GetxController {
   void updateTilt() {
     tiltAngle.value =
         ((currentWeight.value - targetWeight.value) /
-            max(targetWeight.value, 1))
+                max(targetWeight.value, 1))
             .clamp(-1.0, 1.0) *
-            0.15;
-  }
-
-  void nextLevel() {
-    level.value++;
-    Future.delayed(const Duration(milliseconds: 300), () {
-      if(level.value % 3 == 0){
-        AdManager.instance.show();
-        AdManager.instance.load();
-      }
-    });
-    generateLevel();
+        0.15;
   }
 }

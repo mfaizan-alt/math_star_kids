@@ -16,6 +16,7 @@ class NumberBuilderController extends GetxController {
   RxInt ones = 0.obs;
 
   RxBool isCorrect = false.obs;
+  bool get showTutorial => level.value == 1 && !isCorrect.value;
 
   int get currentNumber =>
       hundreds.value * 100 +
@@ -23,6 +24,23 @@ class NumberBuilderController extends GetxController {
           ones.value;
 
   void initGame() {
+    generateQuestion();
+  }
+  @override
+  void onInit() {
+    super.onInit();
+    AdManager.instance.load();
+    generateQuestion();
+  }
+
+  void nextLevel() {
+    if (level.value % 3 == 0) {
+      Future.delayed(const Duration(milliseconds: 300), () {
+        AdManager.instance.show();
+        AdManager.instance.load();
+      });
+    }
+    level.value++;
     generateQuestion();
   }
 
@@ -61,13 +79,4 @@ class NumberBuilderController extends GetxController {
     }
   }
 
-  void nextLevel() {
-    Future.delayed(const Duration(milliseconds: 300), () {
-      if(level.value % 3 == 0){
-        AdManager.instance.show();
-      }
-    });
-    level.value++;
-    generateQuestion();
-  }
 }

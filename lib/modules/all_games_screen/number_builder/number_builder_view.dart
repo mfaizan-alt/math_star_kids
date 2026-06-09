@@ -70,18 +70,16 @@ class _NumberBuilderScreenState extends State<NumberBuilderScreen> {
                   const SizedBox(height: 20),
                   _currentBox(),
 
-                  _blockControl(
-                    'Hundreds',
-                    controller.hundreds,
-                    controller.updateHundreds,
-                  ),
+                  _blockControl('Hundreds',controller.hundreds,controller.updateHundreds,),
 
                   _blockControl('Tens', controller.tens, controller.updateTens),
 
                   _blockControl('Ones', controller.ones, controller.updateOnes),
 
                   const SizedBox(height: 20),
+                  Obx(() => controller.showTutorial ? _buildTutorial() : const SizedBox.shrink()),
 
+                  const SizedBox(height: 100),
                   // ✅ ONLY reactive button
                   Obx(() {
                     return controller.isCorrect.value
@@ -150,6 +148,63 @@ class _NumberBuilderScreenState extends State<NumberBuilderScreen> {
       ),
     );
   }
+  Widget _buildTutorial() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.green.shade50,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.green.shade300, width: 1.5),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Text('💡', style: TextStyle(fontSize: 20)),
+              const SizedBox(width: 8),
+              Text(
+                'How to Play',
+                style: GoogleFonts.poppins(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.green.shade800,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          _buildTutorialStep('1️⃣', 'Look at the target number shown at the top'),
+          _buildTutorialStep('2️⃣', 'Use the sliders to set Hundreds, Tens and Ones'),
+          _buildTutorialStep('3️⃣', 'Example: 253 = 2 Hundreds + 5 Tens + 3 Ones'),
+          _buildTutorialStep('4️⃣', 'Match the number exactly to move to next level! 🎉'),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTutorialStep(String emoji, String text) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(emoji, style: const TextStyle(fontSize: 14)),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              text,
+              style: GoogleFonts.poppins(
+                fontSize: 13,
+                color: Colors.green.shade900,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   Widget _currentBox() {
     return Container(
@@ -161,7 +216,7 @@ class _NumberBuilderScreenState extends State<NumberBuilderScreen> {
       child: Obx(
         () => Text(
           "Your Number: ${controller.currentNumber}",
-          style: const TextStyle(color: Colors.white, fontSize: 20),
+          style: const TextStyle(color: Colors.white, fontSize: 22),
         ),
       ),
     );
@@ -192,7 +247,7 @@ class _NumberBuilderScreenState extends State<NumberBuilderScreen> {
                 child: const Icon(Icons.remove),
               ),
             ),
-            Text("${value.value}"),
+            Text("${value.value}",style: TextStyle(fontSize: 20),),
             IconButton(
               onPressed: () => onChanged(value.value + 1),
               icon: Container(

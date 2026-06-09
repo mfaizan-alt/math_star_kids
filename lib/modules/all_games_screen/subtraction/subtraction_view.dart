@@ -6,6 +6,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../core/colors/colors.dart';
+import '../../../core/commonWidgets/ads/ad_Manager.dart';
 import '../../../core/commonWidgets/all_widgets.dart';
 import 'subtraction_controller.dart';
 
@@ -217,6 +218,7 @@ class ResultDialog extends StatelessWidget {
   final VoidCallback onHome;
 
   const ResultDialog({
+    super.key,
     required this.score,
     required this.total,
     required this.stars,
@@ -234,32 +236,58 @@ class ResultDialog extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              score >= 7 ? '🎉 Great Job!' : score >= 5 ? '👍 Good Try!' : '💪 Keep Practicing!',
-              style: GoogleFonts.poppins(fontSize: 24, fontWeight: FontWeight.bold),
+              score >= 7
+                  ? '🎉 Great Job!'
+                  : score >= 5
+                  ? '👍 Good Try!'
+                  : '💪 Keep Practicing!',
+              style: GoogleFonts.poppins(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(3, (index) {
                 return Icon(
-                  index < stars ? Icons.star_rounded : Icons.star_outline_rounded,
+                  index < stars
+                      ? Icons.star_rounded
+                      : Icons.star_outline_rounded,
                   color: AppColors.star,
                   size: 40,
                 );
               }),
             ),
             const SizedBox(height: 16),
-            Text('Score: $score / $total', style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.w600)),
+            Text(
+              'Score: $score / $total',
+              style: GoogleFonts.poppins(
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
             const SizedBox(height: 24),
             Row(
               children: [
-                Expanded(child: FunButton(text: 'Home', onPressed: onHome, color: Colors.grey, icon: Icons.home_rounded)),
+                Expanded(
+                  child: DialogButton(
+                    text: 'Home',
+                    icon: Icons.home_rounded,
+                    backgroundColor: Colors.blueGrey.shade400,
+                    textColor: Colors.white,
+                    onPressed: onHome,
+                  ),
+                ),
                 const SizedBox(width: 12),
-                Expanded(child: FunButton(
-                    text: 'Again',
+                Expanded(
+                  child: DialogButton(
+                    text: 'Play Again',
+                    icon: Icons.replay_rounded,
+                    backgroundColor: Colors.deepPurple,
+                    textColor: Colors.white,
                     onPressed: onPlayAgain,
-                    color: AppColors.subtraction,
-                    icon: Icons.replay_rounded)
+                  ),
                 ),
               ],
             ),

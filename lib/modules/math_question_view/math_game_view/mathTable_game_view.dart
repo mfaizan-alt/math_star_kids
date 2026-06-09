@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../core/colors/colors.dart';
+import '../../../core/commonWidgets/ads/ad_Manager.dart';
 import 'mathTable_game_controller.dart';
 
 class MathTablesView extends GetView<MathTableController> {
@@ -241,12 +242,13 @@ class MathTablesView extends GetView<MathTableController> {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             itemCount: rows.length,
             separatorBuilder: (_, __) => const SizedBox(height: 10),
-            itemBuilder: (_, i) => _tableRow(
-              index: i,
-              expression: rows[i]['expression'],
-              result: rows[i]['result'],
-              colors: colors,
-            ),
+            itemBuilder: (_, i) =>
+                _tableRow(
+                  index: i,
+                  expression: rows[i]['expression'],
+                  result: rows[i]['result'],
+                  colors: colors,
+                ),
           ),
         ),
 
@@ -270,7 +272,8 @@ class MathTablesView extends GetView<MathTableController> {
                   ),
                 ],
               ),
-              child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center, children: [
                 const Icon(Icons.quiz_rounded, color: Colors.white, size: 22),
                 const SizedBox(width: 8),
                 Text('Start Quiz for Table $number',
@@ -299,7 +302,8 @@ class MathTablesView extends GetView<MathTableController> {
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(color: colors[0].withOpacity(0.4), width: 2),
               ),
-              child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center, children: [
                 Icon(Icons.grid_view_rounded, color: colors[0], size: 20),
                 const SizedBox(width: 8),
                 Text('← Pick Another Table',
@@ -361,7 +365,8 @@ class MathTablesView extends GetView<MathTableController> {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: Colors.white.withOpacity(0.25),
-                border: Border.all(color: Colors.white.withOpacity(0.4), width: 2),
+                border: Border.all(
+                    color: Colors.white.withOpacity(0.4), width: 2),
               ),
               child: Center(
                 child: Text('$number',
@@ -504,9 +509,10 @@ class MathTablesView extends GetView<MathTableController> {
               ),
               const SizedBox(height: 8),
               ShaderMask(
-                shaderCallback: (bounds) => LinearGradient(
-                  colors: colors,
-                ).createShader(bounds),
+                shaderCallback: (bounds) =>
+                    LinearGradient(
+                      colors: colors,
+                    ).createShader(bounds),
                 child: Text(
                   '${controller.num1.value} × ${controller.num2.value} = ?',
                   style: GoogleFonts.baloo2(
@@ -573,16 +579,20 @@ class MathTablesView extends GetView<MathTableController> {
           ),
           const SizedBox(width: 12),
           Expanded(
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(
-                'Table${controller.selectedTables.length > 1 ? "s" : ""} of ${controller.selectedTables.join(", ")}',
+                'Table${controller.selectedTables.length > 1
+                    ? "s"
+                    : ""} of ${controller.selectedTables.join(", ")}',
                 style: GoogleFonts.baloo2(
                   fontSize: 18, color: Colors.white,
                   fontWeight: FontWeight.w800,
                 ),
               ),
               Text(
-                'Q ${controller.currentQuestion.value + 1} / ${controller.totalQuestions}',
+                'Q ${controller.currentQuestion.value + 1} / ${controller
+                    .totalQuestions}',
                 style: GoogleFonts.nunito(
                   fontSize: 13, color: Colors.white.withOpacity(0.85),
                   fontWeight: FontWeight.w700,
@@ -660,7 +670,9 @@ class MathTablesView extends GetView<MathTableController> {
                 : answered && option == selected
                 ? borderColor
                 : colors[0].withOpacity(0.2),
-            width: answered && (option == correct || option == selected) ? 2.5 : 1.5,
+            width: answered && (option == correct || option == selected)
+                ? 2.5
+                : 1.5,
           ),
           boxShadow: [
             BoxShadow(
@@ -733,14 +745,18 @@ class MathTablesView extends GetView<MathTableController> {
 
           // Stars row
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            ...List.generate(3, (i) => Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4),
-              child: Icon(
-                i < stars ? Icons.star_rounded : Icons.star_outline_rounded,
-                color: const Color(0xFFFFD200),
-                size: 44,
-              ),
-            )),
+            ...List.generate(3, (i) =>
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  child: Obx(() {
+                    return Icon(
+                      i < controller.stars ? Icons.star_rounded : Icons
+                          .star_outline_rounded,
+                      color: const Color(0xFFFFD200),
+                      size: 44,
+                    );
+                  }),
+                )),
           ]),
 
           const SizedBox(height: 20),
@@ -767,7 +783,8 @@ class MathTablesView extends GetView<MathTableController> {
               ),
               const SizedBox(height: 6),
               ShaderMask(
-                shaderCallback: (b) => LinearGradient(colors: colors).createShader(b),
+                shaderCallback: (b) =>
+                    LinearGradient(colors: colors).createShader(b),
                 child: Text(
                   '${controller.score.value} / ${controller.totalQuestions}',
                   style: GoogleFonts.baloo2(
@@ -784,8 +801,13 @@ class MathTablesView extends GetView<MathTableController> {
           // Play Again
           GestureDetector(
             onTap: () {
-              // TODO: AdManager.instance.show();
-              controller.resetQuiz();
+              AdManager.instance.load();
+              Future.delayed(const Duration(milliseconds: 1800), () {
+                if (AdManager.instance.isReady) {
+                  AdManager.instance.show();
+                }
+                controller.resetQuiz();
+              });
             },
             child: Container(
               width: double.infinity,
@@ -800,7 +822,8 @@ class MathTablesView extends GetView<MathTableController> {
                   ),
                 ],
               ),
-              child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center, children: [
                 const Icon(Icons.replay_rounded, color: Colors.white, size: 22),
                 const SizedBox(width: 8),
                 Text('Play Again',
@@ -817,16 +840,26 @@ class MathTablesView extends GetView<MathTableController> {
 
           // Home
           GestureDetector(
-            onTap: controller.goToPicker,
+            onTap: () {
+              AdManager.instance.load();
+              Future.delayed(const Duration(milliseconds: 1800), () {
+                if (AdManager.instance.isReady) {
+                  AdManager.instance.show();
+                }
+                controller.goToPicker();
+              });
+            },
             child: Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 14),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: colors[0].withOpacity(0.35), width: 2),
+                border: Border.all(
+                    color: colors[0].withOpacity(0.35), width: 2),
               ),
-              child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center, children: [
                 Icon(Icons.grid_view_rounded, color: colors[0], size: 20),
                 const SizedBox(width: 8),
                 Text('Pick Another Table',

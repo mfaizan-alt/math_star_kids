@@ -128,31 +128,38 @@ class _DivisionScreenState extends State<DivisionScreen> {
               Row(
                 children: [
                   Expanded(
-                    child: FunButton(
+                    child: DialogButton(
                       text: 'Home',
-                      onPressed: () {
-                        Navigator.pop(context);
-                        Navigator.pop(context);
-                      },
-                      color: Colors.grey,
                       icon: Icons.home_rounded,
+                      backgroundColor: Colors.blueGrey,
+                      textColor: Colors.white,
+                      onPressed: () {
+                        AdManager.instance.show();
+                        Future.delayed(const Duration(milliseconds: 300), () {
+                          Navigator.pop(context); // close dialog
+                          Navigator.pop(context); // go home
+                        });
+                      },
                     ),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
-                    child: FunButton(
+                    child: DialogButton(
                       text: 'Again',
+                      icon: Icons.replay_rounded,
+                      backgroundColor: Colors.deepPurple,
+                      textColor: Colors.white,
                       onPressed: () {
-                        Navigator.pop(context);
                         AdManager.instance.show();
-                        setState(() {
-                          _score = 0;
-                          _questionNumber = 0;
-                          _generateQuestion();
+                        Future.delayed(const Duration(milliseconds: 300), () {
+                          Navigator.pop(context); // close dialog
+                          setState(() {
+                            _score = 0;
+                            _questionNumber = 0;
+                            _generateQuestion();
+                          });
                         });
                       },
-                      color: AppColors.division,
-                      icon: Icons.replay_rounded,
                     ),
                   ),
                 ],

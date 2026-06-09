@@ -4,8 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:math_carnival_kids/modules/story_mode_screen/story_mode_controller.dart';
 
 import '../../core/colors/colors.dart';
-import '../../core/routes/routes.dart';
-import '../story_detail_screen/story_detail_view.dart';
 
 class StoryModeView extends GetView<StoryModeController> {
   const StoryModeView({super.key});
@@ -195,7 +193,6 @@ class StoryModeView extends GetView<StoryModeController> {
               ? DecorationImage(
                   image: AssetImage(story["cover"] as String),
                   fit: BoxFit.cover,
-                  onError: (error, stack) {},
                 )
               : null,
           // Fallback color if image missing
@@ -237,7 +234,7 @@ class StoryModeView extends GetView<StoryModeController> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        'UNLOCK AT 40⭐',
+                        'UNLOCK AT 100⭐',
                         style: GoogleFonts.aBeeZee(
                           fontSize: 14,
                           color: Colors.white,

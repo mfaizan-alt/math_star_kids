@@ -2,7 +2,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:math_carnival_kids/core/commonWidgets/ads/ad_Manager.dart';
 import '../../core/colors/colors.dart';
+import '../../core/commonWidgets/ads/interstitial_ad.dart';
+import '../../core/services/stars_service.dart';
 import 'story_detail_controller.dart';
 
 class StoryDetailView extends GetView<StoryDetailController> {
@@ -583,7 +586,19 @@ class StoryDetailView extends GetView<StoryDetailController> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40),
               child: GestureDetector(
-                onTap: () => Get.back(),
+                onTap: () async {
+                  final starsService = Get.find<StarsService>();
+                  final starsEarned = controller.story['stars'] ?? 2;
+                  await starsService.addStars(starsEarned);
+
+                  AdManager.instance.load();
+                  Future.delayed(const Duration(milliseconds: 1800), () {
+                    if (AdManager.instance.isReady) {
+                      AdManager.instance.show();
+                    }
+                    Get.back();
+                  });
+                },
                 child: Container(
                   width: double.infinity,
                   padding: const EdgeInsets.symmetric(vertical: 16),

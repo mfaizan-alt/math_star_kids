@@ -220,27 +220,34 @@ class AdditionResultDialog extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: FunButton(
+                  child: DialogButton(
                     text: 'Home',
-                    onPressed: () {
-                      Navigator.of(context).pop(); // Close dialog
-                      Navigator.of(context).pop(); // Close game screen
-                    },
-                    color: Colors.grey,
                     icon: Icons.home_rounded,
+                    backgroundColor: Colors.blueGrey,
+                    textColor: Colors.white,
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      AdManager.instance.show();
+                      Future.delayed(const Duration(milliseconds: 300), () {
+                        Navigator.of(context).pop();
+                      });
+                    },
                   ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
-                  child: FunButton(
+                  child: DialogButton(
                     text: 'Again',
-                    onPressed: () {
-                      Navigator.of(context).pop(); // close dialog first
-                      AdManager.instance.show();   // then show ad
-                      controller.resetGame();      // then reset
-                    },
-                    color: AppColors.addition,
                     icon: Icons.replay_rounded,
+                    backgroundColor: Colors.deepPurple,
+                    textColor: Colors.white,
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      AdManager.instance.show();
+                      Future.delayed(const Duration(milliseconds: 300), () {
+                        controller.resetGame();
+                      });
+                    },
                   ),
                 ),
               ],

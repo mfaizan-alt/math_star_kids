@@ -214,7 +214,6 @@ class QuizGameView extends GetView<QuizGameController> {
         ),
         child: Column(
           children: [
-            // Expression
             RichText(
               text: TextSpan(
                 children: [
@@ -226,7 +225,7 @@ class QuizGameView extends GetView<QuizGameController> {
                     ),
                   ),
                   TextSpan(
-                    text: ' × ',
+                    text: ' ${q['op']} ',   // ← was hardcoded ' × '
                     style: GoogleFonts.aBeeZee(
                       fontSize: 52,
                       color: const Color(0xFF7B2FBE),
@@ -242,10 +241,7 @@ class QuizGameView extends GetView<QuizGameController> {
                 ],
               ),
             ),
-
             const SizedBox(height: 16),
-
-            // = ?
             RichText(
               text: TextSpan(
                 children: [

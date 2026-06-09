@@ -12,33 +12,49 @@ class SetUpScreenController extends GetxController {
 
   // Reactive variables
   RxString selectedAvatar = '🦊'.obs;
-  RxString selectedLanguage = 'en'.obs;
+
 
   final List<String> avatars = [
     '🦊', '🦁', '🐨', '🐼',
     '🐸', '🦄', '🐶', '🐱',
   ];
 
+  @override
+  void onInit() {
+    super.onInit();
+    final savedName = box.read<String>('childName') ?? '';
+    final savedAvatar = box.read<String>('avatar') ?? '🦊';
+
+    if (savedName.isNotEmpty && savedName != 'Champ') {
+      nameController.text = savedName;
+    }
+    selectedAvatar.value = savedAvatar;
+  }
+
   void selectAvatar(String avatar) {
     selectedAvatar.value = avatar;
   }
 
-  void selectLanguage(String lang) {
-    selectedLanguage.value = lang;
-  }
+
 
   void onLetsGo() {
+    final name = nameController.text.trim();
+    final isAlreadySetup = box.read<bool>('setupDone') ?? false;
 
-    final name = nameController.text.trim().isEmpty
-        ? 'Champ'
-        : nameController.text.trim();
+    box.write('avatar', selectedAvatar.value); // always save avatar
 
-    box.write('isFirstTime', false);
-    box.write('childName', name);
-    box.write('avatar', selectedAvatar.value);
-    box.write('language', selectedLanguage.value);
-
-    Get.offNamed(Routes.homeScreen);
+    if (isAlreadySetup) {
+      if (name.isNotEmpty) {
+        box.write('childName', name);
+      }
+      Get.back();
+    } else {
+      if (name.isNotEmpty) {
+        box.write('childName', name);
+        box.write('setupDone', true);
+      }
+      Get.offNamed(Routes.homeScreen);
+    }
   }
 
   @override

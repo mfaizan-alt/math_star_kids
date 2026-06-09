@@ -1,4 +1,9 @@
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/src/bindings_interface.dart';
+import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
+import '../../modules/all_games_screen/adventure_map/adventure_map_controller.dart';
+import '../../modules/all_games_screen/adventure_map/adventure_map_view.dart';
 import '../../modules/gamesHome/games_home_bindings.dart';
 import '../../modules/gamesHome/games_home_screen_view.dart';
 import '../../modules/home_screen/home_screen_binding.dart';
@@ -9,6 +14,7 @@ import '../../modules/math_question_view/math_game_view/mathTable_game_bindings.
 import '../../modules/math_question_view/math_game_view/mathTable_game_view.dart';
 import '../../modules/math_question_view/quiz_game_view/quiz_game_binding.dart';
 import '../../modules/math_question_view/quiz_game_view/quiz_game_view.dart';
+import '../../modules/math_question_view/quiz_game_view/quiz_result_view.dart';
 import '../../modules/set_up_screen/set_up_binding.dart';
 import '../../modules/set_up_screen/set_up_view.dart';
 import '../../modules/splash_screen/splash_screen_binding.dart';
@@ -30,6 +36,8 @@ abstract class Routes {
   static const String storyModeScreen      = '/storyModeScreen';
   static const String storyDetail = '/story-detail';
   static const String gameScreen = '/gameScreen';
+  static const String adventureMap = '/adventureMap';
+  static const String quizResult = '/quizResult';
 
   // ── Pages ────────────────────────────────────────
   static List<GetPage> getPage = [
@@ -77,6 +85,17 @@ abstract class Routes {
       name: gameScreen,
       page: () => GamesHomeScreenView(),
       binding: GamesHomeBinding(),
+    ),
+    GetPage(
+      name: adventureMap,
+      page: () => AdventureMapScreen(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut(() => AdventureMapController());
+      }),
+    ),
+    GetPage(
+      name: quizResult,
+      page: () => QuizResultScreen(),
     ),
   ];
 }

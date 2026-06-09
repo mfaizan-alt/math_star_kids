@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:math_carnival_kids/core/commonWidgets/ads/ad_Manager.dart';
 import '../../core/colors/colors.dart';
 
 class CountingScreen extends StatefulWidget {
@@ -46,6 +49,26 @@ class _CountingScreenState extends State<CountingScreen> {
     });
   }
 
+  void goHome() {
+    Get.back(); // close dialog
+    AdManager.instance.load();
+    Future.delayed(const Duration(milliseconds: 300), () {
+      AdManager.instance.show();
+      Get.back(); // go home
+    });
+  }
+
+  void playAgain() {
+    Get.back(); // close dialog
+    AdManager.instance.load();
+    Future.delayed(const Duration(milliseconds: 300), () {
+      AdManager.instance.show();
+      _score = 0;
+      _round = 0;
+      _generateRound();
+      setState(() {});
+    });
+  }
   void _submitAnswer() {
     setState(() {
       _showFeedback = true;
@@ -88,7 +111,9 @@ class _CountingScreenState extends State<CountingScreen> {
                 children: [
                   Expanded(
                     child: ElevatedButton(
-                      onPressed: () { Navigator.pop(context); Navigator.pop(context); },
+                      onPressed: () {
+                        goHome();
+                      },
                       child: const Text('Home'),
                     ),
                   ),
@@ -96,8 +121,7 @@ class _CountingScreenState extends State<CountingScreen> {
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.pop(context);
-                        setState(() { _score = 0; _round = 0; _generateRound(); });
+                        playAgain();
                       },
                       style: ElevatedButton.styleFrom(backgroundColor: AppColors.counting),
                       child: const Text('Play Again'),

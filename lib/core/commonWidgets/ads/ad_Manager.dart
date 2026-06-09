@@ -10,6 +10,7 @@ class AdManager {
   static final AdManager instance = AdManager._();
 
   InterstitialAd? _ad;
+  bool get isReady => _ad != null;
 
   /// LOAD AD
   void load() {
@@ -19,9 +20,11 @@ class AdManager {
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (ad) {
           _ad = ad;
+          print("✅ Interstitial Ad Loaded");
         },
         onAdFailedToLoad: (error) {
           _ad = null;
+          print("❌ Ad failed to load: $error");
         },
       ),
     );

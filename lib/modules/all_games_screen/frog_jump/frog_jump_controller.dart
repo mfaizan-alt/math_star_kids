@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:get/get.dart';
 
 import '../../../core/commonWidgets/ads/ad_Manager.dart';
+import '../../../core/commonWidgets/ads/reward_ad.dart';
 
 class FrogJumpController extends GetxController {
   final Random _random = Random();
@@ -26,6 +27,24 @@ class FrogJumpController extends GetxController {
 
   Timer? _timer;
   var timeLeft = 8.obs;
+  bool get showTutorial => score.value == 0 && !isGameOver.value;
+
+
+  @override
+  void onInit() {
+    super.onInit();
+  }
+
+
+
+  void reviveWithLife() {
+    lives.value = 1;
+    isGameOver.value = false;
+    isGameStarted.value = true;
+    showFeedback.value = false;
+    generateQuestion();
+    startTimer();
+  }
 
   void startGame() {
     score.value = 0;
@@ -116,11 +135,6 @@ class FrogJumpController extends GetxController {
     if (lives.value <= 0) {
       isGameOver.value = true;
       isGameStarted.value = false;
-
-      Future.delayed(const Duration(seconds: 1), () {
-        AdManager.instance.show();
-        AdManager.instance.load();
-      });
     } else {
       Future.delayed(const Duration(milliseconds: 800), () {
         showFeedback.value = false;

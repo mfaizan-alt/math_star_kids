@@ -256,7 +256,7 @@ class CountingResultDialog extends StatelessWidget {
                       Get.back(); // close dialog
                       controller.interstitial.showAd();
                       Future.delayed(const Duration(milliseconds: 300), () {
-                        controller.resetGame();
+                        Get.back(); // go home
                       });
                     },
                     child: const Text('Play Again'),

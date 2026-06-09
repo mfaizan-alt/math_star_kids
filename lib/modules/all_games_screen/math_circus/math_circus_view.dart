@@ -87,12 +87,9 @@ class _MathCircusScreenState extends State<MathCircusScreen> {
                     _weights(),
         
                     const SizedBox(height: 20),
-        
+
+                    Obx(() => controller.showTutorial ? _buildTutorial() : const SizedBox.shrink()),
                     if (controller.isBalanced.value)
-                      // ElevatedButton(
-                      //   onPressed: controller.nextLevel,
-                      //   child: const Text("Next Level"),
-                      // ),
                       Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(15),
@@ -157,10 +154,67 @@ class _MathCircusScreenState extends State<MathCircusScreen> {
     return Obx(() => Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        Text("Target: ${controller.targetWeight.value}"),
-        Text("Now: ${controller.currentWeight.value}"),
+        Text("Target: ${controller.targetWeight.value}",style: TextStyle(fontSize: 17),),
+        Text("Now: ${controller.currentWeight.value}",style: TextStyle(fontSize: 17),),
       ],
     ));
+  }
+  Widget _buildTutorial() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.blue.shade50,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.blue.shade300, width: 1.5),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Text('💡', style: TextStyle(fontSize: 20)),
+              const SizedBox(width: 8),
+              Text(
+                'How to Play',
+                style: GoogleFonts.poppins(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue.shade800,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          _buildTutorialStep('1️⃣', 'See the target weight on the left side of the scale'),
+          _buildTutorialStep('2️⃣', 'Tap weights below to place them on the right side'),
+          _buildTutorialStep('3️⃣', 'Make both sides equal to balance the scale! ⚖️'),
+          _buildTutorialStep('4️⃣', 'Tap a placed weight to remove it if needed'),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTutorialStep(String emoji, String text) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(emoji, style: const TextStyle(fontSize: 14)),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              text,
+              style: GoogleFonts.poppins(
+                fontSize: 13,
+                color: Colors.blue.shade900,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _weights() {

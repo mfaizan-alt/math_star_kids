@@ -138,28 +138,6 @@ class QuizGameController extends GetxController {
     });
   }
 
-  // void generateQuestions() {
-  //   questions = List.generate(totalQuestions, (_) {
-  //     final a = random.nextInt(10) + 1;
-  //     final b = random.nextInt(10) + 1;
-  //     final correctAnswer = a * b;
-  //
-  //     // Generate 3 wrong answers
-  //     final wrongAnswers = <int>{};
-  //     while (wrongAnswers.length < 3) {
-  //       final wrong = random.nextInt(100) + 1;
-  //       if (wrong != correctAnswer) wrongAnswers.add(wrong);
-  //     }
-  //
-  //     final options = [...wrongAnswers, correctAnswer]..shuffle();
-  //
-  //     return {'a': a, 'b': b, 'answer': correctAnswer, 'options': options};
-  //   });
-  // }
-
-
-
-
   void nextQuestion() {
     if (currentIndex.value < totalQuestions - 1) {
       currentIndex.value++;
@@ -171,10 +149,11 @@ class QuizGameController extends GetxController {
       if (Get.isRegistered<StarsService>()) {
         StarsService.to.addStars(earned, sourceName: 'Quiz Game');
       } else {
-        // Fallback to direct storage if service not available
         final current = box.read('totalStars') ?? 0;
         box.write('totalStars', current + earned);
       }
+
+      // Navigate directly to result (NO AD HERE)
       Get.offNamed(
         '/quizResult',
         arguments: {'score': score.value, 'total': totalQuestions},

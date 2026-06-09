@@ -2,18 +2,17 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// Service to manage stars across the entire app
-/// Provides a centralized way to add, track, and persist stars
 class StarsService extends GetxService {
   static StarsService get to => Get.find();
 
   final box = GetStorage();
   late SharedPreferences _prefs;
 
-  // Reactive total stars
   final RxInt totalStars = 0.obs;
+  final RxBool premiumStoriesUnlocked = false.obs;
 
-  // Callback when 40 stars reached (for unlocking premium content)
+  static const int masteryThreshold = 100;
+
   Function? onMasteryReached;
 
   @override
@@ -23,66 +22,70 @@ class StarsService extends GetxService {
     await loadTotalStars();
   }
 
-  /// Load total stars from storage
   Future<void> loadTotalStars() async {
-    // Try GetStorage first (used by stories and quiz)
-    int? starsFromGetStorage = box.read('totalStars');
-    
-    // Try SharedPreferences (used by mini games)
-    int? starsFromPrefs = _prefs.getInt('totalStars');
+    final starsFromGetStorage = box.read('totalStars') as int?;
+    final starsFromPrefs = _prefs.getInt('totalStars');
+    final unlockedFromBox = box.read('premiumStoriesUnlocked') as bool?;
+    final unlockedFromPrefs = _prefs.getBool('premiumStoriesUnlocked');
 
-    // Use the maximum of both sources to ensure data isn't lost
     int maxStars = 0;
     if (starsFromGetStorage != null) maxStars = starsFromGetStorage;
     if (starsFromPrefs != null && starsFromPrefs > maxStars) maxStars = starsFromPrefs;
 
     totalStars.value = maxStars;
-  }
+    premiumStoriesUnlocked.value =
+        (unlockedFromBox ?? false) ||
+            (unlockedFromPrefs ?? false) ||
+            maxStars >= masteryThreshold;
 
-  /// Add stars from a story or game
-  Future<void> addStars(int earnedStars, {String? sourceName}) async {
-    if (earnedStars <= 0) return;
-
-    final newTotal = totalStars.value + earnedStars;
-    totalStars.value = newTotal;
-
-    // Save to both storage systems to ensure consistency
-    await box.write('totalStars', newTotal);
-    await _prefs.setInt('totalStars', newTotal);
-
-    // Check if mastery (40 stars) reached for first time
-    final previousTotal = newTotal - earnedStars;
-    if (previousTotal < 40 && newTotal >= 40) {
+    if (premiumStoriesUnlocked.value) {
       await unlockPremiumStories();
-      // Trigger callback if registered
-      if (onMasteryReached != null) {
-        onMasteryReached!();
-      }
     }
   }
 
-  /// Get current total stars
-  int getTotalStars() => totalStars.value;
+  Future<void> addStars(int earnedStars, {String? sourceName}) async {
+    if (earnedStars <= 0) return;
 
-  /// Check if premium stories are unlocked (40+ stars)
-  bool arePremiumStoriesUnlocked() {
-    return box.read('premiumStoriesUnlocked') ?? false;
+    final previousTotal = totalStars.value;
+    final newTotal = totalStars.value + earnedStars;
+
+    totalStars.value = newTotal;
+
+    await box.write('totalStars', newTotal);
+    await _prefs.setInt('totalStars', newTotal);
+
+    if (previousTotal < masteryThreshold && newTotal >= masteryThreshold) {
+      await unlockPremiumStories();
+      onMasteryReached?.call();
+    }
   }
 
-  /// Unlock premium stories (2 math + 3 reading)
+  Future<bool> spendStars(int requiredStars) async {
+    if (requiredStars <= 0) return true;
+    if (totalStars.value < requiredStars) return false;
+
+    totalStars.value -= requiredStars;
+    await box.write('totalStars', totalStars.value);
+    await _prefs.setInt('totalStars', totalStars.value);
+    return true;
+  }
+
+  int getTotalStars() => totalStars.value;
+
+  bool arePremiumStoriesUnlocked() => premiumStoriesUnlocked.value;
+
   Future<void> unlockPremiumStories() async {
+    premiumStoriesUnlocked.value = true;
     await box.write('premiumStoriesUnlocked', true);
-    // Also save to SharedPreferences for backup
     await _prefs.setBool('premiumStoriesUnlocked', true);
   }
 
-  /// Reset stars and lock premium content (for testing)
   Future<void> resetStars() async {
     totalStars.value = 0;
+    premiumStoriesUnlocked.value = false;
     await box.write('totalStars', 0);
     await _prefs.setInt('totalStars', 0);
     await box.write('premiumStoriesUnlocked', false);
     await _prefs.setBool('premiumStoriesUnlocked', false);
   }
 }
-

@@ -40,9 +40,7 @@ class ResultDialog extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-
             const SizedBox(height: 16),
-
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(3, (index) {
@@ -53,9 +51,7 @@ class ResultDialog extends StatelessWidget {
                 );
               }),
             ),
-
             const SizedBox(height: 16),
-
             Text(
               "Score: $score / $total",
               style: GoogleFonts.poppins(
@@ -63,9 +59,7 @@ class ResultDialog extends StatelessWidget {
                 fontWeight: FontWeight.w500,
               ),
             ),
-
             const SizedBox(height: 24),
-
             Row(
               children: [
                 Expanded(
@@ -73,8 +67,12 @@ class ResultDialog extends StatelessWidget {
                     onPressed: onHome,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.grey,
+                      foregroundColor: Colors.white, // 👈 fix
                     ),
-                    child: const Text("Home"),
+                    child: Text(
+                      "Home",
+                      style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+                    ),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -83,8 +81,12 @@ class ResultDialog extends StatelessWidget {
                     onPressed: onPlayAgain,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: color,
+                      foregroundColor: Colors.white, // 👈 fix
                     ),
-                    child: const Text("Play Again"),
+                    child: Text(
+                      "Play Again",
+                      style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
+                    ),
                   ),
                 ),
               ],

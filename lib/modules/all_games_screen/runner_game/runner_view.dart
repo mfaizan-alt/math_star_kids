@@ -7,6 +7,8 @@ import 'package:confetti/confetti.dart';
 import 'package:get/get.dart';
 import 'package:math_carnival_kids/modules/all_games_screen/runner_game/runner_controller.dart';
 import '../../../core/colors/colors.dart';
+import '../../../core/commonWidgets/ads/ad_Manager.dart';
+import '../../../core/commonWidgets/ads/reward_ad.dart';
 
 class RunnerGameScreen extends StatefulWidget {
   const RunnerGameScreen({super.key});
@@ -637,10 +639,7 @@ class _RunnerGameScreenState extends State<RunnerGameScreen>
             Text(
               controller.gameOverMessage,
               textAlign: TextAlign.center,
-              style: GoogleFonts.poppins(
-                fontSize: 14,
-                color: Colors.grey[600],
-              ),
+              style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey[600]),
             ),
             const SizedBox(height: 24),
             Container(
@@ -665,19 +664,81 @@ class _RunnerGameScreenState extends State<RunnerGameScreen>
                 ],
               ),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: 24),
+
+            // ── Rewarded ad buttons ──
+            _buildRewardedButton(
+              emoji: '❤️',
+              label: 'Watch Ad → Get 1 Life',
+              color: Colors.red.shade400,
+              onTap: () {
+                RewardedAdService.instance.showAd(() {
+                  controller.reviveWithLife();
+                  _startObstacleAnimation();
+                });
+              },
+            ),
+
+            const SizedBox(height: 16),
+            // ── Free buttons ──
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 _buildGameOverButton('🏠 Home', () => Navigator.pop(context)),
                 const SizedBox(width: 16),
-                _buildGameOverButton('🔄 Retry', _onStartGame, isPrimary: true),
+                _buildGameOverButton('🔄 Retry', () {
+                  AdManager.instance.show(); // interstitial
+                  Future.delayed(const Duration(milliseconds: 300), () {
+                    _onStartGame();
+                  });
+                }, isPrimary: true),
               ],
             ),
           ],
         ),
       ),
     ).animate().fadeIn().scale(begin: const Offset(0.8, 0.8));
+  }
+
+  Widget _buildRewardedButton({
+    required String emoji,
+    required String label,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 14),
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: color.withValues(alpha: 0.4),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(emoji, style: const TextStyle(fontSize: 20)),
+            const SizedBox(width: 10),
+            Text(
+              label,
+              style: GoogleFonts.poppins(
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildGameOverButton(String label, VoidCallback onTap,

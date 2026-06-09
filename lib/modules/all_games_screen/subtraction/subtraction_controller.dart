@@ -103,17 +103,23 @@ class SubtractionController extends GetxController {
   }
 
   void playAgain() {
-    Get.back();                    // close dialog first
-    AdManager.instance.show();     // then show ad
-    AdManager.instance.load();     // then show ad
-    score = 0;
-    questionNumber = 0;
-    generateQuestion();
+    Get.back(); // close dialog
+    AdManager.instance.load();
+    Future.delayed(const Duration(milliseconds: 300), () {
+      AdManager.instance.show();
+      score = 0;
+      questionNumber = 0;
+      generateQuestion();
+    });
   }
 
   void goHome() {
-    Get.back();
-    Get.back();
+    Get.back(); // close dialog
+    AdManager.instance.load();
+    Future.delayed(const Duration(milliseconds: 300), () {
+      AdManager.instance.show();
+      Get.back(); // go home
+    });
   }
 
   void showResults() {

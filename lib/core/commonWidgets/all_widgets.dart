@@ -52,31 +52,29 @@ class AnimatedScoreCard extends StatelessWidget {
   }
 }
 
-class FunButton extends StatefulWidget {
+class DialogButton extends StatefulWidget {
   final String text;
+  final IconData icon;
+  final Color backgroundColor;
+  final Color textColor;
   final VoidCallback onPressed;
-  final Color color;
-  final IconData? icon;
-  final double? width;
-  final double? height;
 
-  const FunButton({
-    super.key,
+  const DialogButton({
     required this.text,
+    required this.icon,
+    required this.backgroundColor,
+    required this.textColor,
     required this.onPressed,
-    required this.color,
-    this.icon,
-    this.width,
-    this.height,
   });
 
   @override
-  State<FunButton> createState() => _FunButtonState();
+  State<DialogButton> createState() => _DialogButtonState();
 }
 
-class _FunButtonState extends State<FunButton> with SingleTickerProviderStateMixin {
+class _DialogButtonState extends State<DialogButton>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  late Animation<double> _scaleAnimation;
+  late Animation<double> _scale;
 
   @override
   void initState() {
@@ -85,7 +83,7 @@ class _FunButtonState extends State<FunButton> with SingleTickerProviderStateMix
       duration: const Duration(milliseconds: 100),
       vsync: this,
     );
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.95).animate(
+    _scale = Tween<double>(begin: 1.0, end: 0.95).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
     );
   }
@@ -106,46 +104,28 @@ class _FunButtonState extends State<FunButton> with SingleTickerProviderStateMix
       },
       onTapCancel: () => _controller.reverse(),
       child: AnimatedBuilder(
-        animation: _scaleAnimation,
+        animation: _scale,
         builder: (context, child) => Transform.scale(
-          scale: _scaleAnimation.value,
+          scale: _scale.value,
           child: child,
         ),
         child: Container(
-          width: widget.width,
-          height: widget.height ?? 56,
+          height: 52,
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [widget.color, widget.color.withValues(alpha: 0.8)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
+            color: widget.backgroundColor,
             borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: widget.color.withValues(alpha: 0.4),
-                blurRadius: 12,
-                offset: const Offset(0, 6),
-              ),
-            ],
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
             children: [
-              if (widget.icon != null) ...[
-                Icon(widget.icon, color: Colors.white, size: 24),
-                const SizedBox(width: 8),
-              ],
-              Flexible(
-                child: Text(
-                  widget.text,
-                  style: GoogleFonts.poppins(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  overflow: TextOverflow.ellipsis,
+              Icon(widget.icon, color: widget.textColor, size: 22),
+              const SizedBox(width: 8),
+              Text(
+                widget.text,
+                style: GoogleFonts.poppins(
+                  color: widget.textColor,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ],

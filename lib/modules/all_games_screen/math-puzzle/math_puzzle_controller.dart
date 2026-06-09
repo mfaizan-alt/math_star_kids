@@ -15,6 +15,7 @@ class MathPuzzleController extends GetxController {
   var correctOrder = <String>[].obs;
   var current = <String>[].obs;
   var tiles = <String>[].obs;
+  bool get showTutorial => level.value == 1 && !isComplete.value;
 
   late ConfettiController confettiController;
 
@@ -22,6 +23,7 @@ class MathPuzzleController extends GetxController {
   void onInit() {
     super.onInit();
     confettiController = ConfettiController(duration: const Duration(seconds: 2));
+    AdManager.instance.load(); // 👈
     generatePuzzle();
   }
 
@@ -116,9 +118,14 @@ class MathPuzzleController extends GetxController {
   }
 
   void nextLevel() {
-    Future.delayed(const Duration(milliseconds: 300), () {
-      AdManager.instance.show();
-    });
+
+
+    if (level.value % 3 == 0) {
+      Future.delayed(const Duration(milliseconds: 300), () {
+        AdManager.instance.show();
+        AdManager.instance.load();
+      });
+    }
     level++;
     generatePuzzle();
   }

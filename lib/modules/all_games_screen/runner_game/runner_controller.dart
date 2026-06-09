@@ -3,6 +3,8 @@ import 'dart:math';
 import 'package:get/get.dart';
 import 'package:confetti/confetti.dart';
 
+import '../../../core/commonWidgets/ads/reward_ad.dart';
+
 class RunnerGameController extends GetxController {
   final Random _random = Random();
   Timer? _gameTimer;
@@ -30,9 +32,8 @@ class RunnerGameController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    confettiController = ConfettiController(
-      duration: const Duration(seconds: 2),
-    );
+    confettiController = ConfettiController(duration: const Duration(seconds: 2));
+    RewardedAdService.instance.loadAd();
   }
 
   @override
@@ -60,6 +61,17 @@ class RunnerGameController extends GetxController {
     _gameTimer?.cancel();
     isGameOver.value = true;
     isGameStarted.value = false;
+  }
+  void reviveWithLife() {
+    lives.value = 1;
+    isGameOver.value = false;
+    isGameStarted.value = true;
+    showFeedback.value = false;
+    generateQuestion();
+  }
+
+  void replayWithAd() {
+    startGame();
   }
 
   void generateQuestion() {

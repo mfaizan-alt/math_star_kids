@@ -35,6 +35,8 @@ class MathPuzzleScreen extends GetView<MathPuzzleController> {
                   const SizedBox(height: 40),
                   _tiles(),
                   const Spacer(),
+                  Obx(() => controller.showTutorial ? _buildTutorial() : const SizedBox.shrink()),
+                  SizedBox(height: 20),
                   controller.isComplete.value
                       ? _nextBtn()
                       : _resetBtn(),
@@ -143,6 +145,86 @@ class MathPuzzleScreen extends GetView<MathPuzzleController> {
     ),
   );
 
+  Widget _buildTutorial() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.amber.shade50,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.amber.shade300, width: 1.5),
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              const Text('💡', style: TextStyle(fontSize: 20)),
+              const SizedBox(width: 8),
+              Text(
+                'How to Play',
+                style: GoogleFonts.poppins(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.amber.shade800,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Tap the tiles below to fill the empty boxes and make a correct math equation!',
+            style: GoogleFonts.poppins(
+              fontSize: 13,
+              color: Colors.amber.shade900,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _buildExampleBox('3'),
+              _buildExampleBox('+'),
+              _buildExampleBox('4'),
+              _buildExampleBox('='),
+              _buildExampleBox('7'),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            '👆 Tap a filled box to put the tile back',
+            style: GoogleFonts.poppins(
+              fontSize: 12,
+              color: Colors.amber.shade800,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildExampleBox(String value) {
+    final isOperator = value == '+' || value == '-' || value == '×' || value == '=';
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 3),
+      width: 36,
+      height: 36,
+      decoration: BoxDecoration(
+        color: isOperator ? Colors.amber.shade200 : Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.amber.shade400),
+      ),
+      child: Center(
+        child: Text(
+          value,
+          style: GoogleFonts.poppins(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.amber.shade900,
+          ),
+        ),
+      ),
+    );
+  }
 
   Widget _resetBtn() => InkWell(
     onTap: ()=> controller.reset(),
