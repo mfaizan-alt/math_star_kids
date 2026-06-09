@@ -89,7 +89,7 @@ class HomeScreenView extends GetView<HomeScreenController> {
               height: 160,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.white.withOpacity(0.1),
+                color: Colors.white.withValues(alpha: 0.1),
               ),
             ),
           ),
@@ -157,7 +157,7 @@ class HomeScreenView extends GetView<HomeScreenController> {
                   vertical: 7,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Row(
@@ -206,7 +206,7 @@ class HomeScreenView extends GetView<HomeScreenController> {
         borderRadius: BorderRadius.circular(22),
         boxShadow: [
           BoxShadow(
-            color: AppColors.orangeColor.withOpacity(0.4),
+            color: AppColors.orangeColor.withValues(alpha: 0.4),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -225,7 +225,7 @@ class HomeScreenView extends GetView<HomeScreenController> {
                 '🎯',
                 style: TextStyle(
                   fontSize: 50,
-                  color: Colors.white.withOpacity(0.3),
+                  color: Colors.white.withValues(alpha: 0.3),
                 ),
               ),
             ),
@@ -238,7 +238,7 @@ class HomeScreenView extends GetView<HomeScreenController> {
                 '⚡ ${controller.todayMissionTitle.value.toUpperCase()}',
                 style: GoogleFonts.nunito(
                   fontSize: 11,
-                  color: Colors.white.withOpacity(0.85),
+                  color: Colors.white.withValues(alpha: 0.85),
                   fontWeight: FontWeight.w900,
                   letterSpacing: 1.5,
                 ),
@@ -264,7 +264,7 @@ class HomeScreenView extends GetView<HomeScreenController> {
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
+                        color: Colors.black.withValues(alpha: 0.1),
                         blurRadius: 8,
                         offset: const Offset(0, 3),
                       ),
@@ -386,7 +386,7 @@ class HomeScreenView extends GetView<HomeScreenController> {
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.06),
+            color: Colors.black.withValues(alpha: 0.06),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),

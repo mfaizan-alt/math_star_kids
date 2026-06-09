@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../core/constants/appConstants.dart';
+import '../../core/constants/app_constants.dart';
 import '../../core/services/stars_service.dart';
 
 class ProgressController extends GetxController {

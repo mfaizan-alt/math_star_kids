@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:confetti/confetti.dart';
 import 'package:get/get.dart';
 
-import '../../../core/commonWidgets/ads/ad_Manager.dart';
+import '../../../core/commonWidgets/ads/ad_manager.dart';
 import '../../../core/commonWidgets/ads/reward_ad.dart';
 
 class Bubble {
@@ -237,7 +237,6 @@ class NumberPopController extends GetxController {
       level.value++;
       if(level.value % 3 == 0){
         AdManager.instance.show();
-        AdManager.instance.load();
       }
     });
   }

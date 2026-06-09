@@ -123,9 +123,13 @@ class AdditionController extends GetxController {
 
   void showResults() {
     int stars = 0;
-    if (score >= 9) stars = 3;
-    else if (score >= 7) stars = 2;
-    else if (score >= 5) stars = 1;
+    if (score >= 9) {
+      stars = 3;
+    } else if (score >= 7) {
+      stars = 2;
+    } else if (score >= 5) {
+      stars = 1;
+    }
 
     progressController.addStars('addition', stars);
 

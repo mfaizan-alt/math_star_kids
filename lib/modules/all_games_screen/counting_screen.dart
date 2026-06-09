@@ -3,7 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:math_carnival_kids/core/commonWidgets/ads/ad_Manager.dart';
+import 'package:math_carnival_kids/core/commonWidgets/ads/ad_manager.dart';
 import '../../core/colors/colors.dart';
 
 class CountingScreen extends StatefulWidget {

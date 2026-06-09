@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../core/colors/colors.dart';
-import '../../../core/commonWidgets/ads/ad_Manager.dart';
+import '../../../core/commonWidgets/ads/ad_manager.dart';
 import '../../../core/routes/routes.dart';
 
 class QuizResultScreen extends StatelessWidget {
@@ -62,7 +61,7 @@ class QuizResultScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(24),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.07),
+                      color: Colors.black.withValues(alpha: 0.07),
                       blurRadius: 20,
                       offset: const Offset(0, 8),
                     ),
@@ -128,7 +127,7 @@ class QuizResultScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xFF7B2FBE).withOpacity(0.4),
+                        color: const Color(0xFF7B2FBE).withValues(alpha: 0.4),
                         blurRadius: 20,
                         offset: const Offset(0, 8),
                       ),
@@ -168,7 +167,7 @@ class QuizResultScreen extends StatelessWidget {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
-                      color: const Color(0xFF7B2FBE).withOpacity(0.35),
+                      color: const Color(0xFF7B2FBE).withValues(alpha: 0.35),
                       width: 2,
                     ),
                   ),

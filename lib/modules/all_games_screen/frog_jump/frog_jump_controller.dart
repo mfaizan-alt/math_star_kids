@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:math';
 import 'package:get/get.dart';
 
-import '../../../core/commonWidgets/ads/ad_Manager.dart';
 import '../../../core/commonWidgets/ads/reward_ad.dart';
 
 class FrogJumpController extends GetxController {
@@ -33,6 +32,8 @@ class FrogJumpController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    // Preload the rewarded ad so the "watch ad for a life" revive works.
+    RewardedAdService.instance.loadAd();
   }
 
 

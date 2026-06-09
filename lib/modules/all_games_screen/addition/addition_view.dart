@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../core/colors/colors.dart';
-import '../../../core/commonWidgets/ads/ad_Manager.dart';
+import '../../../core/commonWidgets/ads/ad_manager.dart';
 import '../../../core/commonWidgets/all_widgets.dart';
 import 'addition_controller.dart';
 
@@ -171,9 +171,13 @@ class AdditionResultDialog extends StatelessWidget {
     final total = controller.totalQuestions;
 
     int stars = 0;
-    if (score >= 9) stars = 3;
-    if (score >= 7) stars = 2;
-    if (score >= 5) stars = 1;
+    if (score >= 9) {
+      stars = 3;
+    } else if (score >= 7) {
+      stars = 2;
+    } else if (score >= 5) {
+      stars = 1;
+    }
 
     return Dialog(
       shape: RoundedRectangleBorder(
@@ -226,10 +230,11 @@ class AdditionResultDialog extends StatelessWidget {
                     backgroundColor: Colors.blueGrey,
                     textColor: Colors.white,
                     onPressed: () {
-                      Navigator.of(context).pop();
+                      final navigator = Navigator.of(context);
+                      navigator.pop();
                       AdManager.instance.show();
                       Future.delayed(const Duration(milliseconds: 300), () {
-                        Navigator.of(context).pop();
+                        navigator.pop();
                       });
                     },
                   ),

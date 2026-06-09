@@ -59,7 +59,7 @@ class DialogButton extends StatefulWidget {
   final Color textColor;
   final VoidCallback onPressed;
 
-  const DialogButton({
+  const DialogButton({super.key, 
     required this.text,
     required this.icon,
     required this.backgroundColor,

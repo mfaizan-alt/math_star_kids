@@ -2,9 +2,8 @@ import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../core/colors/colors.dart';
-import '../../../core/commonWidgets/ads/ad_Manager.dart';
-import 'mathTable_game_controller.dart';
+import '../../../core/commonWidgets/ads/ad_manager.dart';
+import 'math_table_game_controller.dart';
 
 class MathTablesView extends GetView<MathTableController> {
   const MathTablesView({super.key});
@@ -35,7 +34,7 @@ class MathTablesView extends GetView<MathTableController> {
             child: Container(width: 200, height: 200,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: const Color(0xFF4FACFE).withOpacity(0.12),
+                color: const Color(0xFF4FACFE).withValues(alpha: 0.12),
               ),
             ),
           ),
@@ -43,7 +42,7 @@ class MathTablesView extends GetView<MathTableController> {
             child: Container(width: 160, height: 160,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: const Color(0xFFFA709A).withOpacity(0.10),
+                color: const Color(0xFFFA709A).withValues(alpha: 0.10),
               ),
             ),
           ),
@@ -139,7 +138,7 @@ class MathTablesView extends GetView<MathTableController> {
         Positioned(top: -20, right: -10,
           child: Text('✖', style: TextStyle(
             fontSize: 100,
-            color: Colors.white.withOpacity(0.07),
+            color: Colors.white.withValues(alpha: 0.07),
             fontWeight: FontWeight.bold,
           )),
         ),
@@ -149,7 +148,7 @@ class MathTablesView extends GetView<MathTableController> {
             child: Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: const Icon(Icons.arrow_back_ios_new_rounded,
@@ -161,7 +160,7 @@ class MathTablesView extends GetView<MathTableController> {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: const Text('✖️', style: TextStyle(fontSize: 32)),
@@ -176,7 +175,7 @@ class MathTablesView extends GetView<MathTableController> {
               ),
               Text('Tables from 1 to 20 🌟',
                 style: GoogleFonts.nunito(
-                  fontSize: 13, color: Colors.white.withOpacity(0.85),
+                  fontSize: 13, color: Colors.white.withValues(alpha: 0.85),
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -201,7 +200,7 @@ class MathTablesView extends GetView<MathTableController> {
           borderRadius: BorderRadius.circular(18),
           boxShadow: [
             BoxShadow(
-              color: colors[0].withOpacity(0.4),
+              color: colors[0].withValues(alpha: 0.4),
               blurRadius: 10, offset: const Offset(0, 4),
             ),
           ],
@@ -215,7 +214,7 @@ class MathTablesView extends GetView<MathTableController> {
           ),
           Text('Table',
             style: GoogleFonts.nunito(
-              fontSize: 10, color: Colors.white.withOpacity(0.85),
+              fontSize: 10, color: Colors.white.withValues(alpha: 0.85),
               fontWeight: FontWeight.w700,
             ),
           ),
@@ -267,7 +266,7 @@ class MathTablesView extends GetView<MathTableController> {
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                    color: colors[0].withOpacity(0.45),
+                    color: colors[0].withValues(alpha: 0.45),
                     blurRadius: 20, offset: const Offset(0, 8),
                   ),
                 ],
@@ -300,7 +299,7 @@ class MathTablesView extends GetView<MathTableController> {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: colors[0].withOpacity(0.4), width: 2),
+                border: Border.all(color: colors[0].withValues(alpha: 0.4), width: 2),
               ),
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -340,7 +339,7 @@ class MathTablesView extends GetView<MathTableController> {
         Positioned(right: 0, top: -15,
           child: Text('$number',
             style: GoogleFonts.baloo2(
-              fontSize: 90, color: Colors.white.withOpacity(0.1),
+              fontSize: 90, color: Colors.white.withValues(alpha: 0.1),
               fontWeight: FontWeight.w900,
             ),
           ),
@@ -351,7 +350,7 @@ class MathTablesView extends GetView<MathTableController> {
             child: Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: const Icon(Icons.arrow_back_ios_new_rounded,
@@ -364,9 +363,9 @@ class MathTablesView extends GetView<MathTableController> {
               width: 64, height: 64,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.white.withOpacity(0.25),
+                color: Colors.white.withValues(alpha: 0.25),
                 border: Border.all(
-                    color: Colors.white.withOpacity(0.4), width: 2),
+                    color: Colors.white.withValues(alpha: 0.4), width: 2),
               ),
               child: Center(
                 child: Text('$number',
@@ -387,7 +386,7 @@ class MathTablesView extends GetView<MathTableController> {
               ),
               Text('10 multiplications to master!',
                 style: GoogleFonts.nunito(
-                  fontSize: 12, color: Colors.white.withOpacity(0.85),
+                  fontSize: 12, color: Colors.white.withValues(alpha: 0.85),
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -411,7 +410,7 @@ class MathTablesView extends GetView<MathTableController> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 8, offset: const Offset(0, 3),
           ),
         ],
@@ -421,7 +420,7 @@ class MathTablesView extends GetView<MathTableController> {
           width: 32, height: 32,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: colors[0].withOpacity(0.12),
+            color: colors[0].withValues(alpha: 0.12),
           ),
           child: Center(
             child: Text('${index + 1}',
@@ -455,7 +454,7 @@ class MathTablesView extends GetView<MathTableController> {
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: colors[0].withOpacity(0.3),
+                color: colors[0].withValues(alpha: 0.3),
                 blurRadius: 8, offset: const Offset(0, 3),
               ),
             ],
@@ -495,7 +494,7 @@ class MathTablesView extends GetView<MathTableController> {
               borderRadius: BorderRadius.circular(28),
               boxShadow: [
                 BoxShadow(
-                  color: colors[0].withOpacity(0.2),
+                  color: colors[0].withValues(alpha: 0.2),
                   blurRadius: 24, offset: const Offset(0, 10),
                 ),
               ],
@@ -570,7 +569,7 @@ class MathTablesView extends GetView<MathTableController> {
             child: Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: const Icon(Icons.close_rounded,
@@ -594,7 +593,7 @@ class MathTablesView extends GetView<MathTableController> {
                 'Q ${controller.currentQuestion.value + 1} / ${controller
                     .totalQuestions}',
                 style: GoogleFonts.nunito(
-                  fontSize: 13, color: Colors.white.withOpacity(0.85),
+                  fontSize: 13, color: Colors.white.withValues(alpha: 0.85),
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -604,7 +603,7 @@ class MathTablesView extends GetView<MathTableController> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.25),
+              color: Colors.white.withValues(alpha: 0.25),
               borderRadius: BorderRadius.circular(14),
             ),
             child: Row(children: [
@@ -625,7 +624,7 @@ class MathTablesView extends GetView<MathTableController> {
           child: LinearProgressIndicator(
             value: progress,
             minHeight: 8,
-            backgroundColor: Colors.white.withOpacity(0.25),
+            backgroundColor: Colors.white.withValues(alpha: 0.25),
             valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
           ),
         ),
@@ -645,12 +644,12 @@ class MathTablesView extends GetView<MathTableController> {
 
     if (answered) {
       if (option == correct) {
-        bgColor = const Color(0xFF43E97B).withOpacity(0.15);
+        bgColor = const Color(0xFF43E97B).withValues(alpha: 0.15);
         borderColor = const Color(0xFF43E97B);
         textColor = const Color(0xFF1E8449);
         icon = Icons.check_circle_rounded;
       } else if (option == selected && option != correct) {
-        bgColor = const Color(0xFFFF6B6B).withOpacity(0.12);
+        bgColor = const Color(0xFFFF6B6B).withValues(alpha: 0.12);
         borderColor = const Color(0xFFFF6B6B);
         textColor = const Color(0xFFCC0000);
         icon = Icons.cancel_rounded;
@@ -669,14 +668,14 @@ class MathTablesView extends GetView<MathTableController> {
                 ? borderColor
                 : answered && option == selected
                 ? borderColor
-                : colors[0].withOpacity(0.2),
+                : colors[0].withValues(alpha: 0.2),
             width: answered && (option == correct || option == selected)
                 ? 2.5
                 : 1.5,
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.06),
+              color: Colors.black.withValues(alpha: 0.06),
               blurRadius: 8, offset: const Offset(0, 3),
             ),
           ],
@@ -718,7 +717,7 @@ class MathTablesView extends GetView<MathTableController> {
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: colors[0].withOpacity(0.4),
+                  color: colors[0].withValues(alpha: 0.4),
                   blurRadius: 30, offset: const Offset(0, 12),
                 ),
               ],
@@ -769,7 +768,7 @@ class MathTablesView extends GetView<MathTableController> {
               borderRadius: BorderRadius.circular(24),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.07),
+                  color: Colors.black.withValues(alpha: 0.07),
                   blurRadius: 20, offset: const Offset(0, 8),
                 ),
               ],
@@ -817,7 +816,7 @@ class MathTablesView extends GetView<MathTableController> {
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                    color: colors[0].withOpacity(0.45),
+                    color: colors[0].withValues(alpha: 0.45),
                     blurRadius: 20, offset: const Offset(0, 8),
                   ),
                 ],
@@ -856,7 +855,7 @@ class MathTablesView extends GetView<MathTableController> {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
-                    color: colors[0].withOpacity(0.35), width: 2),
+                    color: colors[0].withValues(alpha: 0.35), width: 2),
               ),
               child: Row(
                   mainAxisAlignment: MainAxisAlignment.center, children: [

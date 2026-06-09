@@ -7,7 +7,7 @@ import 'package:confetti/confetti.dart';
 import 'package:get/get.dart';
 import 'package:math_carnival_kids/modules/all_games_screen/runner_game/runner_controller.dart';
 import '../../../core/colors/colors.dart';
-import '../../../core/commonWidgets/ads/ad_Manager.dart';
+import '../../../core/commonWidgets/ads/ad_manager.dart';
 import '../../../core/commonWidgets/ads/reward_ad.dart';
 
 class RunnerGameScreen extends StatefulWidget {

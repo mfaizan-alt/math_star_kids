@@ -1,7 +1,7 @@
 // import 'dart:async';
 // import 'dart:math';
 // import 'package:get/get.dart';
-// import '../../../core/constants/appConstants.dart';
+// import '../../../core/constants/app_constants.dart';
 //
 // enum QuizOperation { addition, subtraction, multiplication, division }
 //

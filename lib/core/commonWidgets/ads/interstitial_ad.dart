@@ -1,5 +1,6 @@
 // adUnitId: "ca-app-pub-2983283750660362/3759469533",
 
+import 'package:flutter/foundation.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class InterstitialAdService {
@@ -29,11 +30,11 @@ class InterstitialAdService {
             },
           );
 
-          print("✅ Interstitial Ad Loaded");
+          debugPrint("✅ Interstitial Ad Loaded");
         },
         onAdFailedToLoad: (error) {
           _ad = null;
-          print("❌ Ad failed to load: $error");
+          debugPrint("❌ Ad failed to load: $error");
         },
       ),
     );
@@ -42,12 +43,18 @@ class InterstitialAdService {
   /// SHOW AD
   void showAd() {
     if (_ad == null) {
-      print("⚠️ Ad not ready, reloading...");
+      debugPrint("⚠️ Ad not ready, reloading...");
       loadAd();
       return;
     }
 
     _ad!.show();
+    _ad = null;
+  }
+
+  /// DISPOSE any preloaded ad that was never shown (call from onClose)
+  void dispose() {
+    _ad?.dispose();
     _ad = null;
   }
 }

@@ -74,7 +74,7 @@ class SetupScreenView extends GetView<SetUpScreenController> {
         border: Border.all(color: Colors.black, width: 2.5),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -135,7 +135,7 @@ class SetupScreenView extends GetView<SetUpScreenController> {
                   duration: const Duration(milliseconds: 200),
                   decoration: BoxDecoration(
                     color: isSelected
-                        ? AppColors.coralColor.withOpacity(0.08)
+                        ? AppColors.coralColor.withValues(alpha: 0.08)
                         : AppColors.white,
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
@@ -147,8 +147,8 @@ class SetupScreenView extends GetView<SetUpScreenController> {
                     boxShadow: [
                       BoxShadow(
                         color: isSelected
-                            ? AppColors.coralColor.withOpacity(0.25)  // ← clean
-                            : Colors.black.withOpacity(0.05),
+                            ? AppColors.coralColor.withValues(alpha: 0.25)  // ← clean
+                            : Colors.black.withValues(alpha: 0.05),
                         blurRadius: isSelected ? 14 : 6,
                         offset: const Offset(0, 4),
                       ),

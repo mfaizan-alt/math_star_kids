@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:get/get.dart';
 
-import '../../../core/commonWidgets/ads/ad_Manager.dart';
+import '../../../core/commonWidgets/ads/ad_manager.dart';
 
 class NumberBuilderController extends GetxController {
   final Random _random = Random();
@@ -37,7 +37,6 @@ class NumberBuilderController extends GetxController {
     if (level.value % 3 == 0) {
       Future.delayed(const Duration(milliseconds: 300), () {
         AdManager.instance.show();
-        AdManager.instance.load();
       });
     }
     level.value++;

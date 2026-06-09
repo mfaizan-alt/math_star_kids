@@ -69,7 +69,7 @@ class MathTableController extends GetxController {
     return List.generate(10, (index) {
       final multiplier = index + 1;
       return {
-        'expression': '$number × ${multiplier}',
+        'expression': '$number × $multiplier',
         'result': number * multiplier,
       };
     });

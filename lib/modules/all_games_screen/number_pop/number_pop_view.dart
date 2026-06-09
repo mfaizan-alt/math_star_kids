@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:confetti/confetti.dart';
 import 'package:get/get.dart';
 import '../../../core/colors/colors.dart';
-import '../../../core/commonWidgets/ads/ad_Manager.dart';
+import '../../../core/commonWidgets/ads/ad_manager.dart';
 import '../../../core/commonWidgets/ads/reward_ad.dart';
 import '../../../core/services/stars_service.dart';
 import 'number_pop_controller.dart';
@@ -35,8 +35,7 @@ class _NumberPopScreenState extends State<NumberPopScreen> {
     ));
   }
 
-  void _onStartGame(BuildContext context) {
-    // ADD THIS CHECK:
+  void _onStartGame(Size size) {
     if (starsService.totalStars.value < 10) {
       Get.snackbar(
         '🔒 Locked',
@@ -48,7 +47,6 @@ class _NumberPopScreenState extends State<NumberPopScreen> {
       return;
     }
 
-    final size = MediaQuery.of(context).size;
     controller.screenWidth = size.width;
     controller.screenHeight = size.height;
     controller.startGame();
@@ -274,7 +272,7 @@ class _NumberPopScreenState extends State<NumberPopScreen> {
           ).animate().fadeIn(delay: 200.ms),
           const SizedBox(height: 40),
           GestureDetector(
-            onTap: () => _onStartGame(context),
+            onTap: () => _onStartGame(MediaQuery.of(context).size),
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 18),
               decoration: BoxDecoration(
@@ -378,9 +376,10 @@ class _NumberPopScreenState extends State<NumberPopScreen> {
                 _buildBtn('🏠 Home', () => Navigator.pop(context)),
                 const SizedBox(width: 16),
                 _buildBtn('🔄 Retry', () {
+                  final size = MediaQuery.of(context).size;
                   AdManager.instance.show();
                   Future.delayed(const Duration(milliseconds: 300), () {
-                    _onStartGame(context);
+                    _onStartGame(size);
                   });
                 }, isPrimary: true),
               ],

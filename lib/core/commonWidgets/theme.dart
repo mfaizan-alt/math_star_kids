@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../constants/appConstants.dart';
+import '../constants/app_constants.dart';
 
 class ThemeController extends GetxController {
   ThemeMode themeMode = ThemeMode.light;

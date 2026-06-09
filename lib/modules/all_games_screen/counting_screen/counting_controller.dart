@@ -30,6 +30,12 @@ class CountingController extends GetxController {
     generateRound();
   }
 
+  @override
+  void onClose() {
+    interstitial.dispose();
+    super.onClose();
+  }
+
   void generateRound() {
     targetNumber = (round % 9) + 2 + (round ~/ 3);
     if (targetNumber > 15) targetNumber = 15;
@@ -81,9 +87,13 @@ class CountingController extends GetxController {
     final progress = Get.find<ProgressController>();
 
     int stars = 0;
-    if (score >= 8) stars = 3;
-    if (score >= 5) stars = 2;
-    if (score >= 3) stars = 1;
+    if (score >= 8) {
+      stars = 3;
+    } else if (score >= 5) {
+      stars = 2;
+    } else if (score >= 3) {
+      stars = 1;
+    }
 
     progress.addStars('counting', stars);
 

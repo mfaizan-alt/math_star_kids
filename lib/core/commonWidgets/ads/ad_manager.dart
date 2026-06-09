@@ -1,8 +1,8 @@
 // adUnitId: "ca-app-pub-2983283750660362/3759469533", real id
 
 
+import 'package:flutter/foundation.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'interstitial_ad.dart';
 
 class AdManager {
   AdManager._();
@@ -20,11 +20,11 @@ class AdManager {
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (ad) {
           _ad = ad;
-          print("✅ Interstitial Ad Loaded");
+          debugPrint("✅ Interstitial Ad Loaded");
         },
         onAdFailedToLoad: (error) {
           _ad = null;
-          print("❌ Ad failed to load: $error");
+          debugPrint("❌ Ad failed to load: $error");
         },
       ),
     );
@@ -39,6 +39,11 @@ class AdManager {
 
     _ad!.fullScreenContentCallback = FullScreenContentCallback(
       onAdDismissedFullScreenContent: (ad) {
+        ad.dispose();
+        _ad = null;
+        load(); // preload next
+      },
+      onAdFailedToShowFullScreenContent: (ad, error) {
         ad.dispose();
         _ad = null;
         load(); // preload next

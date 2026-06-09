@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-import 'mathTable_game_controller.dart';
+import 'math_table_game_controller.dart';
 
 class MathTableBindings implements Bindings{
   @override

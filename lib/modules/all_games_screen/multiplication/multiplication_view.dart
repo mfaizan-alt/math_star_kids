@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:math_carnival_kids/core/commonWidgets/ads/ad_Manager.dart';
+import 'package:math_carnival_kids/core/commonWidgets/ads/ad_manager.dart';
 
 import '../../../core/colors/colors.dart';
 import '../../../core/commonWidgets/all_widgets.dart';

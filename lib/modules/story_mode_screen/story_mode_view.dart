@@ -65,7 +65,7 @@ class StoryModeView extends GetView<StoryModeController> {
               height: 120,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.white.withOpacity(0.08),
+                color: Colors.white.withValues(alpha: 0.08),
               ),
             ),
           ),
@@ -79,7 +79,7 @@ class StoryModeView extends GetView<StoryModeController> {
                 child: Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.2),
+                    color: Colors.white.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: const Icon(
@@ -110,7 +110,7 @@ class StoryModeView extends GetView<StoryModeController> {
                         'Read, Learn and Have Fun!',
                         style: GoogleFonts.nunito(
                           fontSize: 14,
-                          color: Colors.white.withOpacity(0.85),
+                          color: Colors.white.withValues(alpha: 0.85),
                           fontWeight: FontWeight.w700,
                         ),
                       ),
@@ -183,7 +183,7 @@ class StoryModeView extends GetView<StoryModeController> {
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.12),
+              color: Colors.black.withValues(alpha: 0.12),
               blurRadius: 16,
               offset: const Offset(0, 6),
             ),
@@ -211,7 +211,7 @@ class StoryModeView extends GetView<StoryModeController> {
                     Colors.transparent,
                     Colors.transparent,
                     Colors.black54,
-                    Colors.black87.withOpacity(isLocked ? 0.7 : 0.87),
+                    Colors.black87.withValues(alpha: isLocked ? 0.7 : 0.87),
                   ],
                 ),
               ),
@@ -222,7 +222,7 @@ class StoryModeView extends GetView<StoryModeController> {
               Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(24),
-                  color: Colors.black.withOpacity(0.4),
+                  color: Colors.black.withValues(alpha: 0.4),
                 ),
                 child: Center(
                   child: Column(
@@ -257,8 +257,8 @@ class StoryModeView extends GetView<StoryModeController> {
                 ),
                 decoration: BoxDecoration(
                   color: story["type"] == "math"
-                      ? const Color(0xFF4CC9F0).withOpacity(0.9)
-                      : const Color(0xFF06D6A0).withOpacity(0.9),
+                      ? const Color(0xFF4CC9F0).withValues(alpha: 0.9)
+                      : const Color(0xFF06D6A0).withValues(alpha: 0.9),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(
@@ -283,8 +283,8 @@ class StoryModeView extends GetView<StoryModeController> {
                 ),
                 decoration: BoxDecoration(
                   color: (story["isPremium"] == true)
-                      ? const Color(0xFFFFD166).withOpacity(0.9)
-                      : Colors.black.withOpacity(0.4),
+                      ? const Color(0xFFFFD166).withValues(alpha: 0.9)
+                      : Colors.black.withValues(alpha: 0.4),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(
@@ -327,7 +327,7 @@ class StoryModeView extends GetView<StoryModeController> {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.nunito(
-                      color: Colors.white.withOpacity(0.8),
+                      color: Colors.white.withValues(alpha: 0.8),
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
                     ),

@@ -22,16 +22,31 @@ class RewardedAdService {
     );
   }
 
+  /// Shows the rewarded ad. [onReward] runs ONLY when the user actually earns
+  /// the reward (via [onUserEarnedReward]). If no ad is loaded, the reward is
+  /// NOT granted — we just preload for next time. This prevents a free-reward
+  /// exploit where revives could be claimed with no ad shown.
   void showAd(VoidCallback onReward) {
-    if (_ad == null) {
-      onReward();
+    final ad = _ad;
+    if (ad == null) {
       loadAd();
       return;
     }
-    _ad!.show(
+    _ad = null;
+
+    ad.fullScreenContentCallback = FullScreenContentCallback(
+      onAdDismissedFullScreenContent: (ad) {
+        ad.dispose();
+        loadAd(); // preload next
+      },
+      onAdFailedToShowFullScreenContent: (ad, error) {
+        ad.dispose();
+        loadAd();
+      },
+    );
+
+    ad.show(
       onUserEarnedReward: (ad, reward) => onReward(),
     );
-    _ad = null;
-    loadAd();
   }
 }

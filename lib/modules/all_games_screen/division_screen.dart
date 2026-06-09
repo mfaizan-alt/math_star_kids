@@ -5,9 +5,8 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/colors/colors.dart';
-import '../../core/commonWidgets/ads/ad_Manager.dart';
+import '../../core/commonWidgets/ads/ad_manager.dart';
 import '../../core/commonWidgets/all_widgets.dart';
-import '../progress/progress.dart';
 import '../progress/progress_controller.dart';
 
 class DivisionScreen extends StatefulWidget {
@@ -134,10 +133,11 @@ class _DivisionScreenState extends State<DivisionScreen> {
                       backgroundColor: Colors.blueGrey,
                       textColor: Colors.white,
                       onPressed: () {
+                        final navigator = Navigator.of(context);
                         AdManager.instance.show();
                         Future.delayed(const Duration(milliseconds: 300), () {
-                          Navigator.pop(context); // close dialog
-                          Navigator.pop(context); // go home
+                          navigator.pop(); // close dialog
+                          navigator.pop(); // go home
                         });
                       },
                     ),
@@ -150,9 +150,11 @@ class _DivisionScreenState extends State<DivisionScreen> {
                       backgroundColor: Colors.deepPurple,
                       textColor: Colors.white,
                       onPressed: () {
+                        final navigator = Navigator.of(context);
                         AdManager.instance.show();
                         Future.delayed(const Duration(milliseconds: 300), () {
-                          Navigator.pop(context); // close dialog
+                          navigator.pop(); // close dialog
+                          if (!mounted) return;
                           setState(() {
                             _score = 0;
                             _questionNumber = 0;
