@@ -62,10 +62,10 @@ class AppColors {
   ];
 
   // ── Shadow Colors ────────────────────────────────
-  static Color coralShadow     = coralColor.withOpacity(0.4);
-  static Color blueShadow      = skyBlue.withOpacity(0.3);
-  static Color greenShadow     = mintGreen.withOpacity(0.4);
-  static Color purpleShadow    = purple.withOpacity(0.3);
+  static Color coralShadow     = coralColor.withValues(alpha: 0.4);
+  static Color blueShadow      = skyBlue.withValues(alpha: 0.3);
+  static Color greenShadow     = mintGreen.withValues(alpha: 0.4);
+  static Color purpleShadow    = purple.withValues(alpha: 0.3);
 
   // ── Islamic Module ───────────────────────────────
   static const Color islamicGold        = Color(0xFFFFD166);

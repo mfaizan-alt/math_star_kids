@@ -5,8 +5,6 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'core/commonWidgets/ads/ad_Manager.dart';
 import 'core/routes/routes.dart';
 import 'core/services/stars_service.dart';
-import 'modules/splash_screen/splash_screen_view.dart';
-import 'modules/splash_screen/splash_screen_binding.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,8 +12,8 @@ void main() async {
   AdManager.instance.load();
   await GetStorage.init();
   
-  // Initialize StarsService
-  await Get.put(StarsService());
+  // Initialize StarsService (awaits prefs init before anything can read it)
+  await Get.putAsync<StarsService>(() => StarsService().init());
 
   runApp(const MyApp());
 }

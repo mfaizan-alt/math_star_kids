@@ -225,7 +225,6 @@ class NumberPopController extends GetxController {
       level.value++;
       if(level.value % 3 == 0){
         AdManager.instance.show();
-        AdManager.instance.load();
       }
     });
   }

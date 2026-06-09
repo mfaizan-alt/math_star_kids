@@ -59,7 +59,7 @@ class QuizGameView extends GetView<QuizGameController> {
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.08),
+                color: Colors.black.withValues(alpha: 0.08),
                 blurRadius: 10,
                 offset: const Offset(0, 3),
               ),
@@ -127,7 +127,7 @@ class QuizGameView extends GetView<QuizGameController> {
           borderRadius: BorderRadius.circular(10),
           child: LinearProgressIndicator(
             value: controller.progressValue,
-            backgroundColor: Colors.white.withOpacity(0.6),
+            backgroundColor: Colors.white.withValues(alpha: 0.6),
             valueColor: const AlwaysStoppedAnimation<Color>(
               Color(0xFFFF9F1C),
             ),
@@ -169,7 +169,7 @@ class QuizGameView extends GetView<QuizGameController> {
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           border: Border.all(
-            color: AppColors.coralColor.withOpacity(0.5),
+            color: AppColors.coralColor.withValues(alpha: 0.5),
             width: 2,
           ),
         ),
@@ -201,12 +201,12 @@ class QuizGameView extends GetView<QuizGameController> {
           color: Colors.white,
           borderRadius: BorderRadius.circular(28),
           border: Border.all(
-            color: const Color(0xFF7B2FBE).withOpacity(0.2),
+            color: const Color(0xFF7B2FBE).withValues(alpha: 0.2),
             width: 2.5,
           ),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFF7B2FBE).withOpacity(0.12),
+              color: const Color(0xFF7B2FBE).withValues(alpha: 0.12),
               blurRadius: 24,
               offset: const Offset(0, 8),
             ),
@@ -307,18 +307,18 @@ class QuizGameView extends GetView<QuizGameController> {
       if (!answered) {
         // not answered yet
         btnColor = const Color(0xFF7B2FBE);
-        shadowColor = const Color(0xFF7B2FBE).withOpacity(0.4);
+        shadowColor = const Color(0xFF7B2FBE).withValues(alpha: 0.4);
       } else if (value == correct) {
         // correct answer — always green
         btnColor = AppColors.mintGreen;
-        shadowColor = AppColors.mintGreen.withOpacity(0.4);
+        shadowColor = AppColors.mintGreen.withValues(alpha: 0.4);
       } else if (value == selected && value != correct) {
         // wrong selected — red
         btnColor = AppColors.coralColor;
-        shadowColor = AppColors.coralColor.withOpacity(0.4);
+        shadowColor = AppColors.coralColor.withValues(alpha: 0.4);
       } else {
         // other options — dimmed
-        btnColor = const Color(0xFF7B2FBE).withOpacity(0.3);
+        btnColor = const Color(0xFF7B2FBE).withValues(alpha: 0.3);
         shadowColor = Colors.transparent;
       }
 
@@ -330,7 +330,7 @@ class QuizGameView extends GetView<QuizGameController> {
             color: btnColor,
             borderRadius: BorderRadius.circular(22),
             border: Border.all(
-              color: Colors.white.withOpacity(0.5),
+              color: Colors.white.withValues(alpha: 0.5),
               width: 2.5,
             ),
             boxShadow: [

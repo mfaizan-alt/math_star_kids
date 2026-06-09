@@ -101,7 +101,7 @@ class MathHomeView extends GetView <MathHomeController>{
               height: 130,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.white.withOpacity(0.08),
+                color: Colors.white.withValues(alpha: 0.08),
               ),
             ),
           ),
@@ -113,7 +113,7 @@ class MathHomeView extends GetView <MathHomeController>{
               height: 80,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.white.withOpacity(0.08),
+                color: Colors.white.withValues(alpha: 0.08),
               ),
             ),
           ),
@@ -128,7 +128,7 @@ class MathHomeView extends GetView <MathHomeController>{
                 child: Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.2),
+                    color: Colors.white.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: const Icon(
@@ -160,7 +160,7 @@ class MathHomeView extends GetView <MathHomeController>{
                         'Numbers are super fun 🌟',
                         style: GoogleFonts.nunito(
                           fontSize: 14,
-                          color: Colors.white.withOpacity(0.8),
+                          color: Colors.white.withValues(alpha: 0.8),
                           fontWeight: FontWeight.w700,
                         ),
                       ),
@@ -192,9 +192,9 @@ class MathHomeView extends GetView <MathHomeController>{
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.18),
+        color: Colors.white.withValues(alpha: 0.18),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white.withOpacity(0.25)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.25)),
       ),
       child: Row(
         children: [
@@ -229,7 +229,7 @@ class MathHomeView extends GetView <MathHomeController>{
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFFEF476F).withOpacity(0.4),
+              color: const Color(0xFFEF476F).withValues(alpha: 0.4),
               blurRadius: 20,
               offset: const Offset(0, 8),
             ),
@@ -246,7 +246,7 @@ class MathHomeView extends GetView <MathHomeController>{
                 '🎮',
                 style: TextStyle(
                   fontSize: 80,
-                  color: Colors.white.withOpacity(0.15),
+                  color: Colors.white.withValues(alpha: 0.15),
                 ),
               ),
             ),
@@ -262,7 +262,7 @@ class MathHomeView extends GetView <MathHomeController>{
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.25),
+                    color: Colors.white.withValues(alpha: 0.25),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
@@ -292,7 +292,7 @@ class MathHomeView extends GetView <MathHomeController>{
                   'Answer questions and earn stars!\nBeat your high score!',
                   style: GoogleFonts.nunito(
                     fontSize: 14,
-                    color: Colors.white.withOpacity(0.85),
+                    color: Colors.white.withValues(alpha: 0.85),
                     fontWeight: FontWeight.w600,
                     height: 1.5,
                   ),
@@ -324,7 +324,7 @@ class MathHomeView extends GetView <MathHomeController>{
                     borderRadius: BorderRadius.circular(14),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.12),
+                        color: Colors.black.withValues(alpha: 0.12),
                         blurRadius: 10,
                         offset: const Offset(0, 4),
                       ),
@@ -373,7 +373,7 @@ class MathHomeView extends GetView <MathHomeController>{
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFF4CC9F0).withOpacity(0.4),
+              color: const Color(0xFF4CC9F0).withValues(alpha: 0.4),
               blurRadius: 20,
               offset: const Offset(0, 8),
             ),
@@ -390,7 +390,7 @@ class MathHomeView extends GetView <MathHomeController>{
                 '✖️',
                 style: TextStyle(
                   fontSize: 80,
-                  color: Colors.white.withOpacity(0.15),
+                  color: Colors.white.withValues(alpha: 0.15),
                 ),
               ),
             ),
@@ -406,7 +406,7 @@ class MathHomeView extends GetView <MathHomeController>{
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.25),
+                    color: Colors.white.withValues(alpha: 0.25),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
@@ -436,7 +436,7 @@ class MathHomeView extends GetView <MathHomeController>{
                   'Learn multiplication tables\nfrom 1 to 20!',
                   style: GoogleFonts.nunito(
                     fontSize: 14,
-                    color: Colors.white.withOpacity(0.85),
+                    color: Colors.white.withValues(alpha: 0.85),
                     fontWeight: FontWeight.w600,
                     height: 1.5,
                   ),
@@ -468,7 +468,7 @@ class MathHomeView extends GetView <MathHomeController>{
                     borderRadius: BorderRadius.circular(14),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.12),
+                        color: Colors.black.withValues(alpha: 0.12),
                         blurRadius: 10,
                         offset: const Offset(0, 4),
                       ),
@@ -507,10 +507,10 @@ class MathHomeView extends GetView <MathHomeController>{
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.yellowColor.withOpacity(0.15),
+        color: AppColors.yellowColor.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
-          color: AppColors.yellowColor.withOpacity(0.4),
+          color: AppColors.yellowColor.withValues(alpha: 0.4),
           width: 2,
         ),
       ),
@@ -549,7 +549,7 @@ class MathHomeView extends GetView <MathHomeController>{
                             shape: BoxShape.circle,
                             color: index == controller.factIndex.value % 5
                                 ? AppColors.orangeColor
-                                : AppColors.orangeColor.withOpacity(0.25),
+                                : AppColors.orangeColor.withValues(alpha: 0.25),
                           ),
                         ),
                       ),
@@ -598,9 +598,9 @@ class MathHomeView extends GetView <MathHomeController>{
                       borderRadius: BorderRadius.circular(10),
                       child: LinearProgressIndicator(
                         value: value,
-                        backgroundColor: AppColors.orangeColor.withOpacity(0.15),
+                        backgroundColor: AppColors.orangeColor.withValues(alpha: 0.15),
                         valueColor: AlwaysStoppedAnimation<Color>(
-                          AppColors.orangeColor.withOpacity(0.6),
+                          AppColors.orangeColor.withValues(alpha: 0.6),
                         ),
                         minHeight: 3,
                       ),
@@ -620,9 +620,9 @@ class MathHomeView extends GetView <MathHomeController>{
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.2),
+        color: Colors.white.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white.withOpacity(0.3)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
       ),
       child: Text(
         label,

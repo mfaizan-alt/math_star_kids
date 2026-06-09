@@ -1,5 +1,4 @@
 import 'package:confetti/confetti.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_animate/flutter_animate.dart';
@@ -216,7 +215,7 @@ class ResultDialog extends StatelessWidget {
   final VoidCallback onPlayAgain;
   final VoidCallback onHome;
 
-  const ResultDialog({
+  const ResultDialog({super.key, 
     required this.score,
     required this.total,
     required this.stars,

@@ -87,7 +87,6 @@ class MathCircusController extends GetxController {
     Future.delayed(const Duration(milliseconds: 300), () {
       if(level.value % 3 == 0){
         AdManager.instance.show();
-        AdManager.instance.load();
       }
     });
     generateLevel();

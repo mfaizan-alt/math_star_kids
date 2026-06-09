@@ -79,7 +79,7 @@ class HomeScreenController extends GetxController {
             borderRadius: BorderRadius.circular(24),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.3),
+                color: Colors.black.withValues(alpha: 0.3),
                 blurRadius: 30,
                 offset: const Offset(0, 10),
               ),
@@ -119,7 +119,7 @@ class HomeScreenController extends GetxController {
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
-                      color: Colors.white.withOpacity(0.8),
+                      color: Colors.white.withValues(alpha: 0.8),
                     ),
                   ),
                   
@@ -129,10 +129,10 @@ class HomeScreenController extends GetxController {
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.08),
+                      color: Colors.white.withValues(alpha: 0.08),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: const Color(0xFFFFD166).withOpacity(0.3),
+                        color: const Color(0xFFFFD166).withValues(alpha: 0.3),
                       ),
                     ),
                     child: Text(
@@ -140,7 +140,7 @@ class HomeScreenController extends GetxController {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 14,
-                        color: Colors.white.withOpacity(0.9),
+                        color: Colors.white.withValues(alpha: 0.9),
                         height: 1.6,
                       ),
                     ),
@@ -160,7 +160,7 @@ class HomeScreenController extends GetxController {
                             '⭐',
                             style: TextStyle(
                               fontSize: 24,
-                              color: const Color(0xFFFFD166).withOpacity(0.8 + (index * 0.04)),
+                              color: const Color(0xFFFFD166).withValues(alpha: 0.8 + (index * 0.04)),
                             ),
                           ),
                         ),
@@ -186,7 +186,7 @@ class HomeScreenController extends GetxController {
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xFFEF476F).withOpacity(0.4),
+                            color: const Color(0xFFEF476F).withValues(alpha: 0.4),
                             blurRadius: 20,
                             offset: const Offset(0, 8),
                           ),

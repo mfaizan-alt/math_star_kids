@@ -3,7 +3,6 @@ import 'package:confetti/confetti.dart';
 import 'package:get/get.dart';
 import '../../../core/commonWidgets/ads/ad_Manager.dart';
 import '../../../core/commonWidgets/result_dialog.dart';
-import '../../progress/progress.dart';
 import '../../progress/progress_controller.dart';
 
 class SubtractionController extends GetxController {
@@ -74,6 +73,8 @@ class SubtractionController extends GetxController {
   }
 
   void checkAnswer(int selected) {
+    if (selectedOption != null) return;
+
     selectedOption = selected;
     isCorrect = selected == correctAnswer;
 
@@ -104,8 +105,7 @@ class SubtractionController extends GetxController {
 
   void playAgain() {
     Get.back();                    // close dialog first
-    AdManager.instance.show();     // then show ad
-    AdManager.instance.load();     // then show ad
+    AdManager.instance.show();     // show() preloads the next ad on dismiss
     score = 0;
     questionNumber = 0;
     generateQuestion();

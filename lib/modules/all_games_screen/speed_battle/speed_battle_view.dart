@@ -59,7 +59,7 @@ class SpeedBattleScreen extends StatelessWidget {
     final feedback = player == 1 ? c.feedbackP1 : c.feedbackP2;
 
     return Container(
-      color: Colors.grey.withOpacity(0.1),
+      color: Colors.grey.withValues(alpha: 0.1),
       child: Center(
         child: feedback.isNotEmpty
             ? Text(feedback, style: const TextStyle(fontSize: 40))

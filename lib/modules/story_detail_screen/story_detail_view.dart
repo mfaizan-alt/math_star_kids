@@ -91,7 +91,7 @@ class StoryDetailView extends GetView<StoryDetailController> {
                 borderRadius: BorderRadius.circular(14),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.08),
+                    color: Colors.black.withValues(alpha: 0.08),
                     blurRadius: 8,
                     offset: const Offset(0, 3),
                   ),
@@ -132,7 +132,7 @@ class StoryDetailView extends GetView<StoryDetailController> {
               borderRadius: BorderRadius.circular(14),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.06),
+                  color: Colors.black.withValues(alpha: 0.06),
                   blurRadius: 8,
                   offset: const Offset(0, 3),
                 ),
@@ -176,8 +176,8 @@ class StoryDetailView extends GetView<StoryDetailController> {
                 color: isDone
                     ? accentColor
                     : isCurrent
-                    ? accentColor.withOpacity(0.5)
-                    : Colors.white.withOpacity(0.6),
+                    ? accentColor.withValues(alpha: 0.5)
+                    : Colors.white.withValues(alpha: 0.6),
               ),
             ),
           );
@@ -196,7 +196,7 @@ class StoryDetailView extends GetView<StoryDetailController> {
         borderRadius: BorderRadius.circular(28),
         boxShadow: [
           BoxShadow(
-            color: accentColor.withOpacity(0.2),
+            color: accentColor.withValues(alpha: 0.2),
             blurRadius: 24,
             offset: const Offset(0, 8),
           ),
@@ -213,7 +213,7 @@ class StoryDetailView extends GetView<StoryDetailController> {
               fit: BoxFit.cover,
               errorBuilder: (context, error, stack) {
                 return Container(
-                  color: accentColor.withOpacity(0.1),
+                  color: accentColor.withValues(alpha: 0.1),
                   child: Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -221,14 +221,14 @@ class StoryDetailView extends GetView<StoryDetailController> {
                         Icon(
                           Icons.broken_image_outlined,
                           size: 48,
-                          color: accentColor.withOpacity(0.4),
+                          color: accentColor.withValues(alpha: 0.4),
                         ),
                         const SizedBox(height: 8),
                         Text(
                           'Image not found',
                           style: GoogleFonts.nunito(
                             fontSize: 12,
-                            color: accentColor.withOpacity(0.5),
+                            color: accentColor.withValues(alpha: 0.5),
                             fontWeight: FontWeight.w700,
                           ),
                         ),
@@ -240,7 +240,7 @@ class StoryDetailView extends GetView<StoryDetailController> {
                             '${scene['image']}',
                             style: TextStyle(
                               fontSize: 9,
-                              color: accentColor.withOpacity(0.4),
+                              color: accentColor.withValues(alpha: 0.4),
                             ),
                             textAlign: TextAlign.center,
                           ),
@@ -262,7 +262,7 @@ class StoryDetailView extends GetView<StoryDetailController> {
                     begin: Alignment.bottomCenter,
                     end: Alignment.topCenter,
                     colors: [
-                      Colors.black.withOpacity(0.35),
+                      Colors.black.withValues(alpha: 0.35),
                       Colors.transparent,
                     ],
                   ),
@@ -278,10 +278,10 @@ class StoryDetailView extends GetView<StoryDetailController> {
                   horizontal: 10, vertical: 5,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.35),
+                  color: Colors.black.withValues(alpha: 0.35),
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(
-                    color: Colors.white.withOpacity(0.3),
+                    color: Colors.white.withValues(alpha: 0.3),
                   ),
                 ),
                 child: Obx(() => Text(
@@ -316,7 +316,7 @@ class StoryDetailView extends GetView<StoryDetailController> {
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),
@@ -350,7 +350,7 @@ class StoryDetailView extends GetView<StoryDetailController> {
             borderRadius: BorderRadius.circular(18),
             boxShadow: [
               BoxShadow(
-                color: accentColor.withOpacity(0.4),
+                color: accentColor.withValues(alpha: 0.4),
                 blurRadius: 20,
                 offset: const Offset(0, 8),
               ),
@@ -425,7 +425,7 @@ class StoryDetailView extends GetView<StoryDetailController> {
       } else if (value == selected) {
         btnColor = AppColors.coralColor;
       } else {
-        btnColor = accentColor.withOpacity(0.3);
+        btnColor = accentColor.withValues(alpha: 0.3);
       }
 
       return GestureDetector(
@@ -437,7 +437,7 @@ class StoryDetailView extends GetView<StoryDetailController> {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: btnColor.withOpacity(0.35),
+                color: btnColor.withValues(alpha: 0.35),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
@@ -474,13 +474,13 @@ class StoryDetailView extends GetView<StoryDetailController> {
           ),
           decoration: BoxDecoration(
             color: correct
-                ? AppColors.mintGreen.withOpacity(0.12)
-                : AppColors.coralColor.withOpacity(0.10),
+                ? AppColors.mintGreen.withValues(alpha: 0.12)
+                : AppColors.coralColor.withValues(alpha: 0.10),
             borderRadius: BorderRadius.circular(14),
             border: Border.all(
               color: correct
-                  ? AppColors.mintGreen.withOpacity(0.4)
-                  : AppColors.coralColor.withOpacity(0.3),
+                  ? AppColors.mintGreen.withValues(alpha: 0.4)
+                  : AppColors.coralColor.withValues(alpha: 0.3),
               width: 1.5,
             ),
           ),
@@ -549,7 +549,7 @@ class StoryDetailView extends GetView<StoryDetailController> {
               textAlign: TextAlign.center,
               style: GoogleFonts.nunito(
                 fontSize: 16,
-                color: Colors.white.withOpacity(0.7),
+                color: Colors.white.withValues(alpha: 0.7),
                 fontWeight: FontWeight.w700,
               ),
             ),
@@ -562,10 +562,10 @@ class StoryDetailView extends GetView<StoryDetailController> {
                 horizontal: 28, vertical: 12,
               ),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.08),
+                color: Colors.white.withValues(alpha: 0.08),
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
-                  color: Colors.white.withOpacity(0.12),
+                  color: Colors.white.withValues(alpha: 0.12),
                 ),
               ),
               child: Text(
@@ -597,7 +597,7 @@ class StoryDetailView extends GetView<StoryDetailController> {
                     borderRadius: BorderRadius.circular(18),
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xFFEF476F).withOpacity(0.4),
+                        color: const Color(0xFFEF476F).withValues(alpha: 0.4),
                         blurRadius: 20,
                         offset: const Offset(0, 8),
                       ),

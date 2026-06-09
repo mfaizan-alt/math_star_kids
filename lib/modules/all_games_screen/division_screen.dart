@@ -7,7 +7,6 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../core/colors/colors.dart';
 import '../../core/commonWidgets/ads/ad_Manager.dart';
 import '../../core/commonWidgets/all_widgets.dart';
-import '../progress/progress.dart';
 import '../progress/progress_controller.dart';
 
 class DivisionScreen extends StatefulWidget {

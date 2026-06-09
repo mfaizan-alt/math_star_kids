@@ -2,7 +2,6 @@
 
 
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'interstitial_ad.dart';
 
 class AdManager {
   AdManager._();
@@ -36,6 +35,11 @@ class AdManager {
 
     _ad!.fullScreenContentCallback = FullScreenContentCallback(
       onAdDismissedFullScreenContent: (ad) {
+        ad.dispose();
+        _ad = null;
+        load(); // preload next
+      },
+      onAdFailedToShowFullScreenContent: (ad, error) {
         ad.dispose();
         _ad = null;
         load(); // preload next

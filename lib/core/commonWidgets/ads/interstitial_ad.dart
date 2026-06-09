@@ -4,6 +4,7 @@
 
 
 
+import 'package:flutter/foundation.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class InterstitialAdService {
@@ -33,11 +34,11 @@ class InterstitialAdService {
             },
           );
 
-          print("✅ Interstitial Ad Loaded");
+          debugPrint("✅ Interstitial Ad Loaded");
         },
         onAdFailedToLoad: (error) {
           _ad = null;
-          print("❌ Ad failed to load: $error");
+          debugPrint("❌ Ad failed to load: $error");
         },
       ),
     );
@@ -52,6 +53,12 @@ class InterstitialAdService {
     }
 
     _ad!.show();
+    _ad = null;
+  }
+
+  /// DISPOSE any preloaded ad that was never shown (call from onClose)
+  void dispose() {
+    _ad?.dispose();
     _ad = null;
   }
 }

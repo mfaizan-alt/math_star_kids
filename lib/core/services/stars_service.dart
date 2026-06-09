@@ -16,11 +16,12 @@ class StarsService extends GetxService {
   // Callback when 40 stars reached (for unlocking premium content)
   Function? onMasteryReached;
 
-  @override
-  Future<void> onInit() async {
-    super.onInit();
+  /// Initialize storage and load the persisted total.
+  /// Call via `Get.putAsync` so dependents never read `_prefs` before it's set.
+  Future<StarsService> init() async {
     _prefs = await SharedPreferences.getInstance();
     await loadTotalStars();
+    return this;
   }
 
   /// Load total stars from storage

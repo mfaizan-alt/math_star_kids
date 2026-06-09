@@ -39,7 +39,7 @@ class SplashScreenView extends GetView<SplashScreenController> {
                 height: 300,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.white.withOpacity(0.08),
+                  color: Colors.white.withValues(alpha: 0.08),
                 ),
               ),
             ),
@@ -51,7 +51,7 @@ class SplashScreenView extends GetView<SplashScreenController> {
                 height: 200,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.white.withOpacity(0.08),
+                  color: Colors.white.withValues(alpha: 0.08),
                 ),
               ),
             ),
@@ -81,7 +81,7 @@ class SplashScreenView extends GetView<SplashScreenController> {
                     color: Colors.white,
                     shadows: [
                       Shadow(
-                        color: Colors.black.withOpacity(0.2),
+                        color: Colors.black.withValues(alpha: 0.2),
                         offset: const Offset(0, 4),
                         blurRadius: 12,
                       ),
@@ -93,7 +93,7 @@ class SplashScreenView extends GetView<SplashScreenController> {
                   'Learn · Play · Grow',
                   style: GoogleFonts.googleSans(
                     fontSize: 16,
-                    color: Colors.white.withOpacity(0.85),
+                    color: Colors.white.withValues(alpha: 0.85),
                     fontWeight: FontWeight.w700,
                     letterSpacing: 1.0,
                   ),
@@ -104,7 +104,7 @@ class SplashScreenView extends GetView<SplashScreenController> {
                   width: 140,
                   height: 6,
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.25),
+                    color: Colors.white.withValues(alpha: 0.25),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   alignment: Alignment.centerLeft,

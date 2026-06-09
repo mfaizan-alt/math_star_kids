@@ -119,7 +119,6 @@ class FrogJumpController extends GetxController {
 
       Future.delayed(const Duration(seconds: 1), () {
         AdManager.instance.show();
-        AdManager.instance.load();
       });
     } else {
       Future.delayed(const Duration(milliseconds: 800), () {

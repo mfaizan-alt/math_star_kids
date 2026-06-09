@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart' show AlertDialog, Text, TextButton;
 import 'package:get/get.dart';
 
 class MathHomeController extends GetxController {

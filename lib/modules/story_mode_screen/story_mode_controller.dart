@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 
 import '../../core/routes/routes.dart';
 import '../../core/services/stars_service.dart';
-import '../story_detail_screen/story_detail_view.dart';
 
 class StoryModeController extends GetxController {
   final selectedType = 'math'.obs;
