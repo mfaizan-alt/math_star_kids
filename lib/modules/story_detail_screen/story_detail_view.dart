@@ -14,14 +14,14 @@ class StoryDetailView extends GetView<StoryDetailController> {
   Widget build(BuildContext context) {
     return Obx(() => controller.storyCompleted.value
         ? _buildCelebration()
-        : _buildStoryScreen(),
+        : _buildStoryScreen(context),
     );
   }
 
   // ══════════════════════════════════════════════
   // MAIN STORY SCREEN
   // ══════════════════════════════════════════════
-  Widget _buildStoryScreen() {
+  Widget _buildStoryScreen(BuildContext context) {
     return Obx(() {
       final scene = controller.currentSceneData;
       final bg = scene['bg'] as String;
@@ -29,13 +29,14 @@ class StoryDetailView extends GetView<StoryDetailController> {
       final accentColor = controller.sceneAccent(bg);
 
       return Scaffold(
-        backgroundColor: bgColor,
+        // backgroundColor: bgColor,
+        backgroundColor: TC.bg(context),
         body: SafeArea(
           child: Column(
             children: [
 
               // Top Bar
-              _buildTopBar(accentColor),
+              _buildTopBar(context,accentColor),
 
               // Scene Progress Dots
               _buildSceneDots(accentColor),
@@ -67,7 +68,7 @@ class StoryDetailView extends GetView<StoryDetailController> {
   }
 
   // ── Top Bar ─────────────────────────────────────
-  Widget _buildTopBar(Color accentColor) {
+  Widget _buildTopBar(BuildContext context,Color accentColor) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
       child: Row(

@@ -104,10 +104,18 @@ class AppColors {
   static const Color multiplication = Color(0xFFFFD93D);
   static const Color division = Color(0xFF6BCB77);
   static const Color numbers = Color(0xFF4D96FF);
-  static const Color quiz = Color(0xFFFF8E53);
   static const Color counting = Color(0xFFAD6BFF);
+  static const Color quiz = Color(0xFFFF8E53);
+
   static const Color shapes = Color(0xFFFF6EB4);
 
+  // Add in AppColors — dark variants for module cards
+  // static const Color counting     = Color(0xFF2D9E96); // darker teal
+  // static const Color addition     = Color(0xFF2D9E96); // darker teal
+  // static const Color subtraction  = Color(0xFFCC3333); // darker red
+  // static const Color multiplication = Color(0xFFCCA800); // darker yellow
+  // static const Color division    = Color(0xFF3D8C45); // darker green
+  // static const Color numbers      = Color(0xFF1A5FCC); // darker blue
   // Game Colors
   static const Color correct = Color(0xFF4ECDC4);
   static const Color incorrect = Color(0xFFFF6B6B);
@@ -117,5 +125,26 @@ class AppColors {
   static const Color gold = Color(0xFFFFD700);
 
 
+}
 
+class TC {
+  // Background
+  static Color bg(BuildContext context) =>
+      Theme.of(context).scaffoldBackgroundColor;
+
+  // Card / container surface
+  static Color card(BuildContext context) =>
+      Theme.of(context).cardTheme.color ?? Theme.of(context).colorScheme.surface;
+
+  // Primary text
+  static Color text(BuildContext context) =>
+      Theme.of(context).colorScheme.onSurface;
+
+  // Secondary / hint text
+  static Color textSub(BuildContext context) =>
+      Theme.of(context).colorScheme.onSurfaceVariant;
+
+  // Divider / progress bg
+  static Color divider(BuildContext context) =>
+      Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.12);
 }

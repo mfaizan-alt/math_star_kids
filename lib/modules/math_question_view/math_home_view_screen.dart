@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:math_carnival_kids/core/commonWidgets/theme.dart';
 
 import '../../core/colors/colors.dart';
+import '../../core/commonWidgets/ads/banner_ads.dart';
 import '../../core/routes/routes.dart';
 import 'math_home_view_controller.dart';
 
 class MathHomeView extends GetView <MathHomeController>{
   const MathHomeView({super.key});
 
+
   @override
   Widget build(BuildContext context) {
+    final isDark = Get.find<ThemeController>().isDarkMode;
     return Scaffold(
-      backgroundColor: AppColors.cream,
+      // backgroundColor: AppColors.cream,
+      backgroundColor: TC.bg(context),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -30,12 +35,13 @@ class MathHomeView extends GetView <MathHomeController>{
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
 
-                    // ── Section Title ───────────────
+                    // ── Section Title
                     Text(
                       'Pick a Mode! 🎯',
                       style: GoogleFonts.aBeeZee(
                         fontSize: 22,
-                        color: AppColors.navy,
+                        // color: AppColors.navy,
+                        color: isDark ? Colors.white : Colors.black
                       ),
                     ),
                     const SizedBox(height: 6),
@@ -43,7 +49,7 @@ class MathHomeView extends GetView <MathHomeController>{
                       'What do you want to learn today?',
                       style: GoogleFonts.nunito(
                         fontSize: 14,
-                        color: AppColors.grey,
+                        color: isDark ? Colors.white : Colors.black,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -52,15 +58,14 @@ class MathHomeView extends GetView <MathHomeController>{
 
                     const SizedBox(height: 20),
 
-                    // ── Quiz Card ───────────────────
+                    // ── Quiz Card
                     _buildQuizCard(),
                     const SizedBox(height: 16),
 
-                    // ── Tables Card ─────────────────
+                    // ── Tables Card
                     _buildTablesCard(),
                     const SizedBox(height: 16),
 
-                    // ── Fun Fact Strip ──────────────
 
 
                   ],
@@ -70,6 +75,7 @@ class MathHomeView extends GetView <MathHomeController>{
           ),
         ),
       ),
+      bottomNavigationBar: const BannerAdWidget(),
     );
   }
 
@@ -503,6 +509,8 @@ class MathHomeView extends GetView <MathHomeController>{
 
   // ── Fun Fact Strip ──────────────────────────────
   Widget _buildFunFactStrip() {
+    final isDark = Get.find<ThemeController>().isDarkMode;
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
@@ -519,12 +527,13 @@ class MathHomeView extends GetView <MathHomeController>{
         children: [
           const Text('💡', style: TextStyle(fontSize: 28)),
           const SizedBox(width: 12),
+
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
 
-                // Title row with fact counter
+                // Title + dots
                 Obx(() => Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -532,10 +541,10 @@ class MathHomeView extends GetView <MathHomeController>{
                       'Fun Math Fact!',
                       style: GoogleFonts.fredoka(
                         fontSize: 15,
-                        color: AppColors.navy,
+                        color: isDark ? Colors.white : Colors.black,
                       ),
                     ),
-                    // Fact counter dots
+
                     Row(
                       children: List.generate(
                         controller.mathFacts.length > 5
@@ -547,7 +556,8 @@ class MathHomeView extends GetView <MathHomeController>{
                           height: 6,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: index == controller.factIndex.value % 5
+                            color: index ==
+                                controller.currentIndex.value % 5
                                 ? AppColors.orangeColor
                                 : AppColors.orangeColor.withValues(alpha: 0.25),
                           ),
@@ -559,53 +569,45 @@ class MathHomeView extends GetView <MathHomeController>{
 
                 const SizedBox(height: 6),
 
-                // Animated fact text
-                Obx(() => AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 500),
-                  transitionBuilder: (child, animation) {
-                    return FadeTransition(
-                      opacity: animation,
-                      child: SlideTransition(
-                        position: Tween<Offset>(
-                          begin: const Offset(0, 0.3),
-                          end: Offset.zero,
-                        ).animate(animation),
-                        child: child,
-                      ),
-                    );
+                // Fact text
+                Obx(() => GestureDetector(
+                  onHorizontalDragEnd: (details) {
+                    if (details.primaryVelocity == null) return;
+
+                    if (details.primaryVelocity! < 0) {
+                      controller.nextFact();
+                    } else {
+                      controller.prevFact();
+                    }
+
+                    controller.restartProgress(); // 🔥 FIX
                   },
-                  child: Text(
-                    controller.currentFact.value,
-                    key: ValueKey(controller.currentFact.value),
-                    style: GoogleFonts.nunito(
-                      fontSize: 13,
-                      color: AppColors.grey,
-                      fontWeight: FontWeight.w600,
-                      height: 1.5,
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 500),
+                    child: Text(
+                      controller.currentFact,
+                      key: ValueKey(controller.currentIndex.value),
+                      style: GoogleFonts.nunito(
+                        fontSize: 13,
+                        color: isDark ? Colors.white : Colors.black,
+                        fontWeight: FontWeight.w600,
+                        height: 1.5,
+                      ),
                     ),
                   ),
                 )),
 
                 const SizedBox(height: 8),
 
-                // Timer indicator bar
-                Obx(() => TweenAnimationBuilder<double>(
-                  key: ValueKey(controller.factIndex.value),
-                  tween: Tween(begin: 0.0, end: 1.0),
-                  duration: const Duration(seconds: 15),
-                  builder: (context, value, _) {
-                    return ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: LinearProgressIndicator(
-                        value: value,
-                        backgroundColor: AppColors.orangeColor.withValues(alpha: 0.15),
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          AppColors.orangeColor.withValues(alpha: 0.6),
-                        ),
-                        minHeight: 3,
-                      ),
-                    );
-                  },
+                // 🔥 FIX: progress bar (REPLACES TweenAnimationBuilder)
+                Obx(() => LinearProgressIndicator(
+                  value: controller.progress.value,
+                  backgroundColor:
+                  AppColors.orangeColor.withValues(alpha: 0.15),
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    AppColors.orangeColor.withValues(alpha: 0.6),
+                  ),
+                  minHeight: 3,
                 )),
               ],
             ),

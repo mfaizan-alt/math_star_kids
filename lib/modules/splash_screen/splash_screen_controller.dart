@@ -16,7 +16,7 @@ class SplashScreenController extends GetxController {
   void _scheduleNavigation() {
     final setupDone = box.read<bool>('setupDone') ?? false;
 
-    _navigationTimer = Timer(const Duration(seconds: 3), () {
+    _navigationTimer = Timer(const Duration(seconds: 2), () {
       Get.offNamed(setupDone ? Routes.homeScreen : Routes.setUpScreen);
     });
   }

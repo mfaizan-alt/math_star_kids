@@ -5,6 +5,7 @@ import 'package:confetti/confetti.dart';
 
 import '../../../core/commonWidgets/ads/ad_manager.dart';
 import '../../../core/commonWidgets/ads/reward_ad.dart';
+import '../../../core/commonWidgets/theme.dart';
 import 'frog_jump_controller.dart';
 
 class FrogJumpScreen extends StatelessWidget {
@@ -15,56 +16,60 @@ class FrogJumpScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Obx(() {
-        return Stack(
-          children: [
-            Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Color(0xFFB3E5FC),
-                    Color(0xFFC8E6C9),
-                    Color(0xFF81C784),
+    return Obx(() {
+      final isDark = Get.find<ThemeController>().isDarkMode;
+
+      return Scaffold(
+        body: Obx(() {
+          return Stack(
+            children: [
+              Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Color(0xFFB3E5FC),
+                      Color(0xFFC8E6C9),
+                      Color(0xFF81C784),
+                    ],
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 42,
+                left: -30,
+                child: _bubble(90, Colors.white.withValues(alpha: 0.15)),
+              ),
+              Positioned(
+                top: 120,
+                right: -20,
+                child: _bubble(70, Colors.white.withValues(alpha: 0.12)),
+              ),
+              Positioned(
+                bottom: 140,
+                left: -18,
+                child: _bubble(60, Colors.white.withValues(alpha: 0.10)),
+              ),
+              SafeArea(
+                child: Column(
+                  children: [
+                    _topBar(isDark),
+                    const SizedBox(height: 8),
+                    if (!controller.isGameStarted.value && !controller.isGameOver.value)
+                      Expanded(child: _startScreen(isDark)),
+                    if (controller.isGameStarted.value)
+                      Expanded(child: _gameUI(isDark)),
+                    if (controller.isGameOver.value)
+                      Expanded(child: _gameOver(isDark)),
                   ],
                 ),
               ),
-            ),
-            Positioned(
-              top: 42,
-              left: -30,
-              child: _bubble(90, Colors.white.withValues(alpha: 0.15)),
-            ),
-            Positioned(
-              top: 120,
-              right: -20,
-              child: _bubble(70, Colors.white.withValues(alpha: 0.12)),
-            ),
-            Positioned(
-              bottom: 140,
-              left: -18,
-              child: _bubble(60, Colors.white.withValues(alpha: 0.10)),
-            ),
-            SafeArea(
-              child: Column(
-                children: [
-                  _topBar(),
-                  const SizedBox(height: 8),
-                  if (!controller.isGameStarted.value && !controller.isGameOver.value)
-                    Expanded(child: _startScreen()),
-                  if (controller.isGameStarted.value)
-                    Expanded(child: _gameUI()),
-                  if (controller.isGameOver.value)
-                    Expanded(child: _gameOver()),
-                ],
-              ),
-            ),
-          ],
-        );
-      }),
-    );
+            ],
+          );
+        }),
+      );
+    });
   }
 
   Widget _bubble(double size, Color color) {
@@ -78,13 +83,13 @@ class FrogJumpScreen extends StatelessWidget {
     );
   }
 
-  Widget _topBar() {
+  Widget _topBar(bool isDark) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.88),
+          color: isDark ? const Color(0xFF1F1F1F) : Colors.white.withValues(alpha: 0.88),
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
@@ -100,7 +105,7 @@ class FrogJumpScreen extends StatelessWidget {
             IconButton(
               onPressed: () => Get.back(),
               icon: const Icon(Icons.arrow_back_rounded),
-              color: const Color(0xFF1B5E20),
+              color: isDark ? Colors.white : const Color(0xFF1B5E20),
             ),
             Row(
               children: [
@@ -111,7 +116,7 @@ class FrogJumpScreen extends StatelessWidget {
                   style: GoogleFonts.poppins(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
-                    color: const Color(0xFF1B5E20),
+                    color: isDark ? Colors.white : const Color(0xFF1B5E20),
                   ),
                 ),
               ],
@@ -135,13 +140,13 @@ class FrogJumpScreen extends StatelessWidget {
     );
   }
 
-  Widget _startScreen() {
+  Widget _startScreen(bool isDark) {
     return Center(
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 24),
         padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.92),
+          color: isDark ? const Color(0xFF1F1F1F) : Colors.white.withValues(alpha: 0.92),
           borderRadius: BorderRadius.circular(28),
           boxShadow: [
             BoxShadow(
@@ -172,7 +177,7 @@ class FrogJumpScreen extends StatelessWidget {
               style: GoogleFonts.poppins(
                 fontSize: 32,
                 fontWeight: FontWeight.bold,
-                color: const Color(0xFF1B5E20),
+                color: isDark ? Colors.white : const Color(0xFF1B5E20),
               ),
             ),
             const SizedBox(height: 8),
@@ -181,7 +186,7 @@ class FrogJumpScreen extends StatelessWidget {
               textAlign: TextAlign.center,
               style: GoogleFonts.poppins(
                 fontSize: 14,
-                color: Colors.grey[700],
+                color: isDark ? Colors.white70 : Colors.grey[700],
               ),
             ),
             const SizedBox(height: 18),
@@ -252,7 +257,7 @@ class FrogJumpScreen extends StatelessWidget {
     );
   }
 
-  Widget _gameUI() {
+  Widget _gameUI(bool isDark) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       child: Column(
@@ -261,7 +266,7 @@ class FrogJumpScreen extends StatelessWidget {
             width: double.infinity,
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.88),
+              color: isDark ? const Color(0xFF1F1F1F) : Colors.white.withValues(alpha: 0.88),
               borderRadius: BorderRadius.circular(28),
               boxShadow: [
                 BoxShadow(
@@ -279,7 +284,7 @@ class FrogJumpScreen extends StatelessWidget {
                   style: GoogleFonts.poppins(
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
-                    color: const Color(0xFF1B5E20),
+                    color: isDark ? Colors.white : const Color(0xFF1B5E20),
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -287,7 +292,7 @@ class FrogJumpScreen extends StatelessWidget {
                   'Choose the right lily pad!',
                   style: GoogleFonts.poppins(
                     fontSize: 14,
-                    color: Colors.grey[700],
+                    color: isDark ? Colors.white70 : Colors.grey[700],
                   ),
                 ),
               ],
@@ -390,14 +395,16 @@ class FrogJumpScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildGameOverBtn(String label, VoidCallback onTap,
+  Widget _buildGameOverBtn(String label, bool isDark, VoidCallback onTap,
       {bool isPrimary = false}) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
         decoration: BoxDecoration(
-          color: isPrimary ? Colors.teal : Colors.grey[100],
+          color: isPrimary
+              ? Colors.teal
+              : isDark ? const Color(0xFF2C2C2C) : Colors.grey[100],
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(
@@ -405,20 +412,22 @@ class FrogJumpScreen extends StatelessWidget {
           style: GoogleFonts.poppins(
             fontSize: 15,
             fontWeight: FontWeight.w600,
-            color: isPrimary ? Colors.white : const Color(0xFF2D3142),
+            color: isPrimary
+                ? Colors.white
+                : isDark ? Colors.white : const Color(0xFF2D3142),
           ),
         ),
       ),
     );
   }
 
-  Widget _gameOver() {
+  Widget _gameOver(bool isDark) {
     return Center(
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 24),
         padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.95),
+          color: isDark ? const Color(0xFF1F1F1F) : Colors.white.withValues(alpha: 0.95),
           borderRadius: BorderRadius.circular(28),
           boxShadow: [
             BoxShadow(
@@ -438,26 +447,30 @@ class FrogJumpScreen extends StatelessWidget {
               style: GoogleFonts.poppins(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
-                color: const Color(0xFF1B5E20),
+                color: isDark ? Colors.white : const Color(0xFF1B5E20),
               ),
             ),
             const SizedBox(height: 8),
             Text(
               'Score: ${controller.score.value}',
-              style: GoogleFonts.poppins(fontSize: 18),
+              style: GoogleFonts.poppins(
+                fontSize: 18,
+                color: isDark ? Colors.white70 : Colors.black,
+              ),
             ),
             const SizedBox(height: 18),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _buildGameOverBtn('🏠 Home', () {
+                _buildGameOverBtn('🏠 Home', isDark, () {
                   AdManager.instance.show();
                   Future.delayed(const Duration(milliseconds: 300), () {
                     Get.back();
                   });
                 }),
                 const SizedBox(width: 12),
-                _buildGameOverBtn('🔄 Retry', controller.restart, isPrimary: true),
+                _buildGameOverBtn('🔄 Retry', isDark, controller.restart,
+                    isPrimary: true),
               ],
             ),
             const SizedBox(height: 16),

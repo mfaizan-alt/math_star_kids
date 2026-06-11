@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:confetti/confetti.dart';
 import '../../../core/colors/colors.dart';
+import '../../../core/commonWidgets/theme.dart';
 import 'math_puzzle_controller.dart';
 
 class MathPuzzleScreen extends GetView<MathPuzzleController> {
@@ -11,49 +12,54 @@ class MathPuzzleScreen extends GetView<MathPuzzleController> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(MathPuzzleController());
-    return Scaffold(
-      body: Stack(
-        children: [
-          Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Color(0xFFFFF3E0), Color(0xFFFFCC80)],
+
+    return Obx(() {
+      final isDark = Get.find<ThemeController>().isDarkMode;
+
+      return Scaffold(
+        body: Stack(
+          children: [
+            Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xFFFFF3E0), Color(0xFFFFCC80)],
+                ),
               ),
             ),
-          ),
-          SafeArea(
-            child: Obx(() {
-              return Column(
-                children: [
-                  _topBar(),
-                  const SizedBox(height: 20),
-                  Text('Level ${controller.level.value}',
-                      style: GoogleFonts.poppins(fontSize: 22)),
-                  const SizedBox(height: 30),
-                  _slots(),
-                  const SizedBox(height: 40),
-                  _tiles(),
-                  const Spacer(),
-                  Obx(() => controller.showTutorial ? _buildTutorial() : const SizedBox.shrink()),
-                  SizedBox(height: 20),
-                  controller.isComplete.value
-                      ? _nextBtn()
-                      : _resetBtn(),
-                  const SizedBox(height: 20),
-                ],
-              );
-            }),
-          ),
-          Align(
-            alignment: Alignment.topCenter,
-            child: ConfettiWidget(
-              confettiController: controller.confettiController,
-              blastDirectionality: BlastDirectionality.explosive,
+            SafeArea(
+              child: Obx(() {
+                return Column(
+                  children: [
+                    _topBar(),
+                    const SizedBox(height: 20),
+                    Text('Level ${controller.level.value}',
+                        style: GoogleFonts.poppins(fontSize: 22)),
+                    const SizedBox(height: 30),
+                    _slots(isDark),
+                    const SizedBox(height: 40),
+                    _tiles(isDark),
+                    const Spacer(),
+                    Obx(() => controller.showTutorial
+                        ? _buildTutorial()
+                        : const SizedBox.shrink()),
+                    const SizedBox(height: 20),
+                    controller.isComplete.value ? _nextBtn() : _resetBtn(),
+                    const SizedBox(height: 20),
+                  ],
+                );
+              }),
             ),
-          ),
-        ],
-      ),
-    );
+            Align(
+              alignment: Alignment.topCenter,
+              child: ConfettiWidget(
+                confettiController: controller.confettiController,
+                blastDirectionality: BlastDirectionality.explosive,
+              ),
+            ),
+          ],
+        ),
+      );
+    });
   }
 
   // ---------------- UI PARTS ----------------
@@ -77,7 +83,7 @@ class MathPuzzleScreen extends GetView<MathPuzzleController> {
     ),
   );
 
-  Widget _slots() => Obx(() {
+  Widget _slots(bool isDark) => Obx(() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: List.generate(5, (i) {
@@ -89,16 +95,17 @@ class MathPuzzleScreen extends GetView<MathPuzzleController> {
             margin: const EdgeInsets.all(4),
             decoration: BoxDecoration(
               color: controller.current[i].isEmpty
-                  ? Colors.white70
-                  : Colors.white,
+                  ? isDark ? const Color(0xFF2C2C2C) : Colors.white70  // ✅ solid dark
+                  : isDark ? const Color(0xFF1F1F1F) : Colors.white,   // ✅ solid dark
               borderRadius: BorderRadius.circular(12),
             ),
             child: Center(
               child: Text(
-                controller.current[i].isEmpty
-                    ? '?'
-                    : controller.current[i],
-                style: const TextStyle(fontSize: 22),
+                controller.current[i].isEmpty ? '?' : controller.current[i],
+                style: TextStyle(
+                  fontSize: 22,
+                  color: isDark ? Colors.white : Colors.black,
+                ),
               ),
             ),
           ),
@@ -107,7 +114,7 @@ class MathPuzzleScreen extends GetView<MathPuzzleController> {
     );
   });
 
-  Widget _tiles() => Obx(() {
+  Widget _tiles(bool isDark) => Obx(() {
     return Wrap(
       spacing: 10,
       children: controller.tiles.map((t) {
@@ -116,20 +123,23 @@ class MathPuzzleScreen extends GetView<MathPuzzleController> {
           child: Container(
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: isDark ? const Color(0xFF1F1F1F) : Colors.white, // ✅ solid dark
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Text(t, style: const TextStyle(fontSize: 20)),
+            child: Text(
+              t,
+              style: TextStyle(
+                fontSize: 20,
+                color: isDark ? Colors.white : Colors.black,
+              ),
+            ),
           ),
         );
       }).toList(),
     );
   });
 
-  // Widget _nextBtn() => ElevatedButton(
-  //   onPressed: controller.nextLevel,
-  //   child: const Text("Next Level"),
-  // );
+
   Widget _nextBtn() => InkWell(
     onTap: ()=> controller.nextLevel(),
     child: Container(

@@ -2,7 +2,9 @@ import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../../core/colors/colors.dart';
 import '../../../core/commonWidgets/ads/ad_manager.dart';
+import '../../../core/commonWidgets/ads/banner_ads.dart';
 import 'math_table_game_controller.dart';
 
 class MathTablesView extends GetView<MathTableController> {
@@ -26,7 +28,7 @@ class MathTablesView extends GetView<MathTableController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF0F4FF),
+      backgroundColor: TC.bg(context),
       body: Stack(
         children: [
           // Soft background blobs
@@ -77,6 +79,7 @@ class MathTablesView extends GetView<MathTableController> {
           ),
         ],
       ),
+
     );
   }
 
@@ -115,8 +118,10 @@ class MathTablesView extends GetView<MathTableController> {
           ),
         ),
         const SizedBox(height: 16),
+        const BannerAdWidget(),
       ],
     );
+
   }
 
   Widget _pickerHeader() {

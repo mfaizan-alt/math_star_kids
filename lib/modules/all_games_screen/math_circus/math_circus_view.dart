@@ -150,23 +150,64 @@ class _MathCircusScreenState extends State<MathCircusScreen> {
     ));
   }
 
+  // 1. _stats() — text has no color, will be invisible on dark bg in dark mode
+// Replace _stats() with:
   Widget _stats() {
     return Obx(() => Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        Text("Target: ${controller.targetWeight.value}",style: TextStyle(fontSize: 17),),
-        Text("Now: ${controller.currentWeight.value}",style: TextStyle(fontSize: 17),),
+        Text(
+          "Target: ${controller.targetWeight.value}",
+          style: TextStyle(fontSize: 18, color: Colors.black), // ✅
+        ),
+        Text(
+          "Now: ${controller.currentWeight.value}",
+          style: TextStyle(fontSize: 18, color: Colors.black), // ✅
+        ),
       ],
     ));
   }
+
+// 2. _weights() — Colors.black on coralShadow won't work in dark mode
+// Replace _weights() with:
+  Widget _weights() {
+    return Obx(() => Wrap(
+      spacing: 10,
+      children: controller.availableWeights
+          .map((w) => GestureDetector(
+        onTap: () => controller.addWeight(w),
+        child: Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: AppColors.coralColor,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Text(
+            "$w",
+            style: const TextStyle(
+              fontSize: 16,
+              color: Colors.white, // ✅
+            ),
+          ),
+        ),
+      ))
+          .toList(),
+    ));
+  }
+
+// 3. _buildTutorial() — hardcoded Colors.blue.shade50/800/900
+// Replace _buildTutorial() with:
   Widget _buildTutorial() {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.blue.shade50,
+        color: Theme.of(context).cardTheme.color,   // ✅
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.blue.shade300, width: 1.5),
+        border: Border.all(
+          color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.4), // ✅
+          width: 1.5,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -180,7 +221,7 @@ class _MathCircusScreenState extends State<MathCircusScreen> {
                 style: GoogleFonts.poppins(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
-                  color: Colors.blue.shade800,
+                  color: Theme.of(context).colorScheme.primary, // ✅
                 ),
               ),
             ],
@@ -195,6 +236,8 @@ class _MathCircusScreenState extends State<MathCircusScreen> {
     );
   }
 
+// 4. _buildTutorialStep() — hardcoded Colors.blue.shade900
+// Replace _buildTutorialStep() with:
   Widget _buildTutorialStep(String emoji, String text) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 6),
@@ -208,30 +251,12 @@ class _MathCircusScreenState extends State<MathCircusScreen> {
               text,
               style: GoogleFonts.poppins(
                 fontSize: 13,
-                color: Colors.blue.shade900,
+                color: Theme.of(context).colorScheme.onSurface, // ✅
               ),
             ),
           ),
         ],
       ),
     );
-  }
-
-  Widget _weights() {
-    return Obx(() => Wrap(
-      spacing: 10,
-      children: controller.availableWeights
-          .map(
-            (w) => GestureDetector(
-          onTap: () => controller.addWeight(w),
-          child: Container(
-            padding: const EdgeInsets.all(12),
-            color: AppColors.coralShadow,
-            child: Text("$w",style: TextStyle(fontSize: 16,color: Colors.black),),
-          ),
-        ),
-      )
-          .toList(),
-    ));
   }
 }

@@ -127,35 +127,112 @@ class _NumberBuilderScreenState extends State<NumberBuilderScreen> {
       ),
     );
   }
+  Widget _currentBox() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.2),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Obx(
+            () => Text(
+          "Your Number: ${controller.currentNumber}",
+          style: const TextStyle(color: Colors.white, fontSize: 22),
+        ),
+      ),
+    );
+  }
 
+  // 1. _targetBox() — Colors.white hardcoded
   Widget _targetBox() {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardTheme.color, // ✅
         borderRadius: BorderRadius.circular(20),
       ),
       child: Column(
         children: [
-          const Text("Build this number"),
-          Obx(
-            () => Text(
-              "${controller.targetNumber.value}",
-              style: const TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
-            ),
+          Text(
+            "Build this number",
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurface), // ✅
           ),
+          Obx(() => Text(
+            "${controller.targetNumber.value}",
+            style: TextStyle(
+              fontSize: 40,
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.onSurface, // ✅
+            ),
+          )),
         ],
       ),
     );
   }
+
+// 2. _blockControl() — Colors.white hardcoded on container
+  Widget _blockControl(String label, RxInt value, Function(int) onChanged) {
+    return Obx(() => Container(
+      margin: const EdgeInsets.only(top: 10),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardTheme.color, // ✅
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Row(
+        children: [
+          Text(
+            label,
+            style: GoogleFonts.aBeeZee(
+              fontSize: 16,
+              color: Theme.of(context).colorScheme.onSurface, // ✅
+            ),
+          ),
+          const Spacer(),
+          IconButton(
+            onPressed: value.value > 0 ? () => onChanged(value.value - 1) : null,
+            icon: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: AppColors.lightRed,
+              ),
+              child: const Icon(Icons.remove),
+            ),
+          ),
+          Text(
+            "${value.value}",
+            style: TextStyle(
+              fontSize: 20,
+              color: Theme.of(context).colorScheme.onSurface, // ✅
+            ),
+          ),
+          IconButton(
+            onPressed: () => onChanged(value.value + 1),
+            icon: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: AppColors.yellowColor,
+              ),
+              child: const Icon(Icons.add),
+            ),
+          ),
+        ],
+      ),
+    ));
+  }
+
+// 3. _buildTutorial() — Colors.green.shade50/800 hardcoded
   Widget _buildTutorial() {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.green.shade50,
+        color: Theme.of(context).cardTheme.color, // ✅
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.green.shade300, width: 1.5),
+        border: Border.all(
+          color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.4), // ✅
+          width: 1.5,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -169,7 +246,7 @@ class _NumberBuilderScreenState extends State<NumberBuilderScreen> {
                 style: GoogleFonts.poppins(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
-                  color: Colors.green.shade800,
+                  color: Theme.of(context).colorScheme.primary, // ✅
                 ),
               ),
             ],
@@ -184,6 +261,7 @@ class _NumberBuilderScreenState extends State<NumberBuilderScreen> {
     );
   }
 
+// 4. _buildTutorialStep() — Colors.green.shade900 hardcoded
   Widget _buildTutorialStep(String emoji, String text) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 6),
@@ -197,69 +275,11 @@ class _NumberBuilderScreenState extends State<NumberBuilderScreen> {
               text,
               style: GoogleFonts.poppins(
                 fontSize: 13,
-                color: Colors.green.shade900,
+                color: Theme.of(context).colorScheme.onSurface, // ✅
               ),
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _currentBox() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.2),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Obx(
-        () => Text(
-          "Your Number: ${controller.currentNumber}",
-          style: const TextStyle(color: Colors.white, fontSize: 22),
-        ),
-      ),
-    );
-  }
-
-  Widget _blockControl(String label, RxInt value, Function(int) onChanged) {
-    return Obx(
-      () => Container(
-        margin: const EdgeInsets.only(top: 10),
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Row(
-          children: [
-            Text(label, style: GoogleFonts.aBeeZee(fontSize: 16)),
-            const Spacer(),
-            IconButton(
-              onPressed: value.value > 0
-                  ? () => onChanged(value.value - 1)
-                  : null,
-              icon: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: AppColors.lightRed,
-                ),
-                child: const Icon(Icons.remove),
-              ),
-            ),
-            Text("${value.value}",style: TextStyle(fontSize: 20),),
-            IconButton(
-              onPressed: () => onChanged(value.value + 1),
-              icon: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: AppColors.yellowColor,
-                ),
-                child: const Icon(Icons.add),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

@@ -7,6 +7,7 @@ import '../../core/services/stars_service.dart';
 class StoryModeController extends GetxController {
   final selectedType = 'math'.obs;
 
+
   final RxList<Map<String, dynamic>> stories = <Map<String, dynamic>>[
 
     // Story 1 Mango Orchard story (MATH)
@@ -61,19 +62,19 @@ class StoryModeController extends GetxController {
       "stars": 2,
       "scenes": [
         {
-          "image": "assets/images/cookieStory/cookieScene1.jpeg",
+          "image": "assets/images/cookieStory/scene1.jpeg",
           "bg": "pink",
           "text": "Sara loves baking cookies. Today she is making a special batch for her whole family!",
           "hasQuestion": false
         },
         {
-          "image": "assets/images/cookieStory/cookieScene2.jpeg",
+          "image": "assets/images/cookieStory/scene2.jpeg",
           "bg": "yellow",
           "text": "Sara baked 8 chocolate cookies and put them on a tray. Then she baked 6 more vanilla cookies.",
           "hasQuestion": false
         },
         {
-          "image": "assets/images/cookieStory/cookieScene3.jpeg",
+          "image": "assets/images/cookieStory/scene3.jpeg",
           "bg": "orange",
           "text": "Sara has 8 chocolate cookies and 6 vanilla cookies. How many cookies does Sara have in total?",
           "hasQuestion": true,
@@ -81,7 +82,7 @@ class StoryModeController extends GetxController {
           "answer": 14
         },
         {
-          "image": "assets/images/cookieStory/cookieScene4.jpeg",
+          "image": "assets/images/cookieStory/scene4.jpeg",
           "bg": "coral",
           "text": "Sara had 14 cookies! She packed them in a box and gave them to her family. Everyone loved them!",
           "hasQuestion": false
@@ -624,10 +625,13 @@ class StoryModeController extends GetxController {
 
   List<Map<String, dynamic>> get filteredStories {
     return stories.where((story) {
-      if (story["type"] != selectedType.value) return false;
-      if (story["isPremium"] == true) return isStoryUnlocked();
-      return true;
+      return story["type"] == selectedType.value;
     }).toList();
+  }
+
+  bool isStoryLocked(Map<String, dynamic> story) {
+    if (story["isPremium"] != true) return false;
+    return !isStoryUnlocked();
   }
 
   bool isStoryUnlocked() {

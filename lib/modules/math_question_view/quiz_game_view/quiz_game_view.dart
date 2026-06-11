@@ -11,7 +11,8 @@ class QuizGameView extends GetView<QuizGameController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFE8E8FF), // light purple like reference
+      // backgroundColor: const Color(0xFFE8E8FF), // light purple like reference
+      backgroundColor: TC.bg(context),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),

@@ -8,10 +8,10 @@ import '../../modules/gamesHome/games_home_bindings.dart';
 import '../../modules/gamesHome/games_home_screen_view.dart';
 import '../../modules/home_screen/home_screen_binding.dart';
 import '../../modules/home_screen/home_screen_view.dart';
+import '../../modules/math_question_view/math_Tablegame_view/math_table_game_bindings.dart';
+import '../../modules/math_question_view/math_Tablegame_view/math_table_game_view.dart';
 import '../../modules/math_question_view/math_home_view_binding.dart';
 import '../../modules/math_question_view/math_home_view_screen.dart';
-import '../../modules/math_question_view/math_game_view/math_table_game_bindings.dart';
-import '../../modules/math_question_view/math_game_view/math_table_game_view.dart';
 import '../../modules/math_question_view/quiz_game_view/quiz_game_binding.dart';
 import '../../modules/math_question_view/quiz_game_view/quiz_game_view.dart';
 import '../../modules/math_question_view/quiz_game_view/quiz_result_view.dart';
@@ -58,7 +58,7 @@ abstract class Routes {
     ),
     GetPage(
       name: mathScreen,
-      page: () => const MathHomeView(),
+      page: () =>  MathHomeView(),
       binding: MathHomeBindings(),
     ),
     GetPage(

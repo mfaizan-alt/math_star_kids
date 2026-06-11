@@ -4,49 +4,56 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:math_carnival_kids/modules/set_up_screen/set_up_controller.dart';
 
 import '../../core/colors/colors.dart';
+import '../../core/commonWidgets/ads/banner_ads.dart';
+import '../../core/commonWidgets/theme.dart';
 
 class SetupScreenView extends GetView<SetUpScreenController> {
   const SetupScreenView({super.key});
 
+// 1. isDark must come from Obx, not just Get.find (won't rebuild)
+// Replace the build method start:
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.cream,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildHeader(),
-              const SizedBox(height: 28),
-              _buildNameField(),
-              const SizedBox(height: 28),
-              _buildAvatarSection(),
-              const SizedBox(height: 40),
-              _buildLetsGoButton(),
-              const SizedBox(height: 20),
-            ],
+    return Obx(() {
+      final isDark = Get.find<ThemeController>().isDarkMode;
+      return Scaffold(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor, // ✅
+        body: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildHeader(isDark),        // ✅ pass isDark
+                const SizedBox(height: 28),
+                _buildNameField(isDark),     // ✅ pass isDark
+                const SizedBox(height: 28),
+                _buildAvatarSection(isDark), // ✅ pass isDark
+                const SizedBox(height: 40),
+                _buildLetsGoButton(),
+                const SizedBox(height: 20),
+              ],
+            ),
           ),
         ),
-      ),
-    );
+        bottomNavigationBar: BannerAdWidget(
+            adUnitId: 'ca-app-pub-3940256099942544/6300978111'),
+      );
+    });
   }
 
-  // ── Header ──────────────────────────────────────
-  Widget _buildHeader() {
+// 2. _buildHeader — AppColors.navy hardcoded
+  Widget _buildHeader(bool isDark) {
     return Column(
       children: [
-        const Center(
-          child: Text('👋', style: TextStyle(fontSize: 55)),
-        ),
+        const Center(child: Text('👋', style: TextStyle(fontSize: 55))),
         const SizedBox(height: 12),
         Center(
           child: Text(
             "What's Your Name?",
             style: GoogleFonts.aBeeZee(
               fontSize: 28,
-              color: AppColors.navy,
+              color: isDark ? Colors.white : AppColors.navy, // ✅
             ),
           ),
         ),
@@ -56,7 +63,7 @@ class SetupScreenView extends GetView<SetUpScreenController> {
             'Your parent can set this up for you!',
             style: GoogleFonts.nunito(
               fontSize: 14,
-              color: AppColors.grey,
+              color: AppColors.grey, // grey works on both themes
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -65,13 +72,16 @@ class SetupScreenView extends GetView<SetUpScreenController> {
     );
   }
 
-  // ── Name Field ──────────────────────────────────
-  Widget _buildNameField() {
+// 3. _buildNameField — AppColors.white bg, AppColors.navy text
+  Widget _buildNameField(bool isDark) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: isDark ? const Color(0xFF1F1F1F) : AppColors.white,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: Colors.black, width: 2.5),
+        border: Border.all(
+          color: isDark ? Colors.white24 : Colors.black,
+          width: 2.5,
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.05),
@@ -85,13 +95,13 @@ class SetupScreenView extends GetView<SetUpScreenController> {
         textAlign: TextAlign.center,
         style: GoogleFonts.aBeeZee(
           fontSize: 22,
-          color: AppColors.navy,
+          color: isDark ? Colors.white : AppColors.navy,
         ),
         decoration: InputDecoration(
           hintText: 'Enter name here...',
           hintStyle: GoogleFonts.aBeeZee(
             fontSize: 18,
-            color: Colors.black,
+            color: isDark ? Colors.white38 : Colors.black,
           ),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(
@@ -103,8 +113,7 @@ class SetupScreenView extends GetView<SetUpScreenController> {
     );
   }
 
-  // ── Avatar Section ──────────────────────────────
-  Widget _buildAvatarSection() {
+  Widget _buildAvatarSection(bool isDark) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -112,7 +121,7 @@ class SetupScreenView extends GetView<SetUpScreenController> {
           'Pick Your Avatar 😊',
           style: GoogleFonts.aBeeZee(
             fontSize: 18,
-            color: AppColors.navy,
+            color: isDark ? Colors.white : AppColors.navy, // ✅
           ),
         ),
         const SizedBox(height: 14),
@@ -136,18 +145,16 @@ class SetupScreenView extends GetView<SetUpScreenController> {
                   decoration: BoxDecoration(
                     color: isSelected
                         ? AppColors.coralColor.withValues(alpha: 0.08)
-                        : AppColors.white,
+                        : isDark ? const Color(0xFF1F1F1F) : AppColors.white, // ✅
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
-                      color: isSelected
-                          ? AppColors.coralColor        // ← clean
-                          : AppColors.lightGrey,   // ← clean
+                      color: isSelected ? AppColors.coralColor : AppColors.lightGrey,
                       width: 3,
                     ),
                     boxShadow: [
                       BoxShadow(
                         color: isSelected
-                            ? AppColors.coralColor.withValues(alpha: 0.25)  // ← clean
+                            ? AppColors.coralColor.withValues(alpha: 0.25)
                             : Colors.black.withValues(alpha: 0.05),
                         blurRadius: isSelected ? 14 : 6,
                         offset: const Offset(0, 4),
@@ -157,9 +164,7 @@ class SetupScreenView extends GetView<SetUpScreenController> {
                   child: Center(
                     child: Text(
                       avatar,
-                      style: TextStyle(
-                        fontSize: isSelected ? 32 : 28,
-                      ),
+                      style: TextStyle(fontSize: isSelected ? 32 : 28),
                     ),
                   ),
                 ),

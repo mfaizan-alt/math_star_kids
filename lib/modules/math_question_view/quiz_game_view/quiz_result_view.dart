@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../../core/colors/colors.dart';
 import '../../../core/commonWidgets/ads/ad_manager.dart';
 import '../../../core/routes/routes.dart';
 
@@ -14,7 +15,7 @@ class QuizResultScreen extends StatelessWidget {
     final stars = score >= 9 ? 3 : score >= 7 ? 2 : score >= 5 ? 1 : 0;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFE8E8FF),
+      backgroundColor: TC.bg(context),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24),

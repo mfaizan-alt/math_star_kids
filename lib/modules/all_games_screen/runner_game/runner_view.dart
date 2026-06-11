@@ -9,6 +9,7 @@ import 'package:math_carnival_kids/modules/all_games_screen/runner_game/runner_c
 import '../../../core/colors/colors.dart';
 import '../../../core/commonWidgets/ads/ad_manager.dart';
 import '../../../core/commonWidgets/ads/reward_ad.dart';
+import '../../../core/commonWidgets/theme.dart';
 
 class RunnerGameScreen extends StatefulWidget {
   const RunnerGameScreen({super.key});
@@ -99,40 +100,44 @@ class _RunnerGameScreenState extends State<RunnerGameScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          _buildBackground(),
-          SafeArea(
-            child: Obx(() => Column(
-              children: [
-                _buildTopBar(),
-                Expanded(
-                  child: controller.isGameStarted.value
-                      ? _buildGameArea()
-                      : controller.isGameOver.value
-                      ? _buildGameOverScreen()
-                      : _buildStartScreen(),
-                ),
-              ],
-            )),
-          ),
-          Align(
-            alignment: Alignment.topCenter,
-            child: ConfettiWidget(
-              confettiController: controller.confettiController,
-              blastDirectionality: BlastDirectionality.explosive,
-              colors: const [
-                AppColors.correct,
-                AppColors.star,
-                AppColors.primaryLight,
-                Colors.pink,
-              ],
+    return Obx(() {
+      final isDark = Get.find<ThemeController>().isDarkMode;
+
+      return Scaffold(
+        body: Stack(
+          children: [
+            _buildBackground(),
+            SafeArea(
+              child: Obx(() => Column(
+                children: [
+                  _buildTopBar(),
+                  Expanded(
+                    child: controller.isGameStarted.value
+                        ? _buildGameArea()
+                        : controller.isGameOver.value
+                        ? _buildGameOverScreen(isDark)
+                        : _buildStartScreen(),
+                  ),
+                ],
+              )),
             ),
-          ),
-        ],
-      ),
-    );
+            Align(
+              alignment: Alignment.topCenter,
+              child: ConfettiWidget(
+                confettiController: controller.confettiController,
+                blastDirectionality: BlastDirectionality.explosive,
+                colors: const [
+                  AppColors.correct,
+                  AppColors.star,
+                  AppColors.primaryLight,
+                  Colors.pink,
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    });
   }
 
   Widget _buildBackground() {
@@ -306,29 +311,31 @@ class _RunnerGameScreenState extends State<RunnerGameScreen>
       },
       child: Container(
         color: Colors.transparent,
-        child: Column(
-          children: [
-            const SizedBox(height: 20),
-            _buildQuestionBubble(),
-            const Spacer(),
-            _buildAnswerLanes(),
-            const SizedBox(height: 20),
-            _buildRunnerArea(),
-            const SizedBox(height: 20),
-            _buildLaneButtons(),
-            const SizedBox(height: 16),
-          ],
-        ),
+        child: Obx(() {
+          final isDark = Get.find<ThemeController>().isDarkMode;
+          return Column(
+            children: [
+              const SizedBox(height: 20),
+              _buildQuestionBubble(isDark), // ✅
+              const Spacer(),
+              _buildAnswerLanes(),
+              const SizedBox(height: 20),
+              _buildRunnerArea(),
+              const SizedBox(height: 20),
+              _buildLaneButtons(),
+              const SizedBox(height: 16),
+            ],
+          );
+        }),
       ),
     );
   }
 
-  Widget _buildQuestionBubble() {
-    // Already inside parent Obx
+  Widget _buildQuestionBubble(bool isDark) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? const Color(0xFF1F1F1F) : Colors.white, // ✅
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
@@ -354,7 +361,7 @@ class _RunnerGameScreenState extends State<RunnerGameScreen>
             style: GoogleFonts.poppins(
               fontSize: 32,
               fontWeight: FontWeight.bold,
-              color: const Color(0xFF2D3142),
+              color: isDark ? Colors.white : const Color(0xFF2D3142), // ✅
             ),
           ),
         ],
@@ -603,13 +610,13 @@ class _RunnerGameScreenState extends State<RunnerGameScreen>
     );
   }
 
-  Widget _buildGameOverScreen() {
+  Widget _buildGameOverScreen(bool isDark) {
     return Center(
       child: Container(
         margin: const EdgeInsets.all(32),
         padding: const EdgeInsets.all(32),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: isDark ? const Color(0xFF1F1F1F) : Colors.white, // ✅
           borderRadius: BorderRadius.circular(32),
           boxShadow: [
             BoxShadow(
@@ -622,24 +629,24 @@ class _RunnerGameScreenState extends State<RunnerGameScreen>
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              controller.gameOverEmoji,
-              style: const TextStyle(fontSize: 64),
-            ),
+            Text(controller.gameOverEmoji, style: const TextStyle(fontSize: 64)),
             const SizedBox(height: 16),
             Text(
               'Game Over!',
               style: GoogleFonts.poppins(
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
-                color: const Color(0xFF2D3142),
+                color: isDark ? Colors.white : const Color(0xFF2D3142), // ✅
               ),
             ),
             const SizedBox(height: 8),
             Text(
               controller.gameOverMessage,
               textAlign: TextAlign.center,
-              style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey[600]),
+              style: GoogleFonts.poppins(
+                fontSize: 14,
+                color: isDark ? Colors.white54 : Colors.grey[600], // ✅
+              ),
             ),
             const SizedBox(height: 24),
             Container(
@@ -658,15 +665,13 @@ class _RunnerGameScreenState extends State<RunnerGameScreen>
                     style: GoogleFonts.poppins(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFF2D3142),
+                      color: isDark ? Colors.white : const Color(0xFF2D3142), // ✅
                     ),
                   ),
                 ],
               ),
             ),
             const SizedBox(height: 24),
-
-            // ── Rewarded ad buttons ──
             _buildRewardedButton(
               emoji: '❤️',
               label: 'Watch Ad → Get 1 Life',
@@ -678,16 +683,19 @@ class _RunnerGameScreenState extends State<RunnerGameScreen>
                 });
               },
             ),
-
             const SizedBox(height: 16),
-            // ── Free buttons ──
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _buildGameOverButton('🏠 Home', () => Navigator.pop(context)),
+                _buildGameOverButton('🏠 Home', isDark, () {
+                  AdManager.instance.show(); // ✅ load interstitial ad
+                  Future.delayed(const Duration(milliseconds: 300), () {
+                    Navigator.pop(context); // ✅ navigate after ad
+                  });
+                }),
                 const SizedBox(width: 16),
-                _buildGameOverButton('🔄 Retry', () {
-                  AdManager.instance.show(); // interstitial
+                _buildGameOverButton('🔄 Retry', isDark, () {
+                  AdManager.instance.show();
                   Future.delayed(const Duration(milliseconds: 300), () {
                     _onStartGame();
                   });
@@ -741,7 +749,7 @@ class _RunnerGameScreenState extends State<RunnerGameScreen>
     );
   }
 
-  Widget _buildGameOverButton(String label, VoidCallback onTap,
+  Widget _buildGameOverButton(String label, bool isDark, VoidCallback onTap,
       {bool isPrimary = false}) {
     return GestureDetector(
       onTap: onTap,
@@ -752,7 +760,9 @@ class _RunnerGameScreenState extends State<RunnerGameScreen>
               ? const LinearGradient(
               colors: [AppColors.primaryLight, Color(0xFF8B5CF6)])
               : null,
-          color: isPrimary ? null : Colors.grey[100],
+          color: isPrimary
+              ? null
+              : isDark ? const Color(0xFF2C2C2C) : Colors.grey[100], // ✅
           borderRadius: BorderRadius.circular(20),
           boxShadow: isPrimary
               ? [
@@ -769,7 +779,9 @@ class _RunnerGameScreenState extends State<RunnerGameScreen>
           style: GoogleFonts.poppins(
             fontSize: 15,
             fontWeight: FontWeight.w600,
-            color: isPrimary ? Colors.white : const Color(0xFF2D3142),
+            color: isPrimary
+                ? Colors.white
+                : isDark ? Colors.white : const Color(0xFF2D3142), // ✅
           ),
         ),
       ),

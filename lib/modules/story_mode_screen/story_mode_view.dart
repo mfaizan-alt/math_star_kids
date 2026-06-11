@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:math_carnival_kids/modules/story_mode_screen/story_mode_controller.dart';
 
 import '../../core/colors/colors.dart';
+import '../../core/commonWidgets/ads/banner_ads.dart';
 
 class StoryModeView extends GetView<StoryModeController> {
   const StoryModeView({super.key});
@@ -11,7 +12,8 @@ class StoryModeView extends GetView<StoryModeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.cream,
+      // backgroundColor: AppColors.cream,
+      backgroundColor: TC.bg(context),
       body: SafeArea(
         child: Column(
           children: [
@@ -35,6 +37,7 @@ class StoryModeView extends GetView<StoryModeController> {
           ],
         ),
       ),
+      bottomNavigationBar: const BannerAdWidget(),
     );
   }
 
@@ -234,7 +237,7 @@ class StoryModeView extends GetView<StoryModeController> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        'UNLOCK AT 100⭐',
+                        'UNLOCK AT 40⭐',
                         style: GoogleFonts.aBeeZee(
                           fontSize: 14,
                           color: Colors.white,

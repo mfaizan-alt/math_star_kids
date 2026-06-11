@@ -36,16 +36,16 @@ class _NumberPopScreenState extends State<NumberPopScreen> {
   }
 
   void _onStartGame(Size size) {
-    if (starsService.totalStars.value < 10) {
-      Get.snackbar(
-        '🔒 Locked',
-        'You need 10 stars to play this game!',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
-      return;
-    }
+    // if (starsService.totalStars.value < 10) {
+    //   Get.snackbar(
+    //     '🔒 Locked',
+    //     'You need 10 stars to play this game!',
+    //     snackPosition: SnackPosition.BOTTOM,
+    //     backgroundColor: Colors.red,
+    //     colorText: Colors.white,
+    //   );
+    //   return;
+    // }
 
     controller.screenWidth = size.width;
     controller.screenHeight = size.height;
@@ -57,19 +57,13 @@ class _NumberPopScreenState extends State<NumberPopScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          // Background
+          // 1. Background
           _buildBackground(),
-          // Stars (static, no Obx needed)
+
+          // 2. Stars
           ..._buildStars(),
-          // Game content
-          SafeArea(
-            child: Obx(() {
-              if (controller.isGameStarted.value) return _buildGameContent();
-              if (controller.isGameOver.value) return _buildGameOver();
-              return _buildStartScreen();
-            }),
-          ),
-          // Floating bubbles
+
+          // 3. Floating bubbles — BEFORE SafeArea so dialog goes on top ✅
           Obx(() => Stack(
             children: controller.bubbles.map((bubble) => Positioned(
               left: bubble.x,
@@ -80,9 +74,27 @@ class _NumberPopScreenState extends State<NumberPopScreen> {
               ),
             )).toList(),
           )),
-          // Top bar
+
+          // 4. Game content — AFTER bubbles so it renders on top ✅
+          SafeArea(
+            child: Obx(() {
+              if (controller.isGameStarted.value) return _buildGameContent();
+              if (controller.isGameOver.value) {
+                return Stack(
+                children: [
+                  Container(color: Colors.black.withValues(alpha: 0.6)),
+                  _buildGameOver(),
+                ],
+              );
+              }
+              return _buildStartScreen();
+            }),
+          ),
+
+          // 5. Top bar — always on top
           SafeArea(child: Obx(() => _buildTopBar())),
-          // Confetti
+
+          // 6. Confetti — always on top
           Align(
             alignment: Alignment.topCenter,
             child: ConfettiWidget(
@@ -373,7 +385,12 @@ class _NumberPopScreenState extends State<NumberPopScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _buildBtn('🏠 Home', () => Navigator.pop(context)),
+                _buildBtn('🏠 Home', () {
+                  AdManager.instance.show();
+                  Future.delayed(const Duration(milliseconds: 300),(){
+                    Navigator.pop(context);
+                  });
+                }),
                 const SizedBox(width: 16),
                 _buildBtn('🔄 Retry', () {
                   final size = MediaQuery.of(context).size;

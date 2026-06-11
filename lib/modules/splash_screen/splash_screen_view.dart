@@ -101,7 +101,7 @@ class SplashScreenView extends GetView<SplashScreenController> {
                 const SizedBox(height: 50),
                 // Loading bar
                 Container(
-                  width: 140,
+                  width: 130,
                   height: 6,
                   decoration: BoxDecoration(
                     color: Colors.white.withValues(alpha: 0.25),
@@ -109,8 +109,8 @@ class SplashScreenView extends GetView<SplashScreenController> {
                   ),
                   alignment: Alignment.centerLeft,
                   child: TweenAnimationBuilder<double>(
-                    tween: Tween<double>(begin: 0, end: 1),
-                    duration: const Duration(seconds: 3),
+                    tween: Tween<double>(begin: 0, end: 2),
+                    duration: const Duration(seconds: 2),
                     builder: (context, value, _) {
                       return FractionallySizedBox(
                         widthFactor: value,

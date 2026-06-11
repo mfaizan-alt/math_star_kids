@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/colors/colors.dart';
+import '../../core/commonWidgets/ads/banner_ads.dart';
 import '../../core/commonWidgets/theme.dart';
 import '../../core/models/mini_game_data_model/mani_game_model.dart';
 import '../../core/services/stars_service.dart';
@@ -30,7 +31,7 @@ class GamesHomeScreenView extends GetView<GamesHomeController>{
    final HomeScreenController cont = Get.find<HomeScreenController>();
   @override
   Widget build(BuildContext context) {
-
+    final isDark = Get.find<ThemeController>().isDarkMode;
     return Scaffold(
       body: SafeArea(
         child: CustomScrollView(
@@ -50,6 +51,7 @@ class GamesHomeScreenView extends GetView<GamesHomeController>{
                       style: GoogleFonts.poppins(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
+                        color:  isDark ? Colors.white : Colors.black
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -84,7 +86,11 @@ class GamesHomeScreenView extends GetView<GamesHomeController>{
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Text(
                   '🎮 Mini Games',
-                  style: GoogleFonts.poppins(fontSize: 22, fontWeight: FontWeight.bold),
+                  style: GoogleFonts.poppins(
+                      fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: isDark ? Colors.white : Colors.black
+                  ),
                 ),
               ),
             ),
@@ -110,6 +116,7 @@ class GamesHomeScreenView extends GetView<GamesHomeController>{
           ],
         ),
       ),
+      bottomNavigationBar: const BannerAdWidget(),
     );
   }
 
@@ -139,11 +146,13 @@ class GamesHomeScreenView extends GetView<GamesHomeController>{
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // _buildHeader — replace these two Text widgets
+
             Text(
               "Let's Play Games",
               style: GoogleFonts.aBeeZee(
                 fontSize: 15,
-                color: Colors.black,
+                color: Theme.of(context).colorScheme.onSurface,
                 fontWeight: FontWeight.w700,
               ),
             ),
@@ -152,28 +161,28 @@ class GamesHomeScreenView extends GetView<GamesHomeController>{
               '${cont.childName.value} ${cont.childAvatar.value}',
               style: GoogleFonts.aBeeZee(
                 fontSize: 26,
-                color: Colors.black,
+                color: Theme.of(context).colorScheme.onSurface, // ✅
               ),
             )),
           ],
         ),
-        Row(
-          children: [
-            IconButton(
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (_) => const ProgressScreen()));
-              },
-              icon: const Icon(Icons.emoji_events_rounded, size: 28),
-            ),
-            IconButton(
-              onPressed: themeProvider.toggleTheme,
-              icon: Icon(
-                themeProvider.isDarkMode ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
-                size: 28,
-              ),
-            ),
-          ],
-        ),
+        // Row(
+        //   children: [
+        //     IconButton(
+        //       onPressed: () {
+        //         Navigator.push(context, MaterialPageRoute(builder: (_) => const ProgressScreen()));
+        //       },
+        //       icon: const Icon(Icons.emoji_events_rounded, size: 28),
+        //     ),
+        //     IconButton(
+        //       onPressed: themeProvider.toggleTheme,
+        //       icon: Icon(
+        //         themeProvider.isDarkMode ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
+        //         size: 28,
+        //       ),
+        //     ),
+        //   ],
+        // ),
       ],
     );
   }
@@ -190,7 +199,7 @@ class GamesHomeScreenView extends GetView<GamesHomeController>{
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: AppColors.coralColor.withValues(alpha: 0.3),
+            color: AppColors.coralColor.withValues(alpha: 0.4),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -273,6 +282,7 @@ class GamesHomeScreenView extends GetView<GamesHomeController>{
   }
 
   Widget _buildModuleCard(BuildContext context, ModuleData module, int index) {
+    final isDark = Get.find<ThemeController>().isDarkMode;
     return GestureDetector(
       onTap: () {
         Navigator.push(context, MaterialPageRoute(builder: (_) => module.screen));
@@ -284,7 +294,7 @@ class GamesHomeScreenView extends GetView<GamesHomeController>{
           border: Border.all(color: module.color.withValues(alpha: 0.2), width: 2),
           boxShadow: [
             BoxShadow(
-              color: module.color.withValues(alpha: 0.15),
+              color: module.color.withValues(alpha: 0.4),
               blurRadius: 12,
               offset: const Offset(0, 6),
             ),
@@ -296,7 +306,7 @@ class GamesHomeScreenView extends GetView<GamesHomeController>{
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: module.color.withValues(alpha: 0.15),
+                color: module.color.withValues(alpha: 0.25),
                 shape: BoxShape.circle,
               ),
               child: Text(module.emoji, style: const TextStyle(fontSize: 36)),
@@ -307,6 +317,7 @@ class GamesHomeScreenView extends GetView<GamesHomeController>{
               style: GoogleFonts.poppins(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
+                color: isDark ? Colors.white : Colors.black,
               ),
             ),
           ],
@@ -392,6 +403,7 @@ class GamesHomeScreenView extends GetView<GamesHomeController>{
     return games.asMap().entries.map((entry) {
       final index = entry.key;
       final game = entry.value;
+      final isDark = Get.find<ThemeController>().isDarkMode;
       return Padding(
         padding: const EdgeInsets.only(right: 12),
         child: GestureDetector(
@@ -414,7 +426,8 @@ class GamesHomeScreenView extends GetView<GamesHomeController>{
                   child: Text(game.emoji, style: const TextStyle(fontSize: 28)),
                 ),
                 const SizedBox(height: 8),
-                Text(game.title, textAlign: TextAlign.center, style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.w600)),
+                Text(game.title, textAlign: TextAlign.center,
+                    style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.w600,color: isDark ? Colors.white : Colors.black )),
               ],
             ),
           ),
