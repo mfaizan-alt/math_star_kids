@@ -6,6 +6,11 @@ import '../../core/services/stars_service.dart';
 
 class StoryModeController extends GetxController {
   final selectedType = 'math'.obs;
+  static const int tier1Threshold = 60;
+  static const int tier2Threshold = 100;
+
+  final RxBool tier1Unlocked = false.obs;
+  final RxBool tier2Unlocked = false.obs;
 
 
   final RxList<Map<String, dynamic>> stories = <Map<String, dynamic>>[
@@ -329,6 +334,7 @@ class StoryModeController extends GetxController {
       "cover": "assets/images/kiteStory/kiteCover.jpeg",
       "type": "reading",
       "stars": 2,
+      "minStars": 60, "isPremium": true,
       "scenes": [
         {
           "image": "assets/images/kiteStory/scene1.jpeg",
@@ -367,6 +373,7 @@ class StoryModeController extends GetxController {
       "cover": "assets/images/lostLantern/lostLanternCover.jpeg",
       "type": "reading",
       "stars": 2,
+      "minStars": 100, "isPremium": true,
       "scenes": [
         {
           "image": "assets/images/lostLantern/scene1.jpeg",
@@ -403,6 +410,7 @@ class StoryModeController extends GetxController {
       "type": "math",
       "subject": "÷",
       "stars": 3,
+      "minStars": 60, "isPremium": true,
       "scenes": [
         {
           "image": "assets/images/starJar/scene1.jpeg",
@@ -435,30 +443,31 @@ class StoryModeController extends GetxController {
 
     // ═══ PREMIUM STORIES (Unlocked at 40 stars) ═══
 
-    // Premium Math Story 1
+    // Premium Math Story 1 APPLE MARKET
     {
       "title": "The Market Adventure (Premium)",
       "description": "Zara helps at her father's market and learns advanced math.",
-      "cover": "assets/images/mangoOrchard/mangoOrchardCover.jpeg", // Reuse image for now
+      "cover": "assets/images/appleMarket/AppleCover.jpeg",
       "type": "math",
       "subject": "÷",
       "stars": 3,
-      "isPremium": true,
+      "minStars": 100
+      , "isPremium": true,
       "scenes": [
         {
-          "image": "assets/images/mangoOrchard/mangoOrchardScene1.jpeg",
+          "image": "assets/images/appleMarket/scene1.jpeg",
           "bg": "orange",
           "text": "Zara's father runs a busy market. Today he has 24 apples to distribute equally among 6 baskets.",
           "hasQuestion": false,
         },
         {
-          "image": "assets/images/mangoOrchard/mangoOrchardScene2.jpeg",
+          "image": "assets/images/appleMarket/scene2.jpeg",
           "bg": "yellow",
           "text": "Zara carefully counted the apples. She needs to put the same number in each basket.",
           "hasQuestion": false,
         },
         {
-          "image": "assets/images/mangoOrchard/mangoOrchardScene3.jpeg",
+          "image": "assets/images/appleMarket/scene3.jpeg",
           "bg": "coral",
           "text": "If 24 apples go into 6 baskets equally, how many apples will be in each basket?",
           "hasQuestion": true,
@@ -466,7 +475,7 @@ class StoryModeController extends GetxController {
           "answer": 4,
         },
         {
-          "image": "assets/images/mangoOrchard/mangoOrchardScene4.jpeg",
+          "image": "assets/images/appleMarket/scene4.jpeg",
           "bg": "green",
           "text": "Perfect! 4 apples in each basket. Customers were happy with the organized market!",
           "hasQuestion": false,
@@ -474,154 +483,16 @@ class StoryModeController extends GetxController {
       ],
     },
 
-    // Premium Math Story 2
-    {
-      "title": "The Garden Store (Premium)",
-      "description": "Karim learns fractions while decorating his home.",
-      "cover": "assets/images/cookieStory/cookieCover.jpeg",
-      "type": "math",
-      "subject": "Fractions",
-      "stars": 3,
-      "isPremium": true,
-      "scenes": [
-        {
-          "image": "assets/images/cookieStory/cookieScene1.jpeg",
-          "bg": "pink",
-          "text": "Karim wants to paint his wall with two colors. Half of the wall will be blue and half will be yellow.",
-          "hasQuestion": false
-        },
-        {
-          "image": "assets/images/cookieStory/cookieScene2.jpeg",
-          "bg": "blue",
-          "text": "He has already painted 1/4 of the wall blue. He needs to paint another 1/4 to complete the blue section.",
-          "hasQuestion": false
-        },
-        {
-          "image": "assets/images/cookieStory/cookieScene3.jpeg",
-          "bg": "yellow",
-          "text": "If Karim has painted 1/4 blue and needs 1/2 blue total, what fraction of the wall is left to paint blue?",
-          "hasQuestion": true,
-          "options": ["1/8", "1/4", "1/2", "3/4"],
-          "answer": "1/4"
-        },
-        {
-          "image": "assets/images/cookieStory/cookieScene4.jpeg",
-          "bg": "coral",
-          "text": "Done! The wall looks beautiful with the blue and yellow colors perfectly divided!",
-          "hasQuestion": false
-        }
-      ]
-    },
-
-    // Premium Reading Story 1
-    {
-      "title": "The Hidden Treasure (Premium)",
-      "description": "A young explorer discovers an ancient map and learns about friendship.",
-      "cover": "assets/images/lostDog/lostDogStoryCover.jpeg",
-      "type": "reading",
-      "stars": 3,
-      "isPremium": true,
-      "scenes": [
-        {
-          "image": "assets/images/lostDog/scene1.jpeg",
-          "bg": "brown",
-          "text": "Maya found an old map in her grandmother's attic. It showed a mysterious path through the forest with an X marked at the end.",
-          "hasQuestion": false,
-        },
-        {
-          "image": "assets/images/lostDog/scene2.jpeg",
-          "bg": "green",
-          "text": "She wanted to find the treasure alone, but her best friend Amir asked to join. 'Real treasure is shared with friends,' he said wisely.",
-          "hasQuestion": false,
-        },
-        {
-          "image": "assets/images/lostDog/scene3.jpeg",
-          "bg": "purple",
-          "text": "Together they followed the winding path, helping each other through difficult parts. They discovered that working together made them braver.",
-          "hasQuestion": false,
-        },
-        {
-          "image": "assets/images/lostDog/scene4.jpeg",
-          "bg": "gold",
-          "text": "At the X, they found a box filled with old coins, jewels, and a letter from Maya's grandmother: 'True treasure is friendship.' They both smiled.",
-          "hasQuestion": false,
-        },
-      ],
-    },
-
-    // Premium Reading Story 2
-    {
-      "title": "The Scientist's Discovery (Premium)",
-      "description": "Amira's curiosity leads to an amazing scientific discovery.",
-      "cover": "assets/images/glowingCave/cover.jpeg",
-      "type": "reading",
-      "stars": 3,
-      "isPremium": true,
-      "scenes": [
-        {
-          "image": "assets/images/glowingCave/scene1.jpeg",
-          "bg": "blue",
-          "text": "Amira loved asking questions about everything. While playing in the garden, she noticed something strange — the plants glowed at sunset!",
-          "hasQuestion": false,
-        },
-        {
-          "image": "assets/images/glowingCave/scene2.jpeg",
-          "bg": "purple",
-          "text": "She didn't laugh away the idea. Instead, she started researching every night, taking notes, and observing carefully.",
-          "hasQuestion": false,
-        },
-        {
-          "image": "assets/images/glowingCave/scene3.jpeg",
-          "bg": "pink",
-          "text": "Her science teacher was amazed by her discovery. 'You found bioluminescent algae on the leaves! This is remarkable work!',she exclaimed.",
-          "hasQuestion": false,
-        },
-        {
-          "image": "assets/images/glowingCave/scene4.jpeg",
-          "bg": "green",
-          "text": "Amira learned that curiosity, patience, and observation can lead to amazing discoveries. Her garden now glowed beautifully.",
-          "hasQuestion": false,
-        },
-      ],
-    },
-
-    // Premium Reading Story 3
-    {
-      "title": "The Dream Maker (Premium)",
-      "description": "Hassan learns that dreams can come true with hard work and determination.",
-      "cover": "assets/images/littleSeed/seedCover.jpeg",
-      "type": "reading",
-      "stars": 3,
-      "isPremium": true,
-      "scenes": [
-        {
-          "image": "assets/images/littleSeed/scene1.jpeg",
-          "bg": "blue",
-          "text": "Hassan dreamed of becoming a musician since he was a little boy. His family was poor, but his dream was big and bright.",
-          "hasQuestion": false,
-        },
-        {
-          "image": "assets/images/littleSeed/scene2.jpeg",
-          "bg": "purple",
-          "text": "He practiced every single day with a borrowed instrument, even when his fingers hurt. He never gave up, no matter how difficult it seemed.",
-          "hasQuestion": false,
-        },
-        {
-          "image": "assets/images/littleSeed/scene3.jpeg",
-          "bg": "pink",
-          "text": "Years passed. His dedication caught the attention of a music teacher who offered him a scholarship to study music professionally.",
-          "hasQuestion": false,
-        },
-        {
-          "image": "assets/images/littleSeed/scene4.jpeg",
-          "bg": "gold",
-          "text": "Hassan's dream came true! He learned that big dreams need hard work, patience, and never giving up. 'Never stop believing in yourself,' he told younger children.",
-          "hasQuestion": false,
-        },
-      ],
-    }
 
   ].obs;
+
+  @override
+  void onInit() {
+    super.onInit();
+    if (Get.isRegistered<StarsService>()) {
+      ever(StarsService.to.totalStars, (_) => stories.refresh());
+    }
+  }
 
   List<Map<String, dynamic>> get filteredStories {
     return stories.where((story) {
@@ -629,16 +500,18 @@ class StoryModeController extends GetxController {
     }).toList();
   }
 
-  bool isStoryLocked(Map<String, dynamic> story) {
-    if (story["isPremium"] != true) return false;
-    return !isStoryUnlocked();
+  bool get isUnlocked {
+    if (!Get.isRegistered<StarsService>()) return false;
+    return StarsService.to.premiumStoriesUnlocked.value;
   }
 
-  bool isStoryUnlocked() {
-    if (Get.isRegistered<StarsService>()) {
-      return StarsService.to.arePremiumStoriesUnlocked();
-    }
-    return false;
+  bool isStoryLocked(Map<String, dynamic> story) {
+    if (story["isPremium"] != true) return false;
+    final minStars = story["minStars"] as int? ?? 100;
+    final currentStars = Get.isRegistered<StarsService>()
+        ? StarsService.to.totalStars.value
+        : 0;
+    return currentStars < minStars;
   }
 
   void changeTab(String type) {
@@ -646,20 +519,27 @@ class StoryModeController extends GetxController {
   }
 
   void openStory(Map<String, dynamic> story) {
-    if (story["isPremium"] == true && !isStoryUnlocked()) {
-      Get.snackbar(
-        '🔒 Story Locked',
-        'Complete 40 ⭐ stars to unlock this premium story!',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: const Color(0xFF2C3E50),
-        colorText: Colors.white,
-        duration: const Duration(seconds: 3),
-      );
-      return;
-    }
+    if (story["isPremium"] == true) {
+      final minStars = story["minStars"] as int? ?? 100;
+      final currentStars = Get.isRegistered<StarsService>()
+          ? StarsService.to.totalStars.value
+          : 0;
+      if (currentStars < minStars) {
+        Get.snackbar(
+          '🔒 Story Locked',
+          'Earn $minStars ⭐ stars to unlock this story!',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor:  Colors.red,
+          colorText: Colors.white,
 
+          duration: const Duration(seconds: 3),
+        );
+        return;
+      }
+    }
     Get.toNamed(Routes.storyDetail, arguments: story);
   }
+
 }
 
 

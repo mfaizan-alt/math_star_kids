@@ -24,14 +24,15 @@ class StoryModeView extends GetView<StoryModeController> {
             // Story List
             Expanded(
               child: Obx(
-                () => ListView.builder(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: controller.filteredStories.length,
-                  itemBuilder: (context, index) {
-                    final story = controller.filteredStories[index];
-                    return _buildStoryCard(story);
-                  },
-                ),
+                    () =>
+                    ListView.builder(
+                      padding: const EdgeInsets.all(16),
+                      itemCount: controller.filteredStories.length,
+                      itemBuilder: (context, index) {
+                        final story = controller.filteredStories[index];
+                        return _buildStoryCard(story);
+                      },
+                    ),
               ),
             ),
           ],
@@ -130,53 +131,61 @@ class StoryModeView extends GetView<StoryModeController> {
 
   Widget _buildTabs() {
     return Obx(
-      () => Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          children: [
-            Expanded(
-              child: GestureDetector(
-                onTap: () => controller.changeTab('math'),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  decoration: BoxDecoration(
-                    color: controller.selectedType.value == 'math'
-                        ? const Color(0xFFEF476F)
-                        : Colors.white,
-                    borderRadius: BorderRadius.circular(14),
+          () =>
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () => controller.changeTab('math'),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      decoration: BoxDecoration(
+                        color: controller.selectedType.value == 'math'
+                            ? const Color(0xFFEF476F)
+                            : Colors.white,
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      child: const Center(child: Text('🧮   Math Stories',
+                        style: TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.w600),)),
+                    ),
                   ),
-                  child: const Center(child: Text('🧮   Math Stories',style: TextStyle(fontSize: 15,fontWeight: FontWeight.w600),)),
                 ),
-              ),
-            ),
 
-            const SizedBox(width: 10),
+                const SizedBox(width: 10),
 
-            Expanded(
-              child: GestureDetector(
-                onTap: () => controller.changeTab('reading'),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  decoration: BoxDecoration(
-                    color: controller.selectedType.value == 'reading'
-                        ? Color(0xFFEF476F)
-                        : Colors.white,
-                    borderRadius: BorderRadius.circular(14),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () => controller.changeTab('reading'),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      decoration: BoxDecoration(
+                        color: controller.selectedType.value == 'reading'
+                            ? Color(0xFFEF476F)
+                            : Colors.white,
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      child: const Center(child: Text('📖   Reading Stories',
+                        style: TextStyle(
+                          fontSize: 15, fontWeight: FontWeight.w600,),)),
+                    ),
                   ),
-                  child: const Center(child: Text('📖   Reading Stories',style: TextStyle(fontSize: 15,fontWeight: FontWeight.w600,),)),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
     );
   }
 
   // ── Story Card ───────────────────────────────────
   Widget _buildStoryCard(Map<String, dynamic> story) {
-    final isLocked = (story["isPremium"] == true) && !controller.isStoryUnlocked();
-    
+    // final isLocked = (story["isPremium"] == true) &&
+    //     !controller.isStoryUnlocked();
+
+    final isLocked = controller.isStoryLocked(story);
+
     return GestureDetector(
       onTap: () => controller.openStory(story),
       child: Container(
@@ -194,9 +203,9 @@ class StoryModeView extends GetView<StoryModeController> {
           // ✅ Safe null check — uses cover key
           image: story["cover"] != null
               ? DecorationImage(
-                  image: AssetImage(story["cover"] as String),
-                  fit: BoxFit.cover,
-                )
+            image: AssetImage(story["cover"] as String),
+            fit: BoxFit.cover,
+          )
               : null,
           // Fallback color if image missing
           color: story["cover"] == null ? const Color(0xFFEF476F) : null,
@@ -237,12 +246,8 @@ class StoryModeView extends GetView<StoryModeController> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        'UNLOCK AT 40⭐',
-                        style: GoogleFonts.aBeeZee(
-                          fontSize: 14,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w700,
-                        ),
+                        'UNLOCK AT ${story["minStars"] ?? 100}⭐',
+                        style: GoogleFonts.aBeeZee(),
                       ),
                     ],
                   ),
@@ -296,7 +301,9 @@ class StoryModeView extends GetView<StoryModeController> {
                       : '⭐ ${story["stars"]}',
                   style: GoogleFonts.nunito(
                     fontSize: 11,
-                    color: (story["isPremium"] == true) ? Colors.black87 : Colors.white,
+                    color: (story["isPremium"] == true)
+                        ? Colors.black87
+                        : Colors.white,
                     fontWeight: FontWeight.w800,
                   ),
                 ),

@@ -54,7 +54,6 @@ class GamesHomeScreenView extends GetView<GamesHomeController>{
                         color:  isDark ? Colors.white : Colors.black
                       ),
                     ),
-                    const SizedBox(height: 16),
                   ],
                 ),
               ),
@@ -66,7 +65,7 @@ class GamesHomeScreenView extends GetView<GamesHomeController>{
                   crossAxisCount: 3,
                   crossAxisSpacing: 16,
                   mainAxisSpacing: 16,
-                  childAspectRatio: 0.9,
+                  childAspectRatio: 0.80,
                 ),
                 delegate: SliverChildListDelegate(
                   _buildModuleCards(context),
@@ -315,7 +314,7 @@ class GamesHomeScreenView extends GetView<GamesHomeController>{
             Text(
               module.title,
               style: GoogleFonts.poppins(
-                fontSize: 16,
+                fontSize: 13,
                 fontWeight: FontWeight.w600,
                 color: isDark ? Colors.white : Colors.black,
               ),
