@@ -4,12 +4,14 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/colors/colors.dart';
 import '../../core/commonWidgets/ads/banner_ads.dart';
+import '../../core/commonWidgets/screen_header.dart';
+import '../../core/constants/app_strings.dart';
 import '../../core/commonWidgets/theme.dart';
 import '../../core/models/mini_game_data_model/mani_game_model.dart';
 import '../../core/services/stars_service.dart';
 import '../all_games_screen/addition/addition_view.dart';
 import '../all_games_screen/adventure_map/adventure_map_view.dart';
-import '../all_games_screen/counting_screen.dart';
+import '../all_games_screen/counting_screen/counting_view.dart';
 import '../all_games_screen/division_screen.dart';
 import '../all_games_screen/frog_jump/frog_jump_view.dart';
 import '../all_games_screen/math-puzzle/math_puzzle_view.dart';
@@ -21,7 +23,6 @@ import '../all_games_screen/runner_game/runner_view.dart';
 import '../all_games_screen/subtraction/subtraction_view.dart';
 import '../all_games_screen/table/table_view.dart';
 import '../home_screen/home_screen_controller.dart';
-import '../progress/progress.dart';
 import '../progress/progress_controller.dart';
 import 'games_home_controller.dart';
 
@@ -34,26 +35,35 @@ class GamesHomeScreenView extends GetView<GamesHomeController>{
     final isDark = Get.find<ThemeController>().isDarkMode;
     return Scaffold(
       body: SafeArea(
+        top: false,
         child: CustomScrollView(
           slivers: [
+            SliverToBoxAdapter(
+              child: Obx(() => ScreenHeader(
+                    colors: const [Color(0xFF7B2FF7), Color(0xFFF107A3)],
+                    emoji: '🎮',
+                    title: AppStrings.letsPlayGames,
+                    subtitle:
+                        '${cont.childName.value} ${cont.childAvatar.value} · ${AppStrings.playAndLearn}',
+                  )),
+            ),
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.all(20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildHeader(context, ThemeController(), ProgressController()),
-                    const SizedBox(height: 24),
-                    _buildStatsCard(context, ProgressController()),
+                    _buildStatsCard(context, Get.find<ProgressController>()),
                     const SizedBox(height: 24),
                     Text(
-                      '🎮 Learning Modules',
+                      AppStrings.learningModules,
                       style: GoogleFonts.poppins(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
                         color:  isDark ? Colors.white : Colors.black
                       ),
                     ),
+                    const SizedBox(height: 16),
                   ],
                 ),
               ),
@@ -65,7 +75,7 @@ class GamesHomeScreenView extends GetView<GamesHomeController>{
                   crossAxisCount: 3,
                   crossAxisSpacing: 16,
                   mainAxisSpacing: 16,
-                  childAspectRatio: 0.80,
+                  childAspectRatio: 0.9,
                 ),
                 delegate: SliverChildListDelegate(
                   _buildModuleCards(context),
@@ -84,7 +94,7 @@ class GamesHomeScreenView extends GetView<GamesHomeController>{
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Text(
-                  '🎮 Mini Games',
+                  AppStrings.miniGames,
                   style: GoogleFonts.poppins(
                       fontSize: 22,
                     fontWeight: FontWeight.bold,
@@ -119,73 +129,6 @@ class GamesHomeScreenView extends GetView<GamesHomeController>{
     );
   }
 
-  Widget _buildHeader(BuildContext context, ThemeController themeProvider, ProgressController progress) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        // Column(
-        //   crossAxisAlignment: CrossAxisAlignment.start,
-        //   children: [
-        //     Text(
-        //       'Hello, Champ! 👋',
-        //       style: GoogleFonts.poppins(
-        //         fontSize: 26,
-        //         fontWeight: FontWeight.bold,
-        //       ),
-        //     ),
-        //     Text(
-        //       "Let's learn math today!",
-        //       style: GoogleFonts.poppins(
-        //         fontSize: 14,
-        //         color: Theme.of(context).textTheme.bodySmall?.color,
-        //       ),
-        //     ),
-        //   ],
-        // ).animate().fadeIn(duration: 500.ms).slideX(begin: -0.1),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // _buildHeader — replace these two Text widgets
-
-            Text(
-              "Let's Play Games",
-              style: GoogleFonts.aBeeZee(
-                fontSize: 15,
-                color: Theme.of(context).colorScheme.onSurface,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            const SizedBox(height: 2),
-            Obx(() => Text(
-              '${cont.childName.value} ${cont.childAvatar.value}',
-              style: GoogleFonts.aBeeZee(
-                fontSize: 26,
-                color: Theme.of(context).colorScheme.onSurface, // ✅
-              ),
-            )),
-          ],
-        ),
-        // Row(
-        //   children: [
-        //     IconButton(
-        //       onPressed: () {
-        //         Navigator.push(context, MaterialPageRoute(builder: (_) => const ProgressScreen()));
-        //       },
-        //       icon: const Icon(Icons.emoji_events_rounded, size: 28),
-        //     ),
-        //     IconButton(
-        //       onPressed: themeProvider.toggleTheme,
-        //       icon: Icon(
-        //         themeProvider.isDarkMode ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
-        //         size: 28,
-        //       ),
-        //     ),
-        //   ],
-        // ),
-      ],
-    );
-  }
-
   Widget _buildStatsCard(BuildContext context, ProgressController progress) {
     return Container(
       padding: const EdgeInsets.all(20),
@@ -216,21 +159,25 @@ class GamesHomeScreenView extends GetView<GamesHomeController>{
             )),
           ),
           Container(height: 40, width: 1, color: Colors.white30),
-          // Best Score - static value (NOT OBSERVABLE - no Obx needed)
+          // Best Score - rebuilt when ProgressController calls update()
           Expanded(
-            child: _buildStatItem(
-              '🏆',
-              '${progress.highScore}',
-              'Best Score',
+            child: GetBuilder<ProgressController>(
+              builder: (p) => _buildStatItem(
+                '🏆',
+                '${p.highScore}',
+                'Best Score',
+              ),
             ),
           ),
           Container(height: 40, width: 1, color: Colors.white30),
-          // Streak - static value (NOT OBSERVABLE - no Obx needed)
+          // Streak - rebuilt when ProgressController calls update()
           Expanded(
-            child: _buildStatItem(
-              '🔥',
-              '${progress.currentStreak}',
-              'Streak',
+            child: GetBuilder<ProgressController>(
+              builder: (p) => _buildStatItem(
+                '🔥',
+                '${p.currentStreak}',
+                'Streak',
+              ),
             ),
           ),
         ],
@@ -265,7 +212,7 @@ class GamesHomeScreenView extends GetView<GamesHomeController>{
 
   List<Widget> _buildModuleCards(BuildContext context) {
     final modules = [
-      ModuleData('Counting', '🔢', AppColors.counting, const CountingScreen()),
+      ModuleData('Counting', '🔢', AppColors.counting, CountingScreen()),
       ModuleData('Addition', '➕', AppColors.addition,  AdditionScreen()),
       ModuleData('Subtraction', '➖', AppColors.subtraction,  SubtractionScreen()),
       ModuleData('Multiply', '✖️', AppColors.multiplication,  MultiplicationScreen()),
@@ -299,27 +246,36 @@ class GamesHomeScreenView extends GetView<GamesHomeController>{
             ),
           ],
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: module.color.withValues(alpha: 0.25),
-                shape: BoxShape.circle,
+        child: Center(
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: module.color.withValues(alpha: 0.25),
+                      shape: BoxShape.circle,
+                    ),
+                    child:
+                        Text(module.emoji, style: const TextStyle(fontSize: 36)),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    module.title,
+                    style: GoogleFonts.poppins(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: isDark ? Colors.white : Colors.black,
+                    ),
+                  ),
+                ],
               ),
-              child: Text(module.emoji, style: const TextStyle(fontSize: 36)),
             ),
-            const SizedBox(height: 12),
-            Text(
-              module.title,
-              style: GoogleFonts.poppins(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: isDark ? Colors.white : Colors.black,
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     ).animate().fadeIn(
@@ -357,7 +313,7 @@ class GamesHomeScreenView extends GetView<GamesHomeController>{
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '🏃 Math Runner Game',
+                    AppStrings.mathRunnerGame,
                     style: GoogleFonts.poppins(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -366,7 +322,7 @@ class GamesHomeScreenView extends GetView<GamesHomeController>{
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Run & pick the correct answer!',
+                    AppStrings.mathRunnerDesc,
                     style: GoogleFonts.poppins(
                       fontSize: 13,
                       color: Colors.white70,
@@ -457,7 +413,7 @@ class GamesHomeScreenView extends GetView<GamesHomeController>{
                 children: [
                   Text('🗺️ Adventure Map', style: GoogleFonts.poppins(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
                   const SizedBox(height: 4),
-                  Text('Unlock games by earning stars!', style: GoogleFonts.poppins(fontSize: 13, color: Colors.white70)),
+                  Text(AppStrings.adventureMapDesc, style: GoogleFonts.poppins(fontSize: 13, color: Colors.white70)),
                 ],
               ),
             ),

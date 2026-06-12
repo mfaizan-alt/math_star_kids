@@ -5,6 +5,9 @@ import 'package:math_carnival_kids/modules/story_mode_screen/story_mode_controll
 
 import '../../core/colors/colors.dart';
 import '../../core/commonWidgets/ads/banner_ads.dart';
+import '../../core/commonWidgets/screen_header.dart';
+import '../../core/constants/app_strings.dart';
+import '../../core/constants/app_text_styles.dart';
 
 class StoryModeView extends GetView<StoryModeController> {
   const StoryModeView({super.key});
@@ -15,24 +18,24 @@ class StoryModeView extends GetView<StoryModeController> {
       // backgroundColor: AppColors.cream,
       backgroundColor: TC.bg(context),
       body: SafeArea(
+        top: false,
         child: Column(
           children: [
             // Header
-            _buildHeader(),
+            _buildHeader(context),
 
             _buildTabs(),
             // Story List
             Expanded(
               child: Obx(
-                    () =>
-                    ListView.builder(
-                      padding: const EdgeInsets.all(16),
-                      itemCount: controller.filteredStories.length,
-                      itemBuilder: (context, index) {
-                        final story = controller.filteredStories[index];
-                        return _buildStoryCard(story);
-                      },
-                    ),
+                () => ListView.builder(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: controller.filteredStories.length,
+                  itemBuilder: (context, index) {
+                    final story = controller.filteredStories[index];
+                    return _buildStoryCard(story);
+                  },
+                ),
               ),
             ),
           ],
@@ -43,10 +46,11 @@ class StoryModeView extends GetView<StoryModeController> {
   }
 
   // ── Header ───────────────────────────────────────
-  Widget _buildHeader() {
+  Widget _buildHeader(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(20, 24, 20, 24),
+      padding: EdgeInsets.fromLTRB(
+          20, MediaQuery.of(context).padding.top + 12, 20, 24),
       decoration: const BoxDecoration(
         gradient: LinearGradient(
           colors: [Color(0xFFEF476F), Color(0xFFFF9F1C)],
@@ -60,39 +64,11 @@ class StoryModeView extends GetView<StoryModeController> {
       ),
       child: Stack(
         children: [
-          // Decorative circle
-          Positioned(
-            top: -30,
-            right: -20,
-            child: Container(
-              width: 120,
-              height: 120,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white.withValues(alpha: 0.08),
-              ),
-            ),
-          ),
-
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Back button
-              GestureDetector(
-                onTap: () => Get.back(),
-                child: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: const Icon(
-                    Icons.arrow_back_ios_new_rounded,
-                    color: Colors.white,
-                    size: 18,
-                  ),
-                ),
-              ),
+              const CircleBackButton(),
 
               const SizedBox(height: 16),
 
@@ -104,19 +80,12 @@ class StoryModeView extends GetView<StoryModeController> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Kids Stories',
-                        style: GoogleFonts.fredoka(
-                          fontSize: 28,
-                          color: Colors.white,
-                        ),
+                        AppStrings.storyTitle,
+                        style: AppTextStyles.screenTitle,
                       ),
                       Text(
-                        'Read, Learn and Have Fun!',
-                        style: GoogleFonts.nunito(
-                          fontSize: 14,
-                          color: Colors.white.withValues(alpha: 0.85),
-                          fontWeight: FontWeight.w700,
-                        ),
+                        AppStrings.storySubtitle,
+                        style: AppTextStyles.screenSubtitle,
                       ),
                     ],
                   ),
@@ -131,61 +100,53 @@ class StoryModeView extends GetView<StoryModeController> {
 
   Widget _buildTabs() {
     return Obx(
-          () =>
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                Expanded(
-                  child: GestureDetector(
-                    onTap: () => controller.changeTab('math'),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      decoration: BoxDecoration(
-                        color: controller.selectedType.value == 'math'
-                            ? const Color(0xFFEF476F)
-                            : Colors.white,
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                      child: const Center(child: Text('🧮   Math Stories',
-                        style: TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.w600),)),
-                    ),
+      () => Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Expanded(
+              child: GestureDetector(
+                onTap: () => controller.changeTab('math'),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  decoration: BoxDecoration(
+                    color: controller.selectedType.value == 'math'
+                        ? const Color(0xFFEF476F)
+                        : Colors.white,
+                    borderRadius: BorderRadius.circular(14),
                   ),
+                  child: const Center(child: Text(AppStrings.mathStoriesTab, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600))),
                 ),
-
-                const SizedBox(width: 10),
-
-                Expanded(
-                  child: GestureDetector(
-                    onTap: () => controller.changeTab('reading'),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      decoration: BoxDecoration(
-                        color: controller.selectedType.value == 'reading'
-                            ? Color(0xFFEF476F)
-                            : Colors.white,
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                      child: const Center(child: Text('📖   Reading Stories',
-                        style: TextStyle(
-                          fontSize: 15, fontWeight: FontWeight.w600,),)),
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
+
+            const SizedBox(width: 10),
+
+            Expanded(
+              child: GestureDetector(
+                onTap: () => controller.changeTab('reading'),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  decoration: BoxDecoration(
+                    color: controller.selectedType.value == 'reading'
+                        ? Color(0xFFEF476F)
+                        : Colors.white,
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  child: const Center(child: Text(AppStrings.readingStoriesTab, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600))),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
   // ── Story Card ───────────────────────────────────
   Widget _buildStoryCard(Map<String, dynamic> story) {
-    // final isLocked = (story["isPremium"] == true) &&
-    //     !controller.isStoryUnlocked();
-
-    final isLocked = controller.isStoryLocked(story);
-
+    final isLocked = (story["isPremium"] == true) && !controller.isStoryUnlocked();
+    
     return GestureDetector(
       onTap: () => controller.openStory(story),
       child: Container(
@@ -203,9 +164,9 @@ class StoryModeView extends GetView<StoryModeController> {
           // ✅ Safe null check — uses cover key
           image: story["cover"] != null
               ? DecorationImage(
-            image: AssetImage(story["cover"] as String),
-            fit: BoxFit.cover,
-          )
+                  image: AssetImage(story["cover"] as String),
+                  fit: BoxFit.cover,
+                )
               : null,
           // Fallback color if image missing
           color: story["cover"] == null ? const Color(0xFFEF476F) : null,
@@ -246,8 +207,12 @@ class StoryModeView extends GetView<StoryModeController> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        'UNLOCK AT ${story["minStars"] ?? 100}⭐',
-                        style: GoogleFonts.aBeeZee(),
+                        'UNLOCK AT 40⭐',
+                        style: GoogleFonts.aBeeZee(
+                          fontSize: 14,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ],
                   ),
@@ -301,9 +266,7 @@ class StoryModeView extends GetView<StoryModeController> {
                       : '⭐ ${story["stars"]}',
                   style: GoogleFonts.nunito(
                     fontSize: 11,
-                    color: (story["isPremium"] == true)
-                        ? Colors.black87
-                        : Colors.white,
+                    color: (story["isPremium"] == true) ? Colors.black87 : Colors.white,
                     fontWeight: FontWeight.w800,
                   ),
                 ),
