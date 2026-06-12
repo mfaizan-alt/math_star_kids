@@ -4,6 +4,8 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
 import 'package:math_carnival_kids/modules/all_games_screen/speed_battle/speed_battle_controlelr.dart';
+import '../../../core/constants/app_strings.dart';
+import '../../../core/commonWidgets/ads/banner_ads.dart';
 
 
 class SpeedBattleScreen extends StatelessWidget {
@@ -36,11 +38,11 @@ class SpeedBattleScreen extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Text('P1: ${c.score1}',
+                    Text('${AppStrings.playerOne}: ${c.score1}',
                         style: GoogleFonts.poppins(color: Colors.redAccent)),
                     Text('${c.num1} ${c.operator} ${c.num2} = ?',
                         style: GoogleFonts.poppins(color: Colors.white)),
-                    Text('P2: ${c.score2}',
+                    Text('${AppStrings.playerTwo}: ${c.score2}',
                         style: GoogleFonts.poppins(color: Colors.cyan)),
                   ],
                 ),
@@ -89,6 +91,7 @@ class SpeedBattleScreen extends StatelessWidget {
 
   Widget _startScreen(SpeedBattleController c) {
     return Scaffold(
+      bottomNavigationBar: const BannerAdWidget(),
       body: Center(
         child: ElevatedButton(
           onPressed: c.startGame,
@@ -100,6 +103,7 @@ class SpeedBattleScreen extends StatelessWidget {
 
   Widget _gameOver(SpeedBattleController c) {
     return Scaffold(
+      bottomNavigationBar: const BannerAdWidget(),
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,

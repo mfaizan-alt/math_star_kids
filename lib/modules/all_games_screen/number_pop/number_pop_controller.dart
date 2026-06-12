@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 
 import '../../../core/commonWidgets/ads/ad_manager.dart';
 import '../../../core/commonWidgets/ads/reward_ad.dart';
+import '../../progress/progress_controller.dart';
 
 class Bubble {
   double x;
@@ -183,8 +184,8 @@ class NumberPopController extends GetxController {
       value = correctAnswer.value;
     } else {
       value = correctAnswer.value + random.nextInt(21) - 10;
+      if (value <= 0) value = correctAnswer.value + random.nextInt(10) + 1;
       if (value == correctAnswer.value) value += 1;
-      if (value < 0) value = random.nextInt(20) + 1;
     }
 
     bubbles.add(Bubble(
@@ -232,8 +233,12 @@ class NumberPopController extends GetxController {
     _moveTimer?.cancel();
     isGameOver.value = true;
     isGameStarted.value = false;
+    if (Get.isRegistered<ProgressController>()) {
+      Get.find<ProgressController>().updateHighScore(score.value);
+    }
 
     Future.delayed(const Duration(milliseconds: 300), () {
+      if (isClosed) return;
       level.value++;
       if(level.value % 3 == 0){
         AdManager.instance.show();

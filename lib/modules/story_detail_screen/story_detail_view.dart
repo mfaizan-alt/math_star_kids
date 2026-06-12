@@ -6,12 +6,22 @@ import 'package:math_carnival_kids/core/commonWidgets/ads/ad_manager.dart';
 import '../../core/colors/colors.dart';
 import '../../core/services/stars_service.dart';
 import 'story_detail_controller.dart';
+import '../../core/commonWidgets/screen_header.dart';
+import '../../core/constants/app_strings.dart';
+import '../../core/commonWidgets/ads/banner_ads.dart';
 
 class StoryDetailView extends GetView<StoryDetailController> {
   const StoryDetailView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    return StatusBarIcons(
+      light: false,
+      child: _buildScreen(context),
+    );
+  }
+
+  Widget _buildScreen(BuildContext context) {
     return Obx(() => controller.storyCompleted.value
         ? _buildCelebration()
         : _buildStoryScreen(context),
@@ -29,6 +39,7 @@ class StoryDetailView extends GetView<StoryDetailController> {
       final accentColor = controller.sceneAccent(bg);
 
       return Scaffold(
+        bottomNavigationBar: const BannerAdWidget(),
         // backgroundColor: bgColor,
         backgroundColor: TC.bg(context),
         body: SafeArea(
@@ -228,7 +239,7 @@ class StoryDetailView extends GetView<StoryDetailController> {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          'Image not found',
+                          AppStrings.imageNotFound,
                           style: GoogleFonts.nunito(
                             fontSize: 12,
                             color: accentColor.withValues(alpha: 0.5),
@@ -288,7 +299,7 @@ class StoryDetailView extends GetView<StoryDetailController> {
                   ),
                 ),
                 child: Obx(() => Text(
-                  'Scene ${controller.currentScene.value + 1} of ${controller.scenes.length}',
+                  '${AppStrings.scene} ${controller.currentScene.value + 1} ${AppStrings.of} ${controller.scenes.length}',
                   style: GoogleFonts.nunito(
                     fontSize: 11,
                     color: Colors.white,
@@ -362,8 +373,8 @@ class StoryDetailView extends GetView<StoryDetailController> {
           child: Center(
             child: Obx(() => Text(
               controller.isLastScene
-                  ? 'Finish Story 🎉'
-                  : 'Next →',
+                  ? AppStrings.finishStory
+                  : AppStrings.next,
               style: GoogleFonts.aBeeZee(
                 fontSize: 20,
                 color: Colors.white,
@@ -403,8 +414,8 @@ class StoryDetailView extends GetView<StoryDetailController> {
             itemCount: options.length,
             itemBuilder: (context, index) {
               return _buildAnswerBtn(
-                options[index] as int,
-                scene['answer'] as int,
+                options[index],
+                scene['answer'],
                 accentColor,
               );
             },
@@ -415,7 +426,7 @@ class StoryDetailView extends GetView<StoryDetailController> {
   }
 
   // ── Answer Button ────────────────────────────────
-  Widget _buildAnswerBtn(int value, int correct, Color accentColor) {
+  Widget _buildAnswerBtn(dynamic value, dynamic correct, Color accentColor) {
     return Obx(() {
       final selected = controller.selectedAnswer.value;
       final isAnswered = controller.answered.value;
@@ -489,7 +500,7 @@ class StoryDetailView extends GetView<StoryDetailController> {
           ),
           child: Text(
             correct
-                ? '🌟 Correct! Well Done!'
+                ? AppStrings.correctWellDone
                 : '❌ Not quite! Try again 😊',
             textAlign: TextAlign.center,
             style: GoogleFonts.aBeeZee(
@@ -509,6 +520,7 @@ class StoryDetailView extends GetView<StoryDetailController> {
   // ══════════════════════════════════════════════
   Widget _buildCelebration() {
     return Scaffold(
+      bottomNavigationBar: const BannerAdWidget(),
       backgroundColor: const Color(0xFF1A1A2E),
       body: SafeArea(
         child: Column(
@@ -538,7 +550,7 @@ class StoryDetailView extends GetView<StoryDetailController> {
             const SizedBox(height: 20),
 
             Text(
-              'Story Complete! 🎉',
+              AppStrings.storyComplete,
               style: GoogleFonts.aBeeZee(
                 fontSize: 32,
                 color: AppColors.yellowColor,

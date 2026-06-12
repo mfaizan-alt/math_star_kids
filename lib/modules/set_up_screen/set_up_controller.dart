@@ -25,7 +25,8 @@ class SetUpScreenController extends GetxController {
     final savedName = box.read<String>('childName') ?? '';
     final savedAvatar = box.read<String>('avatar') ?? '🦊';
 
-    if (savedName.isNotEmpty && savedName != 'Champ') {
+    // Pre-fill the saved name so it never has to be typed again.
+    if (savedName.isNotEmpty) {
       nameController.text = savedName;
     }
     selectedAvatar.value = savedAvatar;

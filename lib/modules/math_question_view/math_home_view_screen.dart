@@ -1,11 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:math_carnival_kids/core/commonWidgets/theme.dart';
 
 import '../../core/colors/colors.dart';
 import '../../core/commonWidgets/ads/banner_ads.dart';
+import '../../core/commonWidgets/screen_header.dart';
+import '../../core/constants/app_strings.dart';
+import '../../core/constants/app_text_styles.dart';
+import '../../core/models/mini_game_data_model/mani_game_model.dart';
 import '../../core/routes/routes.dart';
+import '../../core/services/stars_service.dart';
+import '../all_games_screen/addition/addition_view.dart';
+import '../all_games_screen/counting_screen/counting_view.dart';
+import '../all_games_screen/division_screen.dart';
+import '../all_games_screen/multiplication/multiplication_view.dart';
+import '../all_games_screen/subtraction/subtraction_view.dart';
+import '../progress/progress_controller.dart';
 import 'math_home_view_controller.dart';
 
 class MathHomeView extends GetView <MathHomeController>{
@@ -19,12 +31,13 @@ class MathHomeView extends GetView <MathHomeController>{
       // backgroundColor: AppColors.cream,
       backgroundColor: TC.bg(context),
       body: SafeArea(
+        top: false,
         child: SingleChildScrollView(
           child: Column(
             children: [
 
               // ── Header ─────────────────────────────
-              _buildHeader(),
+              _buildHeader(context),
 
               Padding(
                 padding: const EdgeInsets.symmetric(
@@ -37,21 +50,16 @@ class MathHomeView extends GetView <MathHomeController>{
 
                     // ── Section Title
                     Text(
-                      'Pick a Mode! 🎯',
-                      style: GoogleFonts.aBeeZee(
-                        fontSize: 22,
-                        // color: AppColors.navy,
-                        color: isDark ? Colors.white : Colors.black
-                      ),
+                      AppStrings.pickAMode,
+                      style: AppTextStyles.sectionTitle(
+                              isDark ? Colors.white : Colors.black)
+                          .copyWith(fontSize: 22),
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      'What do you want to learn today?',
-                      style: GoogleFonts.nunito(
-                        fontSize: 14,
-                        color: isDark ? Colors.white : Colors.black,
-                        fontWeight: FontWeight.w600,
-                      ),
+                      AppStrings.whatToLearn,
+                      style: AppTextStyles.body(
+                          isDark ? Colors.white : Colors.black),
                     ),
                     const SizedBox(height: 20),
                     _buildFunFactStrip(),
@@ -64,10 +72,18 @@ class MathHomeView extends GetView <MathHomeController>{
 
                     // ── Tables Card
                     _buildTablesCard(),
+                    const SizedBox(height: 24),
+
+                    // ── Learning Modules (same as Games section)
+                    Text(
+                      AppStrings.learningModules,
+                      style: AppTextStyles.sectionTitle(
+                              isDark ? Colors.white : Colors.black)
+                          .copyWith(fontSize: 22),
+                    ),
                     const SizedBox(height: 16),
-
-
-
+                    _buildModuleGrid(context),
+                    const SizedBox(height: 16),
                   ],
                 ),
               ),
@@ -80,10 +96,11 @@ class MathHomeView extends GetView <MathHomeController>{
   }
 
   // ── Header ─────────────────────────────────────
-  Widget _buildHeader() {
+  Widget _buildHeader(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(20, 24, 20, 30),
+      padding: EdgeInsets.fromLTRB(
+          20, MediaQuery.of(context).padding.top + 12, 20, 30),
       decoration: const BoxDecoration(
         gradient: LinearGradient(
           colors: [Color(0xFF4CC9F0), Color(0xFF7B2FBE)],
@@ -97,20 +114,6 @@ class MathHomeView extends GetView <MathHomeController>{
       ),
       child: Stack(
         children: [
-
-          // Decorative circles
-          Positioned(
-            top: -30,
-            right: -20,
-            child: Container(
-              width: 130,
-              height: 130,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white.withValues(alpha: 0.08),
-              ),
-            ),
-          ),
           Positioned(
             bottom: -20,
             left: -10,
@@ -129,21 +132,7 @@ class MathHomeView extends GetView <MathHomeController>{
             children: [
 
               // Back button
-              GestureDetector(
-                onTap: () => Get.back(),
-                child: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: const Icon(
-                    Icons.arrow_back_ios_new_rounded,
-                    color: Colors.white,
-                    size: 18,
-                  ),
-                ),
-              ),
+              const CircleBackButton(),
 
               const SizedBox(height: 16),
 
@@ -156,19 +145,12 @@ class MathHomeView extends GetView <MathHomeController>{
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Math Time!',
-                        style: GoogleFonts.aBeeZee(
-                          fontSize: 30,
-                          color: Colors.white,
-                        ),
+                        AppStrings.mathTitle,
+                        style: AppTextStyles.button(Colors.white, size: 30),
                       ),
                       Text(
-                        'Numbers are super fun 🌟',
-                        style: GoogleFonts.nunito(
-                          fontSize: 14,
-                          color: Colors.white.withValues(alpha: 0.8),
-                          fontWeight: FontWeight.w700,
-                        ),
+                        AppStrings.mathSubtitle,
+                        style: AppTextStyles.screenSubtitle,
                       ),
                     ],
                   ),
@@ -178,15 +160,18 @@ class MathHomeView extends GetView <MathHomeController>{
               const SizedBox(height: 18),
 
               // Stats row
-              Row(
-                children: [
-                  _statChip('🏆', 'Best: 10'),
-                  const SizedBox(width: 10),
-                  _statChip('⭐', '24 Stars'),
-                  const SizedBox(width: 10),
-                  _statChip('🔥', '3 Streak'),
-                ],
-              ),
+              Obx(() {
+                final progress = Get.find<ProgressController>();
+                return Row(
+                  children: [
+                    _statChip('🏆', 'Best: ${progress.highScore}'),
+                    const SizedBox(width: 10),
+                    _statChip('⭐', '${StarsService.to.totalStars.value} Stars'),
+                    const SizedBox(width: 10),
+                    _statChip('🔥', '${progress.currentStreak} Streak'),
+                  ],
+                );
+              }),
             ],
           ),
         ],
@@ -272,7 +257,7 @@ class MathHomeView extends GetView <MathHomeController>{
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
-                    '🔥 MOST POPULAR',
+                    AppStrings.mostPopular,
                     style: GoogleFonts.nunito(
                       fontSize: 10,
                       color: Colors.white,
@@ -285,7 +270,7 @@ class MathHomeView extends GetView <MathHomeController>{
                 const SizedBox(height: 12),
 
                 Text(
-                  '🎮 Quiz Game',
+                  AppStrings.quizGame,
                   style: GoogleFonts.aBeeZee(
                     fontSize: 28,
                     color: Colors.white,
@@ -295,7 +280,7 @@ class MathHomeView extends GetView <MathHomeController>{
                 const SizedBox(height: 6),
 
                 Text(
-                  'Answer questions and earn stars!\nBeat your high score!',
+                  AppStrings.quizGameDesc,
                   style: GoogleFonts.nunito(
                     fontSize: 14,
                     color: Colors.white.withValues(alpha: 0.85),
@@ -309,11 +294,11 @@ class MathHomeView extends GetView <MathHomeController>{
                 // Info chips row
                 Row(
                   children: [
-                    _cardChip('⏱️ Fast'),
+                    _cardChip(AppStrings.chipFast),
                     const SizedBox(width: 8),
-                    _cardChip('⭐ Earn Stars'),
+                    _cardChip(AppStrings.chipEarnStars),
                     const SizedBox(width: 8),
-                    _cardChip('🏆 Compete'),
+                    _cardChip(AppStrings.chipCompete),
                   ],
                 ),
 
@@ -416,7 +401,7 @@ class MathHomeView extends GetView <MathHomeController>{
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
-                    '📚 LEARN & PRACTICE',
+                    AppStrings.learnAndPractice,
                     style: GoogleFonts.nunito(
                       fontSize: 10,
                       color: Colors.white,
@@ -439,7 +424,7 @@ class MathHomeView extends GetView <MathHomeController>{
                 const SizedBox(height: 6),
 
                 Text(
-                  'Learn multiplication tables\nfrom 1 to 20!',
+                  AppStrings.tablesCardDesc,
                   style: GoogleFonts.nunito(
                     fontSize: 14,
                     color: Colors.white.withValues(alpha: 0.85),
@@ -453,11 +438,11 @@ class MathHomeView extends GetView <MathHomeController>{
                 // Info chips row
                 Row(
                   children: [
-                    _cardChip('🔢 1 to 20'),
+                    _cardChip(AppStrings.chipOneToTwenty),
                     const SizedBox(width: 8),
-                    _cardChip('🎵 Rhythm'),
+                    _cardChip(AppStrings.chipRhythm),
                     const SizedBox(width: 8),
-                    _cardChip('📈 Progress'),
+                    _cardChip(AppStrings.chipProgress),
                   ],
                 ),
 
@@ -490,7 +475,7 @@ class MathHomeView extends GetView <MathHomeController>{
                       ),
                       const SizedBox(width: 6),
                       Text(
-                        'Start Learning',
+                        AppStrings.startLearning,
                         style: GoogleFonts.aBeeZee(
                           fontSize: 16,
                           color: const Color(0xFF4CC9F0),
@@ -505,6 +490,90 @@ class MathHomeView extends GetView <MathHomeController>{
         ),
       ),
     );
+  }
+
+  // ── Learning Modules Grid (mirrors the Games section) ──
+  Widget _buildModuleGrid(BuildContext context) {
+    final modules = [
+      ModuleData('Counting', '🔢', AppColors.counting, CountingScreen()),
+      ModuleData('Addition', '➕', AppColors.addition, AdditionScreen()),
+      ModuleData('Subtraction', '➖', AppColors.subtraction, SubtractionScreen()),
+      ModuleData('Multiply', '✖️', AppColors.multiplication, MultiplicationScreen()),
+      ModuleData('Division', '➗', AppColors.division, const DivisionScreen()),
+    ];
+
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        crossAxisSpacing: 16,
+        mainAxisSpacing: 16,
+        childAspectRatio: 0.9,
+      ),
+      itemCount: modules.length,
+      itemBuilder: (context, index) =>
+          _buildModuleCard(context, modules[index], index),
+    );
+  }
+
+  Widget _buildModuleCard(BuildContext context, ModuleData module, int index) {
+    final isDark = Get.find<ThemeController>().isDarkMode;
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (_) => module.screen));
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardTheme.color,
+          borderRadius: BorderRadius.circular(24),
+          border:
+              Border.all(color: module.color.withValues(alpha: 0.2), width: 2),
+          boxShadow: [
+            BoxShadow(
+              color: module.color.withValues(alpha: 0.4),
+              blurRadius: 12,
+              offset: const Offset(0, 6),
+            ),
+          ],
+        ),
+        child: Center(
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: module.color.withValues(alpha: 0.25),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Text(module.emoji,
+                        style: const TextStyle(fontSize: 36)),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    module.title,
+                    style: GoogleFonts.poppins(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: isDark ? Colors.white : Colors.black,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    )
+        .animate()
+        .fadeIn(duration: 400.ms, delay: Duration(milliseconds: 100 * index))
+        .scale(begin: const Offset(0.8, 0.8), end: const Offset(1, 1));
   }
 
   // ── Fun Fact Strip ──────────────────────────────
@@ -538,7 +607,7 @@ class MathHomeView extends GetView <MathHomeController>{
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Fun Math Fact!',
+                      AppStrings.funMathFact,
                       style: GoogleFonts.fredoka(
                         fontSize: 15,
                         color: isDark ? Colors.white : Colors.black,

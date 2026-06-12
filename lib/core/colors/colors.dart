@@ -31,6 +31,14 @@ class AppColors {
     purple,
   ];
 
+  // ── Section Gradients ────────────────────────────
+  static const Color gamesPurple = Color(0xFF7B2FF7);
+  static const Color gamesPink   = Color(0xFFF107A3);
+
+  static const List<Color> gamesGradient = [gamesPurple, gamesPink];
+  static const List<Color> storyHeaderGradient = [coralColor, orangeColor];
+  static const List<Color> mathHeaderGradient = [skyBlue, purple];
+
   static const List<Color> buttonGradient = [
     coralColor,
     orangeColor,

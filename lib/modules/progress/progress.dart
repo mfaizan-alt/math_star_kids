@@ -6,6 +6,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:math_carnival_kids/modules/progress/progress_controller.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import '../../core/colors/colors.dart';
+import '../../core/commonWidgets/screen_header.dart';
+import '../../core/constants/app_strings.dart';
+import '../../core/commonWidgets/ads/banner_ads.dart';
 
 class ProgressScreen extends StatelessWidget {
   const ProgressScreen({super.key});
@@ -16,27 +19,42 @@ class ProgressScreen extends StatelessWidget {
     final progress = Get.find<ProgressController>();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('🏆 My Progress')),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
+      bottomNavigationBar: const BannerAdWidget(),
+      body: SafeArea(
+        top: false,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildOverallStats(context, progress),
+            const ScreenHeader(
+              colors: AppColors.headerGradient,
+              emoji: '🏆',
+              title: AppStrings.myProgress,
+              subtitle: AppStrings.myProgressSubtitle,
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildOverallStats(context, progress),
             const SizedBox(height: 32),
             Text(
-              'Module Progress',
+              AppStrings.moduleProgress,
               style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             _buildModuleProgress(context, progress),
             const SizedBox(height: 32),
             Text(
-              'Achievements',
+              AppStrings.achievements,
               style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 16),
-            _buildAchievements(context, progress),
+                    const SizedBox(height: 16),
+                    _buildAchievements(context, progress),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -63,7 +81,7 @@ class ProgressScreen extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Text('Total Stars Earned', style: GoogleFonts.poppins(fontSize: 14, color: Colors.white70)),
+          Text(AppStrings.totalStarsEarned, style: GoogleFonts.poppins(fontSize: 14, color: Colors.white70)),
           const SizedBox(height: 8),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -80,8 +98,8 @@ class ProgressScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _buildMiniStat('🏆', 'High Score', '${progress.highScore}'),
-              _buildMiniStat('🔥', 'Streak', '${progress.currentStreak}'),
+              _buildMiniStat('🏆', AppStrings.highScore, '${progress.highScore}'),
+              _buildMiniStat('🔥', AppStrings.streak, '${progress.currentStreak}'),
             ],
           ),
         ],
@@ -139,7 +157,7 @@ class ProgressScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(module.title, style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w600)),
-                    Text('Level $level • ⭐ $stars stars', style: GoogleFonts.poppins(fontSize: 13, color: Colors.grey)),
+                    Text('${AppStrings.level} $level • ⭐ $stars stars', style: GoogleFonts.poppins(fontSize: 13, color: Colors.grey)),
                   ],
                 ),
               ),

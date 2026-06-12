@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:confetti/confetti.dart';
 
 import '../../../core/commonWidgets/ads/reward_ad.dart';
+import '../../progress/progress_controller.dart';
+import '../../../core/constants/app_strings.dart';
 
 class RunnerGameController extends GetxController {
   final Random _random = Random();
@@ -61,6 +63,9 @@ class RunnerGameController extends GetxController {
     _gameTimer?.cancel();
     isGameOver.value = true;
     isGameStarted.value = false;
+    if (Get.isRegistered<ProgressController>()) {
+      Get.find<ProgressController>().updateHighScore(score.value);
+    }
   }
   void reviveWithLife() {
     lives.value = 1;
@@ -165,8 +170,8 @@ class RunnerGameController extends GetxController {
   }
 
   String get gameOverMessage {
-    if (score.value >= 100) return 'Amazing! You\'re a Math Champion!';
-    if (score.value >= 50) return 'Great job! Keep practicing!';
-    return 'Good try! You\'ll do better next time!';
+    if (score.value >= 100) return AppStrings.runnerMsgChampion;
+    if (score.value >= 50) return AppStrings.runnerMsgGreat;
+    return AppStrings.runnerMsgGoodTry;
   }
 }

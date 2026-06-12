@@ -4,40 +4,47 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:math_carnival_kids/modules/math_question_view/quiz_game_view/quiz_game_controller.dart';
 import '../../../core/colors/colors.dart';
+import '../../../core/commonWidgets/screen_header.dart';
+import '../../../core/constants/app_strings.dart';
+import '../../../core/constants/app_text_styles.dart';
+import '../../../core/commonWidgets/ads/banner_ads.dart';
 
 class QuizGameView extends GetView<QuizGameController> {
   const QuizGameView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // backgroundColor: const Color(0xFFE8E8FF), // light purple like reference
-      backgroundColor: TC.bg(context),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Column(
-            children: [
-              const SizedBox(height: 20),
+    return StatusBarIcons(
+      light: Theme.of(context).brightness == Brightness.dark,
+      child: Scaffold(
+        bottomNavigationBar: const BannerAdWidget(),
+        backgroundColor: TC.bg(context),
+        body: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Column(
+              children: [
+                const SizedBox(height: 16),
 
-              // Back Button
-              _buildBackButton(),
-              const SizedBox(height: 20),
+                // Back Button
+                _buildBackButton(),
+                const SizedBox(height: 16),
 
-              // Progress Section
-              _buildProgressSection(),
-              const SizedBox(height: 40),
+                // Progress Section
+                _buildProgressSection(),
+                const SizedBox(height: 24),
 
-              // Question Card
-              _buildQuestionCard(),
-              const SizedBox(height: 40),
+                // Question Card
+                _buildQuestionCard(),
+                const SizedBox(height: 24),
 
-              // Answer Buttons
-              _buildAnswerGrid(),
-              const SizedBox(height: 16),
-              _buildFeedback(),
-              const SizedBox(height: 20),
-            ],
+                // Answer Buttons
+                _buildAnswerGrid(),
+                const SizedBox(height: 12),
+                _buildFeedback(),
+                const SizedBox(height: 16),
+              ],
+            ),
           ),
         ),
       ),
@@ -46,45 +53,11 @@ class QuizGameView extends GetView<QuizGameController> {
 
   // ── Back Button ─────────────────────────────────
   Widget _buildBackButton() {
-    return Align(
+    return const Align(
       alignment: Alignment.centerLeft,
-      child: GestureDetector(
-        onTap: () => Get.back(),
-        child: Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 18,
-            vertical: 10,
-          ),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.08),
-                blurRadius: 10,
-                offset: const Offset(0, 3),
-              ),
-            ],
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(
-                Icons.arrow_back_ios_new_rounded,
-                size: 16,
-                color: Color(0xFF7B2FBE),
-              ),
-              const SizedBox(width: 6),
-              Text(
-                'Back',
-                style: GoogleFonts.aBeeZee(
-                  fontSize: 16,
-                  color: const Color(0xFF7B2FBE),
-                ),
-              ),
-            ],
-          ),
-        ),
+      child: CircleBackButton(
+        iconColor: AppColors.purple,
+        backgroundColor: Colors.white,
       ),
     );
   }
@@ -103,11 +76,8 @@ class QuizGameView extends GetView<QuizGameController> {
                 const Text('🎯', style: TextStyle(fontSize: 18)),
                 const SizedBox(width: 6),
                 Text(
-                  'Progress',
-                  style: GoogleFonts.aBeeZee(
-                    fontSize: 18,
-                    color: const Color(0xFF7B2FBE),
-                  ),
+                  AppStrings.progress,
+                  style: AppTextStyles.button(AppColors.purple, size: 18),
                 ),
               ],
             ),
@@ -115,7 +85,7 @@ class QuizGameView extends GetView<QuizGameController> {
               '${controller.currentIndex.value + 1}/10',
               style: GoogleFonts.aBeeZee(
                 fontSize: 18,
-                color: const Color(0xFF7B2FBE),
+                color: AppColors.purple,
               ),
             ),
           ],
@@ -130,7 +100,7 @@ class QuizGameView extends GetView<QuizGameController> {
             value: controller.progressValue,
             backgroundColor: Colors.white.withValues(alpha: 0.6),
             valueColor: const AlwaysStoppedAnimation<Color>(
-              Color(0xFFFF9F1C),
+              AppColors.orangeColor,
             ),
             minHeight: 14,
           ),
@@ -161,7 +131,7 @@ class QuizGameView extends GetView<QuizGameController> {
       dotColor = AppColors.coralColor;
       child = const Icon(Icons.close, size: 10, color: Colors.white);
     } else if (index == controller.currentIndex.value) {
-      dotColor = const Color(0xFF7B2FBE);
+      dotColor = AppColors.purple;
       child = const Icon(Icons.circle, size: 6, color: Colors.white);
     } else {
       dotColor = Colors.transparent;
@@ -202,12 +172,12 @@ class QuizGameView extends GetView<QuizGameController> {
           color: Colors.white,
           borderRadius: BorderRadius.circular(28),
           border: Border.all(
-            color: const Color(0xFF7B2FBE).withValues(alpha: 0.2),
+            color: AppColors.purple.withValues(alpha: 0.2),
             width: 2.5,
           ),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFF7B2FBE).withValues(alpha: 0.12),
+              color: AppColors.purple.withValues(alpha: 0.12),
               blurRadius: 24,
               offset: const Offset(0, 8),
             ),
@@ -222,21 +192,21 @@ class QuizGameView extends GetView<QuizGameController> {
                     text: '${q['a']}',
                     style: GoogleFonts.aBeeZee(
                       fontSize: 52,
-                      color: const Color(0xFF7B2FBE),
+                      color: AppColors.purple,
                     ),
                   ),
                   TextSpan(
                     text: ' ${q['op']} ',   // ← was hardcoded ' × '
                     style: GoogleFonts.aBeeZee(
                       fontSize: 52,
-                      color: const Color(0xFF7B2FBE),
+                      color: AppColors.purple,
                     ),
                   ),
                   TextSpan(
                     text: '${q['b']}',
                     style: GoogleFonts.aBeeZee(
                       fontSize: 52,
-                      color: const Color(0xFF7B2FBE),
+                      color: AppColors.purple,
                     ),
                   ),
                 ],
@@ -303,8 +273,8 @@ class QuizGameView extends GetView<QuizGameController> {
 
       if (!answered) {
         // not answered yet
-        btnColor = const Color(0xFF7B2FBE);
-        shadowColor = const Color(0xFF7B2FBE).withValues(alpha: 0.4);
+        btnColor = AppColors.purple;
+        shadowColor = AppColors.purple.withValues(alpha: 0.4);
       } else if (value == correct) {
         // correct answer — always green
         btnColor = AppColors.mintGreen;
@@ -315,7 +285,7 @@ class QuizGameView extends GetView<QuizGameController> {
         shadowColor = AppColors.coralColor.withValues(alpha: 0.4);
       } else {
         // other options — dimmed
-        btnColor = const Color(0xFF7B2FBE).withValues(alpha: 0.3);
+        btnColor = AppColors.purple.withValues(alpha: 0.3);
         shadowColor = Colors.transparent;
       }
 
@@ -353,44 +323,43 @@ class QuizGameView extends GetView<QuizGameController> {
   }
 
   Widget _buildFeedback() {
+    // Fixed height in BOTH states: no layout jump and no overflow.
     return Obx(() {
+      const double feedbackHeight = 80;
+
       if (!controller.showFeedback.value) {
-        // Empty space so layout doesn't jump
-        return const SizedBox(height: 70);
+        return const SizedBox(height: feedbackHeight);
       }
 
       final isCorrect = controller.isCorrectFeedback.value;
 
-      return AnimatedSwitcher(
-        duration: const Duration(milliseconds: 300),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20),
-          child: Column(
-            children: [
-
-              Text(
-                controller.feedbackMessage.value,
-                textAlign: TextAlign.center,
-                style: GoogleFonts.aBeeZee(
-                  fontSize: 22,
-                  color: isCorrect
-                      ? AppColors.mintGreen
-                      : AppColors.coralColor,
-                ),
-              ),
-              if (!isCorrect && controller.hintMessage.value.isNotEmpty) ...[
-                const SizedBox(height: 6),
+      return SizedBox(
+        height: feedbackHeight,
+        width: double.infinity,
+        child: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 300),
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Column(
+              children: [
                 Text(
-                  controller.hintMessage.value,
+                  controller.feedbackMessage.value,
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.nunito(
-                    fontSize: 15,
-                    color: AppColors.navy,
-                    fontWeight: FontWeight.w800,
+                  style: AppTextStyles.feedback(
+                    isCorrect ? AppColors.mintGreen : AppColors.coralColor,
                   ),
                 ),
+                if (!isCorrect &&
+                    controller.hintMessage.value.isNotEmpty) ...[
+                  const SizedBox(height: 6),
+                  Text(
+                    controller.hintMessage.value,
+                    textAlign: TextAlign.center,
+                    style: AppTextStyles.label(AppColors.navy, size: 15),
+                  ),
+                ],
               ],
-            ],
+            ),
           ),
         ),
       );

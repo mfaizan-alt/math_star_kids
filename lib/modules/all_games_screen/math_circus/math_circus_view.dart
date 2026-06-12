@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../core/colors/colors.dart';
 import 'math_circus_controller.dart';
+import '../../../core/constants/app_strings.dart';
+import '../../../core/commonWidgets/ads/banner_ads.dart';
 
 class MathCircusScreen extends StatefulWidget {
   const MathCircusScreen({super.key});
@@ -39,6 +41,7 @@ class _MathCircusScreenState extends State<MathCircusScreen> {
 
       return SafeArea(
         child: Scaffold(
+          bottomNavigationBar: const BannerAdWidget(),
           body: Stack(
             children: [
               Container(
@@ -69,7 +72,7 @@ class _MathCircusScreenState extends State<MathCircusScreen> {
                     ).animate().fadeIn(),
         
                     Text(
-                      'Level ${controller.level.value} - Balance!',
+                      '${AppStrings.level} ${controller.level.value} - ${AppStrings.balance}',
                       style: GoogleFonts.poppins(
                           fontSize: 14, color: Colors.white),
                     ),
@@ -97,7 +100,7 @@ class _MathCircusScreenState extends State<MathCircusScreen> {
                         ),
                         child: TextButton(
                             onPressed: controller.nextLevel,
-                            child: Text('Next Level', style: TextStyle(fontSize: 16,color: Colors.white),)),
+                            child: Text(AppStrings.nextLevel, style: TextStyle(fontSize: 16,color: Colors.white),)),
                       ),
         
                     const SizedBox(height: 20),
@@ -157,11 +160,11 @@ class _MathCircusScreenState extends State<MathCircusScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         Text(
-          "Target: ${controller.targetWeight.value}",
+          '${AppStrings.target}: ${controller.targetWeight.value}',
           style: TextStyle(fontSize: 18, color: Colors.black), // ✅
         ),
         Text(
-          "Now: ${controller.currentWeight.value}",
+          '${AppStrings.now}: ${controller.currentWeight.value}',
           style: TextStyle(fontSize: 18, color: Colors.black), // ✅
         ),
       ],
@@ -217,7 +220,7 @@ class _MathCircusScreenState extends State<MathCircusScreen> {
               const Text('💡', style: TextStyle(fontSize: 20)),
               const SizedBox(width: 8),
               Text(
-                'How to Play',
+                AppStrings.howToPlay,
                 style: GoogleFonts.poppins(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
@@ -227,10 +230,10 @@ class _MathCircusScreenState extends State<MathCircusScreen> {
             ],
           ),
           const SizedBox(height: 8),
-          _buildTutorialStep('1️⃣', 'See the target weight on the left side of the scale'),
-          _buildTutorialStep('2️⃣', 'Tap weights below to place them on the right side'),
-          _buildTutorialStep('3️⃣', 'Make both sides equal to balance the scale! ⚖️'),
-          _buildTutorialStep('4️⃣', 'Tap a placed weight to remove it if needed'),
+          _buildTutorialStep('1️⃣', AppStrings.circusHowTo1),
+          _buildTutorialStep('2️⃣', AppStrings.circusHowTo2),
+          _buildTutorialStep('3️⃣', AppStrings.circusHowTo3),
+          _buildTutorialStep('4️⃣', AppStrings.circusHowTo4),
         ],
       ),
     );

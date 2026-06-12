@@ -1,11 +1,10 @@
 import 'dart:math';
 import 'package:get/get.dart';
-import '../../../core/commonWidgets/ads/interstitial_ad.dart';
+import '../../../core/commonWidgets/ads/ad_manager.dart';
 import '../../progress/progress_controller.dart';
 import 'counting_view.dart';
 
 class CountingController extends GetxController {
-  final InterstitialAdService interstitial = InterstitialAdService();
   final Random random = Random();
 
   int currentNumber = 1;
@@ -26,14 +25,8 @@ class CountingController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    interstitial.loadAd();
+    AdManager.instance.load();
     generateRound();
-  }
-
-  @override
-  void onClose() {
-    interstitial.dispose();
-    super.onClose();
   }
 
   void generateRound() {

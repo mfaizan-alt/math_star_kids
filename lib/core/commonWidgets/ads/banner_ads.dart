@@ -30,6 +30,7 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
       request: const AdRequest(),
       listener: BannerAdListener(
         onAdLoaded: (_) {
+          if (!mounted) return;
           setState(() {
             isLoaded = true;
           });
@@ -46,11 +47,17 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
   @override
   Widget build(BuildContext context) {
     return isLoaded
-        ? SizedBox(
-      height: bannerAd.size.height.toDouble(),
-      width: bannerAd.size.width.toDouble(),
-      child: AdWidget(ad: bannerAd),
-    )
+        ? SafeArea(
+            top: false,
+            child: Center(
+              heightFactor: 1,
+              child: SizedBox(
+                height: bannerAd.size.height.toDouble(),
+                width: bannerAd.size.width.toDouble(),
+                child: AdWidget(ad: bannerAd),
+              ),
+            ),
+          )
         : const SizedBox();
   }
 

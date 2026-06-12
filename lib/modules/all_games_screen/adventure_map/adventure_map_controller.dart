@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:math_carnival_kids/core/services/stars_service.dart';
+import '../../../core/constants/app_strings.dart';
 
 class AdventureMapController extends GetxController {
   late StarsService starsService;
@@ -104,7 +105,7 @@ class UnlockLevelDialog extends StatelessWidget {
             const Text('🔓', style: TextStyle(fontSize: 56)),
             const SizedBox(height: 12),
             Text(
-              'Unlock $levelName',
+              '${AppStrings.unlock} $levelName',
               style: const TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
@@ -122,14 +123,14 @@ class UnlockLevelDialog extends StatelessWidget {
                 Expanded(
                   child: OutlinedButton(
                     onPressed: () => Get.back(),
-                    child: const Text('Cancel'),
+                    child: const Text(AppStrings.cancel),
                   ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: ElevatedButton(
                     onPressed: onUnlock,
-                    child: const Text('Unlock'),
+                    child: const Text(AppStrings.unlock),
                   ),
                 ),
               ],

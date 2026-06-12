@@ -8,6 +8,9 @@ import 'package:math_carnival_kids/core/commonWidgets/ads/ad_manager.dart';
 import '../../../core/colors/colors.dart';
 import '../../../core/commonWidgets/all_widgets.dart';
 import 'multiplication_controller.dart';
+import '../../../core/commonWidgets/screen_header.dart';
+import '../../../core/constants/app_strings.dart';
+import '../../../core/commonWidgets/ads/banner_ads.dart';
 
 class MultiplicationScreen extends StatelessWidget {
   MultiplicationScreen({super.key});
@@ -20,8 +23,10 @@ class MultiplicationScreen extends StatelessWidget {
     return GetBuilder<MultiplicationController>(
       builder: (controller) {
         return Scaffold(
+          bottomNavigationBar: const BannerAdWidget(),
           appBar: AppBar(
-            title: const Text('Multiplication ✖️'),
+            leading: appBarBackButton(context),
+            title: const Text(AppStrings.multiplicationTitle),
             actions: [
               AnimatedScoreCard(
                 score: controller.score,
@@ -74,11 +79,11 @@ class MultiplicationScreen extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _chip(c, 'Easy', 1),
+        _chip(c, AppStrings.easy, 1),
         const SizedBox(width: 8),
-        _chip(c, 'Medium', 2),
+        _chip(c, AppStrings.medium, 2),
         const SizedBox(width: 8),
-        _chip(c, 'Hard', 3),
+        _chip(c, AppStrings.hard, 3),
       ],
     );
   }
@@ -112,7 +117,7 @@ class MultiplicationScreen extends StatelessWidget {
     return Column(
       children: [
         Text(
-          'Question ${c.questionNumber + 1}/${c.totalQuestions}',
+          '${AppStrings.question} ${c.questionNumber + 1}/${c.totalQuestions}',
           style: GoogleFonts.poppins(fontSize: 14),
         ),
         const SizedBox(height: 8),
@@ -141,7 +146,7 @@ class MultiplicationScreen extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Text('What is',
+          Text(AppStrings.whatIs,
               style: GoogleFonts.poppins(fontSize: 16, color: Colors.grey)),
           const SizedBox(height: 8),
           Text(
@@ -204,10 +209,10 @@ class MultiplicationResultDialog extends StatelessWidget {
           children: [
             Text(
               controller.score >= 7
-                  ? '🎉 Great Job!'
+                  ? AppStrings.greatJob
                   : controller.score >= 5
-                  ? '👍 Good Try!'
-                  : '💪 Keep Practicing!',
+                  ? AppStrings.goodTry
+                  : AppStrings.keepPracticing,
               style: GoogleFonts.poppins(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -232,7 +237,7 @@ class MultiplicationResultDialog extends StatelessWidget {
             const SizedBox(height: 16),
 
             Text(
-              'Score: ${controller.score} / ${controller.totalQuestions}',
+              '${AppStrings.score}: ${controller.score} / ${controller.totalQuestions}',
               style: GoogleFonts.poppins(
                 fontSize: 20,
                 fontWeight: FontWeight.w600,
@@ -251,7 +256,7 @@ class MultiplicationResultDialog extends StatelessWidget {
                         Get.offAllNamed('/gameScreen');
                       }); // go home
                     },
-                    child: const Text('Home'),
+                    child: const Text(AppStrings.homeShort),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -268,7 +273,7 @@ class MultiplicationResultDialog extends StatelessWidget {
                         controller.resetGame();
                       });
                     },
-                    child: const Text('Again'),
+                    child: const Text(AppStrings.again),
                   ),
                 ),
               ],

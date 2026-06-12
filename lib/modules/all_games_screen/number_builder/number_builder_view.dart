@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../core/colors/colors.dart';
 import 'number_builder_controller.dart';
+import '../../../core/constants/app_strings.dart';
+import '../../../core/commonWidgets/ads/banner_ads.dart';
 
 class NumberBuilderScreen extends StatefulWidget {
   const NumberBuilderScreen({super.key});
@@ -24,6 +26,7 @@ class _NumberBuilderScreenState extends State<NumberBuilderScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: const BannerAdWidget(),
       body: Stack(
         children: [
           Container(
@@ -56,7 +59,7 @@ class _NumberBuilderScreenState extends State<NumberBuilderScreen> {
                   const SizedBox(height: 20),
                   Obx(
                     () => Text(
-                      'Level ${controller.level.value}',
+                      '${AppStrings.level} ${controller.level.value}',
                       style: GoogleFonts.poppins(
                         fontSize: 14,
                         color: Colors.white70,
@@ -70,11 +73,11 @@ class _NumberBuilderScreenState extends State<NumberBuilderScreen> {
                   const SizedBox(height: 20),
                   _currentBox(),
 
-                  _blockControl('Hundreds',controller.hundreds,controller.updateHundreds,),
+                  _blockControl(AppStrings.hundreds,controller.hundreds,controller.updateHundreds,),
 
-                  _blockControl('Tens', controller.tens, controller.updateTens),
+                  _blockControl(AppStrings.tens, controller.tens, controller.updateTens),
 
-                  _blockControl('Ones', controller.ones, controller.updateOnes),
+                  _blockControl(AppStrings.ones, controller.ones, controller.updateOnes),
 
                   const SizedBox(height: 20),
                   Obx(() => controller.showTutorial ? _buildTutorial() : const SizedBox.shrink()),
@@ -93,7 +96,7 @@ class _NumberBuilderScreenState extends State<NumberBuilderScreen> {
                           color: AppColors.blueShadow,
                         ),
 
-                        child: Center(child: Text("Next Level",style: TextStyle(fontSize: 17,color: Colors.white,fontWeight: FontWeight.w500),)),
+                        child: Center(child: Text(AppStrings.nextLevel,style: TextStyle(fontSize: 17,color: Colors.white,fontWeight: FontWeight.w500),)),
                       ),
                     )
                         : const SizedBox();
@@ -136,7 +139,7 @@ class _NumberBuilderScreenState extends State<NumberBuilderScreen> {
       ),
       child: Obx(
             () => Text(
-          "Your Number: ${controller.currentNumber}",
+          '${AppStrings.yourNumber}: ${controller.currentNumber}',
           style: const TextStyle(color: Colors.white, fontSize: 22),
         ),
       ),
@@ -154,7 +157,7 @@ class _NumberBuilderScreenState extends State<NumberBuilderScreen> {
       child: Column(
         children: [
           Text(
-            "Build this number",
+            AppStrings.buildThisNumber,
             style: TextStyle(color: Theme.of(context).colorScheme.onSurface), // ✅
           ),
           Obx(() => Text(
@@ -242,7 +245,7 @@ class _NumberBuilderScreenState extends State<NumberBuilderScreen> {
               const Text('💡', style: TextStyle(fontSize: 20)),
               const SizedBox(width: 8),
               Text(
-                'How to Play',
+                AppStrings.howToPlay,
                 style: GoogleFonts.poppins(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
@@ -252,10 +255,10 @@ class _NumberBuilderScreenState extends State<NumberBuilderScreen> {
             ],
           ),
           const SizedBox(height: 8),
-          _buildTutorialStep('1️⃣', 'Look at the target number shown at the top'),
-          _buildTutorialStep('2️⃣', 'Use the sliders to set Hundreds, Tens and Ones'),
-          _buildTutorialStep('3️⃣', 'Example: 253 = 2 Hundreds + 5 Tens + 3 Ones'),
-          _buildTutorialStep('4️⃣', 'Match the number exactly to move to next level! 🎉'),
+          _buildTutorialStep('1️⃣', AppStrings.builderHowTo1),
+          _buildTutorialStep('2️⃣', AppStrings.builderHowTo2),
+          _buildTutorialStep('3️⃣', AppStrings.builderExample),
+          _buildTutorialStep('4️⃣', AppStrings.builderHowTo3),
         ],
       ),
     );

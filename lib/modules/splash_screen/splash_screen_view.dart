@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:math_carnival_kids/modules/splash_screen/splash_screen_controller.dart';
 
 import '../../core/colors/colors.dart';
+import '../../core/constants/app_strings.dart';
 
 
 
@@ -75,7 +76,7 @@ class SplashScreenView extends GetView<SplashScreenController> {
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  'LearnQuest',
+                  AppStrings.splashTitle,
                   style: GoogleFonts.aBeeZee(
                     fontSize: 38,
                     color: Colors.white,
@@ -90,7 +91,7 @@ class SplashScreenView extends GetView<SplashScreenController> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Learn · Play · Grow',
+                  AppStrings.splashTagline,
                   style: GoogleFonts.googleSans(
                     fontSize: 16,
                     color: Colors.white.withValues(alpha: 0.85),

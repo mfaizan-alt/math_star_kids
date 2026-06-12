@@ -6,6 +6,8 @@ import 'package:math_carnival_kids/modules/set_up_screen/set_up_controller.dart'
 import '../../core/colors/colors.dart';
 import '../../core/commonWidgets/ads/banner_ads.dart';
 import '../../core/commonWidgets/theme.dart';
+import '../../core/commonWidgets/screen_header.dart';
+import '../../core/constants/app_strings.dart';
 
 class SetupScreenView extends GetView<SetUpScreenController> {
   const SetupScreenView({super.key});
@@ -14,6 +16,13 @@ class SetupScreenView extends GetView<SetUpScreenController> {
 // Replace the build method start:
   @override
   Widget build(BuildContext context) {
+    return StatusBarIcons(
+      light: Theme.of(context).brightness == Brightness.dark,
+      child: _buildScreen(context),
+    );
+  }
+
+  Widget _buildScreen(BuildContext context) {
     return Obx(() {
       final isDark = Get.find<ThemeController>().isDarkMode;
       return Scaffold(
@@ -50,7 +59,7 @@ class SetupScreenView extends GetView<SetUpScreenController> {
         const SizedBox(height: 12),
         Center(
           child: Text(
-            "What's Your Name?",
+            AppStrings.whatsYourName,
             style: GoogleFonts.aBeeZee(
               fontSize: 28,
               color: isDark ? Colors.white : AppColors.navy, // ✅
@@ -60,7 +69,7 @@ class SetupScreenView extends GetView<SetUpScreenController> {
         const SizedBox(height: 6),
         Center(
           child: Text(
-            'Your parent can set this up for you!',
+            AppStrings.parentSetupHint,
             style: GoogleFonts.nunito(
               fontSize: 14,
               color: AppColors.grey, // grey works on both themes
@@ -98,7 +107,7 @@ class SetupScreenView extends GetView<SetUpScreenController> {
           color: isDark ? Colors.white : AppColors.navy,
         ),
         decoration: InputDecoration(
-          hintText: 'Enter name here...',
+          hintText: AppStrings.enterNameHint,
           hintStyle: GoogleFonts.aBeeZee(
             fontSize: 18,
             color: isDark ? Colors.white38 : Colors.black,
@@ -118,7 +127,7 @@ class SetupScreenView extends GetView<SetUpScreenController> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Pick Your Avatar 😊',
+          AppStrings.pickYourAvatar,
           style: GoogleFonts.aBeeZee(
             fontSize: 18,
             color: isDark ? Colors.white : AppColors.navy, // ✅
@@ -182,7 +191,7 @@ class SetupScreenView extends GetView<SetUpScreenController> {
   //     crossAxisAlignment: CrossAxisAlignment.start,
   //     children: [
   //       Text(
-  //         'Choose Language 🌍',
+  //         AppStrings.chooseLanguage,
   //         style: GoogleFonts.aBeeZee(
   //           fontSize: 18,
   //           color: AppColors.navy,
@@ -269,7 +278,7 @@ class SetupScreenView extends GetView<SetUpScreenController> {
         ),
         child: Center(
           child: Text(
-            "Let's Go! 🚀",
+            AppStrings.letsGo,
             style: GoogleFonts.aBeeZee(
               fontSize: 22,
               color: AppColors.white,

@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:confetti/confetti.dart';
 import 'package:get/get.dart';
 
+import '../../progress/progress_controller.dart';
 import 'multiplication_view.dart';
 
 class MultiplicationController extends GetxController {
@@ -97,6 +98,17 @@ class MultiplicationController extends GetxController {
   }
 
   void showResultDialog() {
+    final stars = score >= 9
+        ? 3
+        : score >= 7
+            ? 2
+            : score >= 5
+                ? 1
+                : 0;
+    if (Get.isRegistered<ProgressController>()) {
+      Get.find<ProgressController>().addStars('multiplication', stars);
+    }
+
     Get.dialog(
       MultiplicationResultDialog(),
       barrierDismissible: false,

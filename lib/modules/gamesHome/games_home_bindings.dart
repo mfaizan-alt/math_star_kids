@@ -7,9 +7,11 @@ import '../progress/progress_controller.dart';
 class GamesHomeBinding implements Bindings {
   @override
   void dependencies() {
-    // Initialize ProgressController for tracking game progress and stars
-    Get.lazyPut<ProgressController>(() => ProgressController());
-    
+    // ProgressController is registered permanently in main().
+    if (!Get.isRegistered<ProgressController>()) {
+      Get.put(ProgressController(), permanent: true);
+    }
+
     // Initialize GamesHomeController
     Get.lazyPut<GamesHomeController>(() => GamesHomeController());
     

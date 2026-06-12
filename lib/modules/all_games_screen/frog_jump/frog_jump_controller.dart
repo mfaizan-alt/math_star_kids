@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:get/get.dart';
 
 import '../../../core/commonWidgets/ads/reward_ad.dart';
+import '../../progress/progress_controller.dart';
 
 class FrogJumpController extends GetxController {
   final Random _random = Random();
@@ -93,18 +94,25 @@ class FrogJumpController extends GetxController {
       correctAnswer.value = num1.value * num2.value;
     }
 
-    List<int> temp = List.generate(
-      5,
-          (_) => correctAnswer.value + _random.nextInt(21) - 10,
-    );
+    // Build 4 distinct, positive wrong answers around the correct one.
+    final wrong = <int>{};
+    while (wrong.length < 4) {
+      int candidate = correctAnswer.value + _random.nextInt(21) - 10;
+      if (candidate > 0 && candidate != correctAnswer.value) {
+        wrong.add(candidate);
+      }
+    }
 
-    temp[_random.nextInt(5)] = correctAnswer.value;
+    List<int> temp = wrong.toList();
+    temp.insert(_random.nextInt(5), correctAnswer.value);
 
     padAnswers.value = temp;
   }
 
   void jumpTo(int pad) {
     if (isGameOver.value || !isGameStarted.value || showFeedback.value) return;
+
+    _timer?.cancel(); // stop the countdown while feedback is showing
 
     frogPosition.value = pad;
 
@@ -128,6 +136,7 @@ class FrogJumpController extends GetxController {
   }
 
   void wrongAnswer() {
+    _timer?.cancel();
     lives.value--;
 
     isCorrect.value = false;
@@ -136,6 +145,9 @@ class FrogJumpController extends GetxController {
     if (lives.value <= 0) {
       isGameOver.value = true;
       isGameStarted.value = false;
+      if (Get.isRegistered<ProgressController>()) {
+        Get.find<ProgressController>().updateHighScore(score.value);
+      }
     } else {
       Future.delayed(const Duration(milliseconds: 800), () {
         showFeedback.value = false;

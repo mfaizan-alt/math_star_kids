@@ -4,6 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../core/colors/colors.dart';
 import '../../../core/commonWidgets/ads/ad_manager.dart';
 import '../../../core/routes/routes.dart';
+import '../../../core/constants/app_strings.dart';
+import '../../../core/commonWidgets/ads/banner_ads.dart';
 
 class QuizResultScreen extends StatelessWidget {
   const QuizResultScreen({super.key});
@@ -15,6 +17,7 @@ class QuizResultScreen extends StatelessWidget {
     final stars = score >= 9 ? 3 : score >= 7 ? 2 : score >= 5 ? 1 : 0;
 
     return Scaffold(
+      bottomNavigationBar: const BannerAdWidget(),
       backgroundColor: TC.bg(context),
       body: SafeArea(
         child: Padding(
@@ -43,7 +46,7 @@ class QuizResultScreen extends StatelessWidget {
               const SizedBox(height: 24),
 
               Text(
-                stars == 3 ? '🏆 Math Champion!' : stars == 2 ? '🌟 Great Job!' : stars == 1 ? '👍 Good Try!' : '💪 Keep Practicing!',
+                stars == 3 ? AppStrings.mathChampion : stars == 2 ? AppStrings.greatJobStar : stars == 1 ? AppStrings.goodTry : AppStrings.keepPracticing,
                 style: GoogleFonts.aBeeZee(
                   fontSize: 28,
                   color: const Color(0xFF7B2FBE),
@@ -71,7 +74,7 @@ class QuizResultScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     Text(
-                      'Your Score',
+                      AppStrings.yourScore,
                       style: GoogleFonts.nunito(
                         fontSize: 14,
                         color: Colors.grey[500],
@@ -137,7 +140,7 @@ class QuizResultScreen extends StatelessWidget {
                   child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                     const Icon(Icons.map_rounded, color: Colors.white, size: 22),
                     const SizedBox(width: 8),
-                    Text('Continue to Game Screen',
+                    Text(AppStrings.continueToGame,
                       style: GoogleFonts.aBeeZee(
                         fontSize: 18,
                         color: Colors.white,
@@ -175,7 +178,7 @@ class QuizResultScreen extends StatelessWidget {
                   child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                     Icon(Icons.replay_rounded, color: const Color(0xFF7B2FBE), size: 20),
                     const SizedBox(width: 8),
-                    Text('Play Again',
+                    Text(AppStrings.playAgain,
                       style: GoogleFonts.aBeeZee(
                         fontSize: 16,
                         color: const Color(0xFF7B2FBE),

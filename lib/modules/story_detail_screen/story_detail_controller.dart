@@ -6,7 +6,7 @@ class StoryDetailController extends GetxController {
   final currentScene = 0.obs;
   final answered = false.obs;
   final showFeedback = false.obs;
-  final selectedAnswer = (-1).obs;
+  final selectedAnswer = Rx<dynamic>(-1);
   final isCorrect = false.obs;
   final storyCompleted = false.obs;
 
@@ -101,7 +101,7 @@ class StoryDetailController extends GetxController {
   void checkAnswer(dynamic value) {
     if (answered.value) return;
 
-    selectedAnswer.value = value is int ? value : -1;
+    selectedAnswer.value = value;
     final correctAnswer = currentSceneData['answer'];
 
     isCorrect.value = value == correctAnswer;

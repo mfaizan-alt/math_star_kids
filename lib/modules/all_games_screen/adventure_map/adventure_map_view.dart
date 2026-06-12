@@ -14,6 +14,8 @@ import '../number_pop/number_pop_view.dart';
 import '../runner_game/runner_view.dart';
 import '../speed_battle/speed_battle_view.dart';
 import 'adventure_map_controller.dart';
+import '../../../core/commonWidgets/screen_header.dart';
+import '../../../core/constants/app_strings.dart';
 
 class AdventureMapScreen extends StatelessWidget {
   AdventureMapScreen({super.key});
@@ -22,18 +24,25 @@ class AdventureMapScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return StatusBarIcons(
+      light: false,
+      child: _buildScreen(context),
+    );
+  }
+
+  Widget _buildScreen(BuildContext context) {
     return Obx(() {
       final totalStars = controller.totalStars;
       final isDark = Get.find<ThemeController>().isDarkMode;
 
       final levels = [
-        _MapLevel('Math Runner', '🏃', 0, const RunnerGameScreen(), const Color(0xFF6BCB77), '/mathRunner'),
-        _MapLevel('Number Pop', '🫧', 10, const NumberPopScreen(), const Color(0xFFFF6EB4), '/numberPop'),
-        _MapLevel('Math Puzzle', '🧩', 25, const MathPuzzleScreen(), const Color(0xFFFFD93D), '/mathPuzzle'),
-        _MapLevel('Math Circus', '🎪', 40, const MathCircusScreen(), const Color(0xFFDC143C), '/mathCircus'),
-        _MapLevel('Number Builder', '🏗️', 60, const NumberBuilderScreen(), const Color(0xFF764ba2), '/numberBuilder'),
-        _MapLevel('Frog Jump', '🐸', 80, FrogJumpScreen(), const Color(0xFF2E7D32), '/frogJump'),
-        _MapLevel('Speed Battle', '⚡', 100, SpeedBattleScreen(), const Color(0xFFFF6B6B), '/speedBattle'),
+        _MapLevel(AppStrings.gameMathRunner, '🏃', 0, const RunnerGameScreen(), const Color(0xFF6BCB77), '/mathRunner'),
+        _MapLevel(AppStrings.gameNumberPop, '🫧', 10, const NumberPopScreen(), const Color(0xFFFF6EB4), '/numberPop'),
+        _MapLevel(AppStrings.gameMathPuzzle, '🧩', 25, const MathPuzzleScreen(), const Color(0xFFFFD93D), '/mathPuzzle'),
+        _MapLevel(AppStrings.gameMathCircus, '🎪', 40, const MathCircusScreen(), const Color(0xFFDC143C), '/mathCircus'),
+        _MapLevel(AppStrings.gameNumberBuilder, '🏗️', 60, const NumberBuilderScreen(), const Color(0xFF764ba2), '/numberBuilder'),
+        _MapLevel(AppStrings.gameFrogJump, '🐸', 80, FrogJumpScreen(), const Color(0xFF2E7D32), '/frogJump'),
+        _MapLevel(AppStrings.gameSpeedBattle, '⚡', 100, SpeedBattleScreen(), const Color(0xFFFF6B6B), '/speedBattle'),
       ];
 
       return Scaffold(
@@ -95,7 +104,7 @@ class AdventureMapScreen extends StatelessWidget {
                       ),
                     ).animate().fadeIn(),
                     Text(
-                      'Unlock new games by earning stars!',
+                      AppStrings.unlockByStars,
                       style: GoogleFonts.poppins(
                         fontSize: 14,
                         color: isDark ? Colors.white70 : Colors.grey[700], // ✅
@@ -181,7 +190,7 @@ class AdventureMapScreen extends StatelessWidget {
                                                 ),
                                                 Text(
                                                   isUnlocked
-                                                      ? 'Play now!'
+                                                      ? AppStrings.playNowShort
                                                       : '⭐ ${level.starsRequired} to unlock',
                                                   style: GoogleFonts.poppins(
                                                     fontSize: 11,

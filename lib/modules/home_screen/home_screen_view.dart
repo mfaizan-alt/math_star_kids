@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:math_carnival_kids/core/commonWidgets/ads/banner_ads.dart';
 import '../../core/colors/colors.dart';
+import '../../core/constants/app_strings.dart';
+import '../../core/constants/app_text_styles.dart';
 import '../../core/commonWidgets/theme.dart';
 import '../../core/models/subject_model/subject_models.dart';
 import '../../core/routes/routes.dart';
@@ -22,7 +24,8 @@ class HomeScreenView extends GetView<HomeScreenController> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildHeader(context, ThemeController(), ProgressController()),
+            _buildHeader(context, Get.find<ThemeController>(),
+                Get.find<ProgressController>()),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               child: Column(
@@ -31,11 +34,9 @@ class HomeScreenView extends GetView<HomeScreenController> {
                   _buildMissionCard(),
                   const SizedBox(height: 20),
                   Text(
-                    '📚 Subjects',
-                    style: GoogleFonts.aBeeZee(
-                      fontSize: 20,
-                      color: Theme.of(context).colorScheme.onSurface,
-                    ),
+                    AppStrings.subjects,
+                    style: AppTextStyles.sectionTitle(
+                        Theme.of(context).colorScheme.onSurface),
                   ),
                   const SizedBox(height: 15),
                   _buildSubjectsGrid(),
@@ -54,11 +55,10 @@ class HomeScreenView extends GetView<HomeScreenController> {
 
   Widget _buildHeader(BuildContext context, ThemeController themeProvider,
       ProgressController progress) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final topPad = MediaQuery.of(context).padding.top;
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(20, 45, 20, 28),
       decoration: const BoxDecoration(
         gradient: LinearGradient(
           colors: AppColors.headerGradient, // gradient stays same
@@ -72,137 +72,106 @@ class HomeScreenView extends GetView<HomeScreenController> {
       ),
       child: Stack(
         children: [
+          // Shape hugging the top-right device corner (no padding offset)
           Positioned(
-            top: -40,
-            right: -30,
+            top: -55,
+            right: -55,
             child: Container(
-              width: 160,
-              height: 160,
+              width: 195,
+              height: 195,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.white.withValues(alpha: 0.1),
+                color: Colors.white.withValues(alpha: 0.12),
               ),
             ),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+          // Colorful quick actions centered on the visible part of the shape
+          Positioned(
+            top: topPad + 2,
+            right: 12,
+            child: Row(
+              children: [
+                IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => const ProgressScreen()));
+                  },
+                  icon: const Icon(Icons.emoji_events_rounded,
+                      size: 28, color: Color(0xFFFFD166)),
+                ),
+                GetBuilder<ThemeController>(
+                  builder: (themeProvider) => IconButton(
+                    onPressed: themeProvider.toggleTheme,
+                    icon: Icon(
+                      themeProvider.isDarkMode
+                          ? Icons.light_mode_rounded
+                          : Icons.dark_mode_rounded,
+                      size: 28,
+                      color: themeProvider.isDarkMode
+                          ? const Color(0xFFFFE066)
+                          : const Color(0xFF8DF6FF),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(20, topPad + 16, 20, 28),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  AppStrings.welcomeBack,
+                  style: AppTextStyles.button(Colors.white, size: 17)
+                      .copyWith(fontWeight: FontWeight.w700),
+                ),
+                const SizedBox(height: 6),
+                Obx(() => GestureDetector(
+                  onTap: () {
+                    Get.toNamed(Routes.setUpScreen)
+                        ?.then((_) => controller.loadUserData());
+                  },
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(
-                        'Welcome Back,',
-                        style: GoogleFonts.aBeeZee(
-                          fontSize: 17,
-                          color: Colors.white, // ✅ on gradient — always white
-                          fontWeight: FontWeight.w700,
+                      ShaderMask(
+                        shaderCallback: (bounds) => const LinearGradient(
+                          colors: [Color(0xFFFFF3B0), Color(0xFFFFC15E)],
+                        ).createShader(bounds),
+                        child: Text(
+                          controller.childName.value,
+                          style: GoogleFonts.aBeeZee(
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            shadows: const [
+                              Shadow(
+                                color: Colors.black26,
+                                blurRadius: 6,
+                                offset: Offset(0, 2),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                      const SizedBox(height: 2),
-                      // Obx(() => GestureDetector(
-                      //   onTap: () {
-                      //     Get.toNamed(Routes.setUpScreen)
-                      //         ?.then((_) => controller.loadUserData());
-                      //   },
-                      //   child: Container(
-                      //     height: 40,
-                      //     width: 120,
-                      //     decoration: BoxDecoration(
-                      //       borderRadius: BorderRadius.circular(10),
-                      //       color: isDark // ✅
-                      //           ? AppColors.cardDark
-                      //           : Colors.white,
-                      //       border: Border.all(
-                      //         color: isDark
-                      //             ? AppColors.textSecondaryDark
-                      //             : Colors.black,
-                      //       ),
-                      //     ),
-                      //     child: Center(
-                      //       child: Text(
-                      //         ' ${controller.childName.value} ${controller.childAvatar.value} ',
-                      //         style: GoogleFonts.aBeeZee(
-                      //           fontSize: 26,
-                      //           color: isDark // ✅
-                      //               ? AppColors.textPrimaryDark
-                      //               : Colors.black,
-                      //         ),
-                      //       ),
-                      //     ),
-                      //   ),
-                      // )),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Obx(() => GestureDetector(
-                            onTap: () {
-                              Get.toNamed(Routes.setUpScreen)
-                                  ?.then((_) => controller.loadUserData());
-                            },
-                            child: Container(
-                              height: 40,
-                              width: 120,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: isDark // ✅
-                                    ? AppColors.cardDark
-                                    : Colors.white,
-                                border: Border.all(
-                                  color: isDark
-                                      ? AppColors.textSecondaryDark
-                                      : Colors.black,
-                                ),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  ' ${controller.childName.value} ${controller.childAvatar.value} ',
-                                  style: GoogleFonts.aBeeZee(
-                                    fontSize: 26,
-                                    color: isDark // ✅
-                                        ? AppColors.textPrimaryDark
-                                        : Colors.black,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          )),
-                          SizedBox(width: 100,),
-                          IconButton(
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (_) => const ProgressScreen()));
-                            },
-                            icon: const Icon(Icons.emoji_events_rounded,
-                                size: 28, color: Colors.white),
-                          ),
-                          GetBuilder<ThemeController>(
-                            builder: (themeProvider) => IconButton(
-                              onPressed: () {
-                                themeProvider.toggleTheme();
-                                print('isDark: ${themeProvider.isDarkMode}');
-                                print('themeMode: ${themeProvider.themeMode}');
-                              },
-                              icon: Icon(
-                                themeProvider.isDarkMode
-                                    ? Icons.light_mode_rounded
-                                    : Icons.dark_mode_rounded,
-                                size: 28,
-                                color: Colors.white, // ✅ on gradient
-                              ),
-                            ),
-                          ),
-                        ],
+                      const SizedBox(width: 8),
+                      Text(
+                        controller.childAvatar.value,
+                        style: const TextStyle(fontSize: 30),
+                      ),
+                      const SizedBox(width: 8),
+                      Icon(
+                        Icons.edit_rounded,
+                        size: 16,
+                        color: Colors.white.withValues(alpha: 0.8),
                       ),
                     ],
                   ),
-                ],
-              ),
-              const SizedBox(height: 14),
+                )),
+                const SizedBox(height: 14),
               Obx(() => Container(
                 padding: const EdgeInsets.symmetric(
                     horizontal: 14, vertical: 7),
@@ -236,7 +205,8 @@ class HomeScreenView extends GetView<HomeScreenController> {
                   ],
                 ),
               )),
-            ],
+              ],
+            ),
           ),
         ],
       ),
@@ -311,11 +281,9 @@ class HomeScreenView extends GetView<HomeScreenController> {
                     ],
                   ),
                   child: Text(
-                    '▶  Play Now',
-                    style: GoogleFonts.aBeeZee(
-                      fontSize: 15,
-                      color: AppColors.orangeColor,
-                    ),
+                    AppStrings.playNow,
+                    style: AppTextStyles.button(AppColors.orangeColor,
+                        size: 15),
                   ),
                 ),
               ),
@@ -330,22 +298,22 @@ class HomeScreenView extends GetView<HomeScreenController> {
     final List<SubjectModel> subjects = [
       SubjectModel(
         icon: Icons.menu_book,
-        name: 'Story Mode',
-        count: '11 stories',
+        name: AppStrings.subjectStoryMode,
+        count: AppStrings.subjectStoryCount,
         gradient: [const Color(0xFFEF476F), const Color(0xFFFF9F1C)],
         route: '/storyModeScreen',
       ),
       SubjectModel(
         icon: Icons.calculate,
-        name: 'Math',
-        count: 'Tables & more',
+        name: AppStrings.subjectMath,
+        count: AppStrings.subjectMathCount,
         gradient: [const Color(0xFF4CC9F0), const Color(0xFF7B2FBE)],
         route: '/mathScreen',
       ),
       SubjectModel(
         icon: Icons.videogame_asset,
-        name: 'Games',
-        count: 'Play & Learn',
+        name: AppStrings.subjectGames,
+        count: AppStrings.subjectGamesCount,
         gradient: [const Color(0xFF7B2FF7), const Color(0xFFF107A3)],
         route: '/gameScreen',
       ),
@@ -387,24 +355,38 @@ class HomeScreenView extends GetView<HomeScreenController> {
           ),
           borderRadius: BorderRadius.circular(20),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: Stack(
           children: [
-            Icon(subject.icon, size: 34, color: Colors.white),
+            // Big alpha icon as background decoration (mission-card style)
+            Positioned(
+              right: -10,
+              bottom: -10,
+              child: Icon(
+                subject.icon,
+                size: 96,
+                color: Colors.white.withValues(alpha: 0.22),
+              ),
+            ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(subject.name,
-                    style: GoogleFonts.aBeeZee(
-                        textStyle: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 17,
-                            fontWeight: FontWeight.w600))),
-                Text(subject.count,
-                    style: GoogleFonts.aBeeZee(
-                        textStyle: const TextStyle(
-                            color: Colors.white, fontSize: 13))),
+                Icon(subject.icon, size: 34, color: Colors.white),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(subject.name,
+                        style: GoogleFonts.aBeeZee(
+                            textStyle: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 17,
+                                fontWeight: FontWeight.w600))),
+                    Text(subject.count,
+                        style: GoogleFonts.aBeeZee(
+                            textStyle: const TextStyle(
+                                color: Colors.white, fontSize: 13))),
+                  ],
+                ),
               ],
             ),
           ],

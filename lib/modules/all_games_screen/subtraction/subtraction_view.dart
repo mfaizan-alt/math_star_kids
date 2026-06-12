@@ -7,6 +7,9 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../core/colors/colors.dart';
 import '../../../core/commonWidgets/all_widgets.dart';
 import 'subtraction_controller.dart';
+import '../../../core/commonWidgets/screen_header.dart';
+import '../../../core/constants/app_strings.dart';
+import '../../../core/commonWidgets/ads/banner_ads.dart';
 
 class SubtractionScreen extends StatelessWidget {
   SubtractionScreen({super.key});
@@ -18,8 +21,10 @@ class SubtractionScreen extends StatelessWidget {
     return GetBuilder<SubtractionController>(
       builder: (controller) {
         return Scaffold(
+          bottomNavigationBar: const BannerAdWidget(),
           appBar: AppBar(
-            title: const Text('Subtraction ➖'),
+            leading: appBarBackButton(context),
+            title: const Text(AppStrings.subtractionTitle),
             actions: [
               AnimatedScoreCard(
                 score: controller.score,
@@ -70,11 +75,11 @@ class SubtractionScreen extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _buildDifficultyChip(controller, 'Easy', 1),
+        _buildDifficultyChip(controller, AppStrings.easy, 1),
         const SizedBox(width: 8),
-        _buildDifficultyChip(controller, 'Medium', 2),
+        _buildDifficultyChip(controller, AppStrings.medium, 2),
         const SizedBox(width: 8),
-        _buildDifficultyChip(controller, 'Hard', 3),
+        _buildDifficultyChip(controller, AppStrings.hard, 3),
       ],
     );
   }
@@ -117,7 +122,7 @@ class SubtractionScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Question ${controller.questionNumber + 1}/${controller.totalQuestions}',
+              '${AppStrings.question} ${controller.questionNumber + 1}/${controller.totalQuestions}',
               style: GoogleFonts.poppins(fontSize: 14),
             ),
           ],
@@ -159,7 +164,7 @@ class SubtractionScreen extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            'What is',
+            AppStrings.whatIs,
             style: GoogleFonts.poppins(fontSize: 16, color: Colors.grey),
           ),
           const SizedBox(height: 8),
@@ -235,10 +240,10 @@ class ResultDialog extends StatelessWidget {
           children: [
             Text(
               score >= 7
-                  ? '🎉 Great Job!'
+                  ? AppStrings.greatJob
                   : score >= 5
-                  ? '👍 Good Try!'
-                  : '💪 Keep Practicing!',
+                  ? AppStrings.goodTry
+                  : AppStrings.keepPracticing,
               style: GoogleFonts.poppins(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -259,7 +264,7 @@ class ResultDialog extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              'Score: $score / $total',
+              '${AppStrings.score}: $score / $total',
               style: GoogleFonts.poppins(
                 fontSize: 20,
                 fontWeight: FontWeight.w600,
@@ -270,7 +275,7 @@ class ResultDialog extends StatelessWidget {
               children: [
                 Expanded(
                   child: DialogButton(
-                    text: 'Home',
+                    text: AppStrings.homeShort,
                     icon: Icons.home_rounded,
                     backgroundColor: Colors.blueGrey.shade400,
                     textColor: Colors.white,
@@ -280,7 +285,7 @@ class ResultDialog extends StatelessWidget {
                 const SizedBox(width: 12),
                 Expanded(
                   child: DialogButton(
-                    text: 'Play Again',
+                    text: AppStrings.playAgain,
                     icon: Icons.replay_rounded,
                     backgroundColor: Colors.deepPurple,
                     textColor: Colors.white,

@@ -7,7 +7,10 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../core/colors/colors.dart';
 import '../../core/commonWidgets/ads/ad_manager.dart';
 import '../../core/commonWidgets/all_widgets.dart';
+import '../../core/commonWidgets/screen_header.dart';
 import '../progress/progress_controller.dart';
+import '../../core/constants/app_strings.dart';
+import '../../core/commonWidgets/ads/banner_ads.dart';
 
 class DivisionScreen extends StatefulWidget {
   const DivisionScreen({super.key});
@@ -111,7 +114,7 @@ class _DivisionScreenState extends State<DivisionScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                _score >= 7 ? '🎉 Great Job!' : _score >= 5 ? '👍 Good Try!' : '💪 Keep Practicing!',
+                _score >= 7 ? AppStrings.greatJob : _score >= 5 ? AppStrings.goodTry : AppStrings.keepPracticing,
                 style: GoogleFonts.poppins(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16),
@@ -122,13 +125,13 @@ class _DivisionScreenState extends State<DivisionScreen> {
                 }),
               ),
               const SizedBox(height: 16),
-              Text('Score: $_score / $_totalQuestions', style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.w600)),
+              Text('${AppStrings.score}: $_score / $_totalQuestions', style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.w600)),
               const SizedBox(height: 24),
               Row(
                 children: [
                   Expanded(
                     child: DialogButton(
-                      text: 'Home',
+                      text: AppStrings.homeShort,
                       icon: Icons.home_rounded,
                       backgroundColor: Colors.blueGrey,
                       textColor: Colors.white,
@@ -145,7 +148,7 @@ class _DivisionScreenState extends State<DivisionScreen> {
                   const SizedBox(width: 12),
                   Expanded(
                     child: DialogButton(
-                      text: 'Again',
+                      text: AppStrings.again,
                       icon: Icons.replay_rounded,
                       backgroundColor: Colors.deepPurple,
                       textColor: Colors.white,
@@ -176,8 +179,10 @@ class _DivisionScreenState extends State<DivisionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: const BannerAdWidget(),
       appBar: AppBar(
-        title: const Text('Division ➗'),
+            leading: appBarBackButton(context),
+        title: const Text(AppStrings.divisionTitle),
         actions: [
           AnimatedScoreCard(score: _score, total: _totalQuestions, color: AppColors.division),
           const SizedBox(width: 16),
@@ -218,11 +223,11 @@ class _DivisionScreenState extends State<DivisionScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _buildDifficultyChip('Easy', 1),
+        _buildDifficultyChip(AppStrings.easy, 1),
         const SizedBox(width: 8),
-        _buildDifficultyChip('Medium', 2),
+        _buildDifficultyChip(AppStrings.medium, 2),
         const SizedBox(width: 8),
-        _buildDifficultyChip('Hard', 3),
+        _buildDifficultyChip(AppStrings.hard, 3),
       ],
     );
   }
@@ -257,7 +262,7 @@ class _DivisionScreenState extends State<DivisionScreen> {
   Widget _buildProgressBar() {
     return Column(
       children: [
-        Text('Question ${_questionNumber + 1}/$_totalQuestions', style: GoogleFonts.poppins(fontSize: 14)),
+        Text('${AppStrings.question} ${_questionNumber + 1}/$_totalQuestions', style: GoogleFonts.poppins(fontSize: 14)),
         const SizedBox(height: 8),
         ClipRRect(
           borderRadius: BorderRadius.circular(10),
@@ -284,7 +289,7 @@ class _DivisionScreenState extends State<DivisionScreen> {
       ),
       child: Column(
         children: [
-          Text('What is', style: GoogleFonts.poppins(fontSize: 16, color: Colors.grey)),
+          Text(AppStrings.whatIs, style: GoogleFonts.poppins(fontSize: 16, color: Colors.grey)),
           const SizedBox(height: 8),
           Text(
             '$_num1 ÷ $_num2 = ?',

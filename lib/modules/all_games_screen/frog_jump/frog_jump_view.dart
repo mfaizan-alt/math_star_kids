@@ -7,6 +7,9 @@ import '../../../core/commonWidgets/ads/ad_manager.dart';
 import '../../../core/commonWidgets/ads/reward_ad.dart';
 import '../../../core/commonWidgets/theme.dart';
 import 'frog_jump_controller.dart';
+import '../../../core/commonWidgets/screen_header.dart';
+import '../../../core/constants/app_strings.dart';
+import '../../../core/commonWidgets/ads/banner_ads.dart';
 
 class FrogJumpScreen extends StatelessWidget {
   FrogJumpScreen({super.key});
@@ -16,10 +19,18 @@ class FrogJumpScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return StatusBarIcons(
+      light: false,
+      child: _buildScreen(context),
+    );
+  }
+
+  Widget _buildScreen(BuildContext context) {
     return Obx(() {
       final isDark = Get.find<ThemeController>().isDarkMode;
 
       return Scaffold(
+        bottomNavigationBar: const BannerAdWidget(),
         body: Obx(() {
           return Stack(
             children: [
@@ -173,7 +184,7 @@ class FrogJumpScreen extends StatelessWidget {
             ),
             const SizedBox(height: 14),
             Text(
-              'Frog Jump',
+              AppStrings.frogJumpTitle,
               style: GoogleFonts.poppins(
                 fontSize: 32,
                 fontWeight: FontWeight.bold,
@@ -182,7 +193,7 @@ class FrogJumpScreen extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'Hop to the correct answer before time runs out!',
+              AppStrings.frogJumpTagline,
               textAlign: TextAlign.center,
               style: GoogleFonts.poppins(
                 fontSize: 14,
@@ -216,7 +227,7 @@ class FrogJumpScreen extends StatelessWidget {
           ],
         ),
         child: Text(
-          'START',
+          AppStrings.start,
           style: GoogleFonts.poppins(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -289,7 +300,7 @@ class FrogJumpScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  'Choose the right lily pad!',
+                  AppStrings.chooseLilyPad,
                   style: GoogleFonts.poppins(
                     fontSize: 14,
                     color: isDark ? Colors.white70 : Colors.grey[700],
@@ -314,7 +325,36 @@ class FrogJumpScreen extends StatelessWidget {
               ),
             ),
           ),
-          const Spacer(),
+          // Feedback lives inside the flexible space so it never adds fixed
+          // height (a banner ad already trims the body; a fixed chip here
+          // overflowed the column by a few pixels).
+          Expanded(
+            child: Center(
+              child: controller.showFeedback.value
+                  ? AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 18, vertical: 10),
+                      decoration: BoxDecoration(
+                        color: controller.isCorrect.value
+                            ? Colors.green
+                            : Colors.redAccent,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        controller.isCorrect.value
+                            ? AppStrings.correctExcl
+                            : AppStrings.oopsTryAgain,
+                        style: GoogleFonts.poppins(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    )
+                  : const SizedBox(),
+            ),
+          ),
           GridView.count(
             crossAxisCount: 2,
             shrinkWrap: true,
@@ -331,23 +371,6 @@ class FrogJumpScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 14),
-          if (controller.showFeedback.value)
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
-              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
-              decoration: BoxDecoration(
-                color: controller.isCorrect.value ? Colors.green : Colors.redAccent,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Text(
-                controller.isCorrect.value ? "Correct 🎉" : "Oops, try again!",
-                style: GoogleFonts.poppins(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-            ),
         ],
       ),
     );
@@ -443,7 +466,7 @@ class FrogJumpScreen extends StatelessWidget {
             const Text('🪷', style: TextStyle(fontSize: 58)),
             const SizedBox(height: 10),
             Text(
-              'Game Over',
+              AppStrings.gameOver,
               style: GoogleFonts.poppins(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
@@ -452,7 +475,7 @@ class FrogJumpScreen extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'Score: ${controller.score.value}',
+              '${AppStrings.score}: ${controller.score.value}',
               style: GoogleFonts.poppins(
                 fontSize: 18,
                 color: isDark ? Colors.white70 : Colors.black,
@@ -462,27 +485,32 @@ class FrogJumpScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _buildGameOverBtn('🏠 Home', isDark, () {
+                _buildGameOverBtn(AppStrings.home, isDark, () {
                   AdManager.instance.show();
                   Future.delayed(const Duration(milliseconds: 300), () {
                     Get.back();
                   });
                 }),
                 const SizedBox(width: 12),
-                _buildGameOverBtn('🔄 Retry', isDark, controller.restart,
+                _buildGameOverBtn(AppStrings.retry, isDark, controller.restart,
                     isPrimary: true),
               ],
             ),
-            const SizedBox(height: 16),
-            _buildRewardedButton(
-              emoji: '❤️',
-              label: 'Watch Ad → Get 1 Life',
-              onTap: () {
-                RewardedAdService.instance.showAd(() {
-                  controller.reviveWithLife();
-                });
-              },
-            ),
+            // Only offer the revive when a rewarded ad is actually available.
+            Obx(() => RewardedAdService.instance.isLoadedRx.value
+                ? Padding(
+                    padding: const EdgeInsets.only(top: 16),
+                    child: _buildRewardedButton(
+                      emoji: '❤️',
+                      label: AppStrings.watchAdGetLife,
+                      onTap: () {
+                        RewardedAdService.instance.showAd(() {
+                          controller.reviveWithLife();
+                        });
+                      },
+                    ),
+                  )
+                : const SizedBox()),
           ],
         ),
       ),

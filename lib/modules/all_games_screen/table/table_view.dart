@@ -5,6 +5,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:math_carnival_kids/modules/all_games_screen/table/table_controller.dart';
 
 import '../../../core/colors/colors.dart';
+import '../../../core/commonWidgets/screen_header.dart';
+import '../../../core/constants/app_strings.dart';
+import '../../../core/commonWidgets/ads/banner_ads.dart';
 
 class TablesScreen extends StatelessWidget {
   TablesScreen({super.key});
@@ -16,7 +19,8 @@ class TablesScreen extends StatelessWidget {
     return GetBuilder<TablesController>(
       builder: (controller) {
         return Scaffold(
-          appBar: AppBar(title: const Text('Times Tables 📊')),
+          bottomNavigationBar: const BannerAdWidget(),
+          appBar: AppBar(leading: appBarBackButton(context), title: const Text(AppStrings.timesTablesEmojiTitle)),
           body: Column(
             children: [
               const SizedBox(height: 16),

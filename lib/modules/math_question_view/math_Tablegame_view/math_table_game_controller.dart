@@ -2,6 +2,8 @@ import 'dart:math';
 import 'package:confetti/confetti.dart';
 import 'package:get/get.dart';
 
+import '../../../core/services/stars_service.dart';
+
 enum ScreenState { picker, table, quiz, result }
 
 class MathTableController extends GetxController {
@@ -16,7 +18,7 @@ class MathTableController extends GetxController {
   // ── Quiz state ───────────────────────────────
   RxInt currentQuestion = 0.obs;
   RxInt score = 0.obs;
-  RxInt? selectedOption = RxInt(-1);
+  RxInt selectedOption = RxInt(-1);
   RxBool answered = false.obs;
   RxBool isCorrect = false.obs;
 
@@ -81,7 +83,7 @@ class MathTableController extends GetxController {
     score.value = 0;
     currentQuestion.value = 0;
     answered.value = false;
-    selectedOption!.value = -1;
+    selectedOption.value = -1;
     screen.value = ScreenState.quiz;
     _generateQuestion();
   }
@@ -91,6 +93,10 @@ class MathTableController extends GetxController {
   }
 
   void _generateQuestion() {
+    if (selectedTables.isEmpty) {
+      screen.value = ScreenState.picker;
+      return;
+    }
     final table = selectedTables[random.nextInt(selectedTables.length)];
     num1.value = table;
     num2.value = random.nextInt(10) + 1;
@@ -105,13 +111,13 @@ class MathTableController extends GetxController {
     }
     options.shuffle();
     answered.value = false;
-    selectedOption!.value = -1;
+    selectedOption.value = -1;
   }
 
   void checkAnswer(int selected) {
     if (answered.value) return;
 
-    selectedOption!.value = selected;
+    selectedOption.value = selected;
     isCorrect.value = selected == correctAnswer;
     answered.value = true;
 
@@ -124,6 +130,9 @@ class MathTableController extends GetxController {
       currentQuestion.value++;
       if (currentQuestion.value >= totalQuestions) {
         screen.value = ScreenState.result;
+        if (Get.isRegistered<StarsService>() && stars > 0) {
+          StarsService.to.addStars(stars, sourceName: 'Times Tables');
+        }
       } else {
         _generateQuestion();
       }
@@ -134,7 +143,7 @@ class MathTableController extends GetxController {
     score.value = 0;
     currentQuestion.value = 0;
     answered.value = false;
-    selectedOption!.value = -1;
+    selectedOption.value = -1;
     screen.value = ScreenState.quiz;
     _generateQuestion();
   }

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:get/get.dart';
+import '../../../core/commonWidgets/ads/ad_manager.dart';
 
 class SpeedBattleController extends GetxController {
   int score1 = 0;
@@ -121,6 +122,7 @@ class SpeedBattleController extends GetxController {
     isPlaying = false;
     isGameOver = true;
     update();
+    AdManager.instance.showOnGameEnd();
   }
 
   void reset() {

@@ -5,18 +5,29 @@ import 'package:confetti/confetti.dart';
 import '../../../core/colors/colors.dart';
 import '../../../core/commonWidgets/theme.dart';
 import 'math_puzzle_controller.dart';
+import '../../../core/commonWidgets/screen_header.dart';
+import '../../../core/constants/app_strings.dart';
+import '../../../core/commonWidgets/ads/banner_ads.dart';
 
 class MathPuzzleScreen extends GetView<MathPuzzleController> {
   const MathPuzzleScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    return StatusBarIcons(
+      light: false,
+      child: _buildScreen(context),
+    );
+  }
+
+  Widget _buildScreen(BuildContext context) {
     final controller = Get.put(MathPuzzleController());
 
     return Obx(() {
       final isDark = Get.find<ThemeController>().isDarkMode;
 
       return Scaffold(
+        bottomNavigationBar: const BannerAdWidget(),
         body: Stack(
           children: [
             Container(
@@ -32,7 +43,7 @@ class MathPuzzleScreen extends GetView<MathPuzzleController> {
                   children: [
                     _topBar(),
                     const SizedBox(height: 20),
-                    Text('Level ${controller.level.value}',
+                    Text('${AppStrings.level} ${controller.level.value}',
                         style: GoogleFonts.poppins(fontSize: 22)),
                     const SizedBox(height: 30),
                     _slots(isDark),
@@ -170,7 +181,7 @@ class MathPuzzleScreen extends GetView<MathPuzzleController> {
               const Text('💡', style: TextStyle(fontSize: 20)),
               const SizedBox(width: 8),
               Text(
-                'How to Play',
+                AppStrings.howToPlay,
                 style: GoogleFonts.poppins(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
@@ -181,7 +192,7 @@ class MathPuzzleScreen extends GetView<MathPuzzleController> {
           ),
           const SizedBox(height: 8),
           Text(
-            'Tap the tiles below to fill the empty boxes and make a correct math equation!',
+            AppStrings.puzzleHowTo,
             style: GoogleFonts.poppins(
               fontSize: 13,
               color: Colors.amber.shade900,
@@ -200,7 +211,7 @@ class MathPuzzleScreen extends GetView<MathPuzzleController> {
           ),
           const SizedBox(height: 8),
           Text(
-            '👆 Tap a filled box to put the tile back',
+            AppStrings.tapFilledBoxBack,
             style: GoogleFonts.poppins(
               fontSize: 12,
               color: Colors.amber.shade800,
@@ -245,7 +256,7 @@ class MathPuzzleScreen extends GetView<MathPuzzleController> {
         color: AppColors.yellowColor,
       ),
 
-      child: Center(child: Text("Reset",style: TextStyle(fontSize: 17,color: Colors.black,fontWeight: FontWeight.w500),)),
+      child: Center(child: Text(AppStrings.reset,style: TextStyle(fontSize: 17,color: Colors.black,fontWeight: FontWeight.w500),)),
     ),
   );
 

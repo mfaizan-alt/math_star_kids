@@ -8,6 +8,8 @@ import '../../../core/commonWidgets/ads/ad_manager.dart';
 import '../../../core/commonWidgets/ads/reward_ad.dart';
 import '../../../core/services/stars_service.dart';
 import 'number_pop_controller.dart';
+import '../../../core/constants/app_strings.dart';
+import '../../../core/commonWidgets/ads/banner_ads.dart';
 
 class NumberPopScreen extends StatefulWidget {
   const NumberPopScreen({super.key});
@@ -39,7 +41,7 @@ class _NumberPopScreenState extends State<NumberPopScreen> {
     // if (starsService.totalStars.value < 10) {
     //   Get.snackbar(
     //     '🔒 Locked',
-    //     'You need 10 stars to play this game!',
+    //     AppStrings.needStarsToPlay,
     //     snackPosition: SnackPosition.BOTTOM,
     //     backgroundColor: Colors.red,
     //     colorText: Colors.white,
@@ -55,6 +57,7 @@ class _NumberPopScreenState extends State<NumberPopScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: const BannerAdWidget(),
       body: Stack(
         children: [
           // 1. Background
@@ -205,7 +208,7 @@ class _NumberPopScreenState extends State<NumberPopScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Pop the correct bubble! 🫧',
+                AppStrings.popCorrectBubble,
                 style: GoogleFonts.poppins(
                   fontSize: 13,
                   color: Colors.grey[600],
@@ -269,7 +272,7 @@ class _NumberPopScreenState extends State<NumberPopScreen> {
           const Text('🫧', style: TextStyle(fontSize: 80)),
           const SizedBox(height: 24),
           Text(
-            'Number Pop!',
+            AppStrings.numberPopTitle,
             style: GoogleFonts.poppins(
               fontSize: 36,
               fontWeight: FontWeight.bold,
@@ -278,7 +281,7 @@ class _NumberPopScreenState extends State<NumberPopScreen> {
           ).animate().fadeIn().slideY(begin: -0.2),
           const SizedBox(height: 12),
           Text(
-            'Pop the bubble with the\ncorrect answer!',
+            AppStrings.numberPopTagline,
             textAlign: TextAlign.center,
             style: GoogleFonts.poppins(fontSize: 16, color: Colors.white70),
           ).animate().fadeIn(delay: 200.ms),
@@ -339,7 +342,7 @@ class _NumberPopScreenState extends State<NumberPopScreen> {
             ),
             const SizedBox(height: 16),
             Text(
-              'Game Over!',
+              AppStrings.gameOverExcl,
               style: GoogleFonts.poppins(
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
@@ -359,7 +362,7 @@ class _NumberPopScreenState extends State<NumberPopScreen> {
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Text(
-                '⭐ Score: ${controller.score.value}',
+                '⭐ ${AppStrings.score}: ${controller.score.value}',
                 style: GoogleFonts.poppins(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
@@ -368,35 +371,38 @@ class _NumberPopScreenState extends State<NumberPopScreen> {
             ),
             const SizedBox(height: 24),
 
-            // ── Rewarded ad button ──
-            _buildRewardedButton(
-              emoji: '❤️',
-              label: 'Watch Ad → Get 1 Life',
-              onTap: () {
-                RewardedAdService.instance.showAd(() {
-                  controller.reviveWithLife();
-                });
-              },
-            ),
-
-            const SizedBox(height: 16),
+            // ── Rewarded ad button (only when an ad is available) ──
+            Obx(() => RewardedAdService.instance.isLoadedRx.value
+                ? Padding(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: _buildRewardedButton(
+                      emoji: '❤️',
+                      label: AppStrings.watchAdGetLife,
+                      onTap: () {
+                        RewardedAdService.instance.showAd(() {
+                          controller.reviveWithLife();
+                        });
+                      },
+                    ),
+                  )
+                : const SizedBox()),
 
             // ── Free buttons ──
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _buildBtn('🏠 Home', () {
+                _buildBtn(AppStrings.home, () {
                   AdManager.instance.show();
                   Future.delayed(const Duration(milliseconds: 300),(){
-                    Navigator.pop(context);
+                    if (mounted) Navigator.pop(context);
                   });
                 }),
                 const SizedBox(width: 16),
-                _buildBtn('🔄 Retry', () {
+                _buildBtn(AppStrings.retry, () {
                   final size = MediaQuery.of(context).size;
                   AdManager.instance.show();
                   Future.delayed(const Duration(milliseconds: 300), () {
-                    _onStartGame(size);
+                    if (mounted) _onStartGame(size);
                   });
                 }, isPrimary: true),
               ],

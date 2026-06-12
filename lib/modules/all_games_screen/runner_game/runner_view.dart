@@ -10,6 +10,9 @@ import '../../../core/colors/colors.dart';
 import '../../../core/commonWidgets/ads/ad_manager.dart';
 import '../../../core/commonWidgets/ads/reward_ad.dart';
 import '../../../core/commonWidgets/theme.dart';
+import '../../../core/commonWidgets/screen_header.dart';
+import '../../../core/constants/app_strings.dart';
+import '../../../core/commonWidgets/ads/banner_ads.dart';
 
 class RunnerGameScreen extends StatefulWidget {
   const RunnerGameScreen({super.key});
@@ -30,6 +33,7 @@ class _RunnerGameScreenState extends State<RunnerGameScreen>
 
   int _characterFrame = 0;
   Timer? _characterAnimTimer;
+  Worker? _feedbackWorker;
 
   @override
   void initState() {
@@ -53,16 +57,19 @@ class _RunnerGameScreenState extends State<RunnerGameScreen>
     _characterAnimTimer = Timer.periodic(
       const Duration(milliseconds: 200),
           (_) {
-        if (controller.isGameStarted.value && !controller.isGameOver.value) {
+        if (mounted &&
+            controller.isGameStarted.value &&
+            !controller.isGameOver.value) {
           setState(() => _characterFrame = (_characterFrame + 1) % 4);
         }
       },
     );
 
     // React to feedback: play animation then notify controller
-    ever(controller.showFeedback, (bool showing) {
+    _feedbackWorker = ever(controller.showFeedback, (bool showing) {
       if (showing) {
         _feedbackController.forward(from: 0).then((_) {
+          if (!mounted) return;
           controller.onFeedbackDone();
           if (!controller.isGameOver.value) {
             _startObstacleAnimation();
@@ -74,6 +81,7 @@ class _RunnerGameScreenState extends State<RunnerGameScreen>
 
   @override
   void dispose() {
+    _feedbackWorker?.dispose();
     _runController.dispose();
     _obstacleController.dispose();
     _feedbackController.dispose();
@@ -87,7 +95,7 @@ class _RunnerGameScreenState extends State<RunnerGameScreen>
     );
     _obstacleController.duration = duration;
     _obstacleController.forward(from: 0).then((_) {
-      if (!controller.isGameOver.value) {
+      if (mounted && !controller.isGameOver.value) {
         controller.checkAnswer();
       }
     });
@@ -100,10 +108,18 @@ class _RunnerGameScreenState extends State<RunnerGameScreen>
 
   @override
   Widget build(BuildContext context) {
+    return StatusBarIcons(
+      light: false,
+      child: _buildScreen(context),
+    );
+  }
+
+  Widget _buildScreen(BuildContext context) {
     return Obx(() {
       final isDark = Get.find<ThemeController>().isDarkMode;
 
       return Scaffold(
+        bottomNavigationBar: const BannerAdWidget(),
         body: Stack(
           children: [
             _buildBackground(),
@@ -227,7 +243,7 @@ class _RunnerGameScreenState extends State<RunnerGameScreen>
           _buildCharacterWidget(isLarge: true),
           const SizedBox(height: 32),
           Text(
-            '🏃 Math Runner',
+            AppStrings.runnerTitle,
             style: GoogleFonts.poppins(
               fontSize: 36,
               fontWeight: FontWeight.bold,
@@ -243,7 +259,7 @@ class _RunnerGameScreenState extends State<RunnerGameScreen>
           ).animate().fadeIn().slideY(begin: -0.2),
           const SizedBox(height: 12),
           Text(
-            'Move the character to the\ncorrect answer!',
+            AppStrings.runnerTagline,
             textAlign: TextAlign.center,
             style: GoogleFonts.poppins(
               fontSize: 16,
@@ -348,7 +364,7 @@ class _RunnerGameScreenState extends State<RunnerGameScreen>
       child: Column(
         children: [
           Text(
-            'Solve it! 🤔',
+            AppStrings.solveIt,
             style: GoogleFonts.poppins(
               fontSize: 14,
               color: AppColors.primaryLight,
@@ -552,7 +568,7 @@ class _RunnerGameScreenState extends State<RunnerGameScreen>
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           _buildDirectionButton(
-              Icons.arrow_back_rounded, 'LEFT', controller.moveLeft),
+              Icons.arrow_back_rounded, AppStrings.left, controller.moveLeft),
           Obx(() => Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
@@ -560,7 +576,7 @@ class _RunnerGameScreenState extends State<RunnerGameScreen>
               borderRadius: BorderRadius.circular(12),
             ),
             child: Text(
-              'Speed: ${controller.gameSpeed.value.toStringAsFixed(1)}x',
+              '${AppStrings.speed}: ${controller.gameSpeed.value.toStringAsFixed(1)}x',
               style: GoogleFonts.poppins(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
@@ -569,7 +585,7 @@ class _RunnerGameScreenState extends State<RunnerGameScreen>
             ),
           )),
           _buildDirectionButton(
-              Icons.arrow_forward_rounded, 'RIGHT', controller.moveRight),
+              Icons.arrow_forward_rounded, AppStrings.right, controller.moveRight),
         ],
       ),
     );
@@ -632,7 +648,7 @@ class _RunnerGameScreenState extends State<RunnerGameScreen>
             Text(controller.gameOverEmoji, style: const TextStyle(fontSize: 64)),
             const SizedBox(height: 16),
             Text(
-              'Game Over!',
+              AppStrings.gameOverExcl,
               style: GoogleFonts.poppins(
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
@@ -661,7 +677,7 @@ class _RunnerGameScreenState extends State<RunnerGameScreen>
                   const Text('⭐', style: TextStyle(fontSize: 24)),
                   const SizedBox(width: 8),
                   Text(
-                    'Score: ${controller.score.value}',
+                    '${AppStrings.score}: ${controller.score.value}',
                     style: GoogleFonts.poppins(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
@@ -672,32 +688,37 @@ class _RunnerGameScreenState extends State<RunnerGameScreen>
               ),
             ),
             const SizedBox(height: 24),
-            _buildRewardedButton(
-              emoji: '❤️',
-              label: 'Watch Ad → Get 1 Life',
-              color: Colors.red.shade400,
-              onTap: () {
-                RewardedAdService.instance.showAd(() {
-                  controller.reviveWithLife();
-                  _startObstacleAnimation();
-                });
-              },
-            ),
-            const SizedBox(height: 16),
+            // Only offer the revive when a rewarded ad is actually available.
+            Obx(() => RewardedAdService.instance.isLoadedRx.value
+                ? Padding(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: _buildRewardedButton(
+                      emoji: '❤️',
+                      label: AppStrings.watchAdGetLife,
+                      color: Colors.red.shade400,
+                      onTap: () {
+                        RewardedAdService.instance.showAd(() {
+                          controller.reviveWithLife();
+                          _startObstacleAnimation();
+                        });
+                      },
+                    ),
+                  )
+                : const SizedBox()),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _buildGameOverButton('🏠 Home', isDark, () {
+                _buildGameOverButton(AppStrings.home, isDark, () {
                   AdManager.instance.show(); // ✅ load interstitial ad
                   Future.delayed(const Duration(milliseconds: 300), () {
-                    Navigator.pop(context); // ✅ navigate after ad
+                    if (mounted) Navigator.pop(context); // ✅ navigate after ad
                   });
                 }),
                 const SizedBox(width: 16),
-                _buildGameOverButton('🔄 Retry', isDark, () {
+                _buildGameOverButton(AppStrings.retry, isDark, () {
                   AdManager.instance.show();
                   Future.delayed(const Duration(milliseconds: 300), () {
-                    _onStartGame();
+                    if (mounted) _onStartGame();
                   });
                 }, isPrimary: true),
               ],

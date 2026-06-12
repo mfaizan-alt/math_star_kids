@@ -5,6 +5,8 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../core/colors/colors.dart';
 import '../../../core/commonWidgets/ads/ad_manager.dart';
 import '../../../core/commonWidgets/ads/banner_ads.dart';
+import '../../../core/commonWidgets/screen_header.dart';
+import '../../../core/constants/app_strings.dart';
 import 'math_table_game_controller.dart';
 
 class MathTablesView extends GetView<MathTableController> {
@@ -28,6 +30,7 @@ class MathTablesView extends GetView<MathTableController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: const BannerAdWidget(),
       backgroundColor: TC.bg(context),
       body: Stack(
         children: [
@@ -50,6 +53,7 @@ class MathTablesView extends GetView<MathTableController> {
           ),
 
           SafeArea(
+            top: false,
             child: Obx(() {
               switch (controller.screen.value) {
                 case ScreenState.picker:
@@ -94,7 +98,7 @@ class MathTablesView extends GetView<MathTableController> {
         const SizedBox(height: 20),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Text('Tap a table to explore 👇',
+          child: Text(AppStrings.tapTableToExplore,
             style: GoogleFonts.nunito(
               fontSize: 15, color: Colors.grey[600],
               fontWeight: FontWeight.w700,
@@ -127,7 +131,8 @@ class MathTablesView extends GetView<MathTableController> {
   Widget _pickerHeader() {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 28),
+      padding: EdgeInsets.fromLTRB(
+          20, Get.mediaQuery.padding.top + 12, 20, 28),
       decoration: const BoxDecoration(
         gradient: LinearGradient(
           colors: [Color(0xFF4481EB), Color(0xFF04BEFE)],
@@ -172,13 +177,13 @@ class MathTablesView extends GetView<MathTableController> {
             ),
             const SizedBox(width: 14),
             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text('Times Tables',
+              Text(AppStrings.timesTables,
                 style: GoogleFonts.baloo2(
                   fontSize: 26, color: Colors.white,
                   fontWeight: FontWeight.w800,
                 ),
               ),
-              Text('Tables from 1 to 20 🌟',
+              Text(AppStrings.timesTablesSubtitle,
                 style: GoogleFonts.nunito(
                   fontSize: 13, color: Colors.white.withValues(alpha: 0.85),
                   fontWeight: FontWeight.w700,
@@ -217,7 +222,7 @@ class MathTablesView extends GetView<MathTableController> {
               fontWeight: FontWeight.w800,
             ),
           ),
-          Text('Table',
+          Text(AppStrings.table,
             style: GoogleFonts.nunito(
               fontSize: 10, color: Colors.white.withValues(alpha: 0.85),
               fontWeight: FontWeight.w700,
@@ -280,7 +285,7 @@ class MathTablesView extends GetView<MathTableController> {
                   mainAxisAlignment: MainAxisAlignment.center, children: [
                 const Icon(Icons.quiz_rounded, color: Colors.white, size: 22),
                 const SizedBox(width: 8),
-                Text('Start Quiz for Table $number',
+                Text('${AppStrings.startQuizForTable} $number',
                   style: GoogleFonts.baloo2(
                     fontSize: 18, color: Colors.white,
                     fontWeight: FontWeight.w700,
@@ -310,7 +315,7 @@ class MathTablesView extends GetView<MathTableController> {
                   mainAxisAlignment: MainAxisAlignment.center, children: [
                 Icon(Icons.grid_view_rounded, color: colors[0], size: 20),
                 const SizedBox(width: 8),
-                Text('← Pick Another Table',
+                Text(AppStrings.pickAnotherTable,
                   style: GoogleFonts.nunito(
                     fontSize: 16, color: colors[0],
                     fontWeight: FontWeight.w800,
@@ -328,7 +333,8 @@ class MathTablesView extends GetView<MathTableController> {
   Widget _detailHeader(int number, List<Color> colors) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
+      padding: EdgeInsets.fromLTRB(
+          20, Get.mediaQuery.padding.top + 12, 20, 24),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: colors,
@@ -383,13 +389,13 @@ class MathTablesView extends GetView<MathTableController> {
             ),
             const SizedBox(width: 14),
             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text('Table of $number',
+              Text('${AppStrings.tableOf} $number',
                 style: GoogleFonts.baloo2(
                   fontSize: 24, color: Colors.white,
                   fontWeight: FontWeight.w800,
                 ),
               ),
-              Text('10 multiplications to master!',
+              Text(AppStrings.multiplicationsToMaster,
                 style: GoogleFonts.nunito(
                   fontSize: 12, color: Colors.white.withValues(alpha: 0.85),
                   fontWeight: FontWeight.w700,
@@ -505,7 +511,7 @@ class MathTablesView extends GetView<MathTableController> {
               ],
             ),
             child: Column(children: [
-              Text('What is',
+              Text(AppStrings.whatIs,
                 style: GoogleFonts.nunito(
                   fontSize: 16, color: Colors.grey[500],
                   fontWeight: FontWeight.w700,
@@ -555,7 +561,9 @@ class MathTablesView extends GetView<MathTableController> {
 
   Widget _quizHeader(List<Color> colors, double progress) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 22),
+      width: double.infinity,
+      padding: EdgeInsets.fromLTRB(
+          20, Get.mediaQuery.padding.top + 12, 20, 22),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: colors,
@@ -639,7 +647,7 @@ class MathTablesView extends GetView<MathTableController> {
 
   Widget _optionButton(int option, List<Color> colors) {
     final answered = controller.answered.value;
-    final selected = controller.selectedOption!.value;
+    final selected = controller.selectedOption.value;
     final correct = controller.correctAnswer;
 
     Color bgColor = Colors.white;
@@ -709,8 +717,11 @@ class MathTablesView extends GetView<MathTableController> {
       final colors = _tableColors(controller.selectedTable.value);
       final stars = controller.stars;
 
-      return SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
+      return StatusBarIcons(
+        light: false,
+        child: SingleChildScrollView(
+        padding: EdgeInsets.fromLTRB(
+            24, Get.mediaQuery.padding.top + 24, 24, 24),
         child: Column(children: [
           const SizedBox(height: 20),
 
@@ -779,7 +790,7 @@ class MathTablesView extends GetView<MathTableController> {
               ],
             ),
             child: Column(children: [
-              Text('Your Score',
+              Text(AppStrings.yourScore,
                 style: GoogleFonts.nunito(
                   fontSize: 14, color: Colors.grey[500],
                   fontWeight: FontWeight.w700,
@@ -830,7 +841,7 @@ class MathTablesView extends GetView<MathTableController> {
                   mainAxisAlignment: MainAxisAlignment.center, children: [
                 const Icon(Icons.replay_rounded, color: Colors.white, size: 22),
                 const SizedBox(width: 8),
-                Text('Play Again',
+                Text(AppStrings.playAgain,
                   style: GoogleFonts.baloo2(
                     fontSize: 20, color: Colors.white,
                     fontWeight: FontWeight.w800,
@@ -866,7 +877,7 @@ class MathTablesView extends GetView<MathTableController> {
                   mainAxisAlignment: MainAxisAlignment.center, children: [
                 Icon(Icons.grid_view_rounded, color: colors[0], size: 20),
                 const SizedBox(width: 8),
-                Text('Pick Another Table',
+                Text(AppStrings.pickAnotherTable.replaceFirst('← ', ''),
                   style: GoogleFonts.nunito(
                     fontSize: 16, color: colors[0],
                     fontWeight: FontWeight.w800,
@@ -878,6 +889,7 @@ class MathTablesView extends GetView<MathTableController> {
 
           const SizedBox(height: 20),
         ]),
+        ),
       );
     });
   }

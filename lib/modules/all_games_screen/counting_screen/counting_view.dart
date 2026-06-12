@@ -3,7 +3,11 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../core/colors/colors.dart';
+import '../../../core/commonWidgets/screen_header.dart';
+import '../../../core/constants/app_strings.dart';
 import 'counting_controller.dart';
+import '../../../core/commonWidgets/ads/ad_manager.dart';
+import '../../../core/commonWidgets/ads/banner_ads.dart';
 
 class CountingScreen extends StatelessWidget {
   CountingScreen({super.key});
@@ -16,8 +20,10 @@ class CountingScreen extends StatelessWidget {
     return GetBuilder<CountingController>(
       builder: (controller) {
         return Scaffold(
+          bottomNavigationBar: const BannerAdWidget(),
           appBar: AppBar(
-            title: const Text('Counting 🔢'),
+            leading: appBarBackButton(context),
+            title: const Text(AppStrings.countingTitle),
             actions: [
               Container(
                 padding:
@@ -42,7 +48,7 @@ class CountingScreen extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  'Round ${controller.round + 1} of ${controller.totalRounds}',
+                  '${AppStrings.round} ${(controller.round + 1).clamp(1, controller.totalRounds)} ${AppStrings.of} ${controller.totalRounds}',
                   style: GoogleFonts.poppins(
                     fontSize: 14,
                     color: Colors.grey,
@@ -50,13 +56,13 @@ class CountingScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 LinearProgressIndicator(
-                  value: (controller.round + 1) / controller.totalRounds,
+                  value: ((controller.round + 1).clamp(1, controller.totalRounds)) / controller.totalRounds,
                   color: AppColors.counting,
                 ),
                 const SizedBox(height: 24),
 
                 Text(
-                  'Count the items!',
+                  AppStrings.countTheItems,
                   style: GoogleFonts.poppins(
                     fontSize: 20,
                     fontWeight: FontWeight.w600,
@@ -110,8 +116,8 @@ class CountingScreen extends StatelessWidget {
                     ),
                     child: Text(
                       controller.isCorrect
-                          ? '✅ Correct!'
-                          : '❌ Try again!',
+                          ? AppStrings.correctTick
+                          : AppStrings.tryAgainCross,
                       style: GoogleFonts.poppins(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
@@ -163,7 +169,7 @@ class CountingScreen extends StatelessWidget {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.counting,
                       ),
-                      child: Text('Submit Answer'),
+                      child: const Text(AppStrings.submitAnswer),
                     ),
                   ),
                 ],
@@ -216,10 +222,10 @@ class CountingResultDialog extends StatelessWidget {
           children: [
             Text(
               score >= 8
-                  ? '🎉 Amazing!'
+                  ? AppStrings.amazing
                   : score >= 5
-                  ? '👍 Good Job!'
-                  : '💪 Keep Trying!',
+                  ? AppStrings.goodJob
+                  : AppStrings.keepTrying,
               style: GoogleFonts.poppins(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -242,7 +248,7 @@ class CountingResultDialog extends StatelessWidget {
                       Get.back(); // close dialog
                       Get.back(); // go home
                     },
-                    child: const Text('Home'),
+                    child: const Text(AppStrings.homeShort),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -254,12 +260,10 @@ class CountingResultDialog extends StatelessWidget {
                     ),
                     onPressed: () {
                       Get.back(); // close dialog
-                      controller.interstitial.showAd();
-                      Future.delayed(const Duration(milliseconds: 300), () {
-                        Get.back(); // go home
-                      });
+                      AdManager.instance.showOnGameEnd();
+                      controller.resetGame();
                     },
-                    child: const Text('Play Again'),
+                    child: const Text(AppStrings.playAgain),
                   ),
                 ),
               ],

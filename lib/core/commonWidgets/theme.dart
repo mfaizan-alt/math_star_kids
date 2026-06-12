@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import '../colors/colors.dart';
@@ -47,6 +48,11 @@ class AppTheme {
       backgroundColor: AppColors.backgroundLight,
       foregroundColor: AppColors.textPrimaryLight,
       elevation: 0,
+      systemOverlayStyle: SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+        statusBarBrightness: Brightness.light,
+      ),
     ),
     textTheme: const TextTheme(
       bodyLarge: TextStyle(color: AppColors.textPrimaryLight),
@@ -78,6 +84,11 @@ class AppTheme {
       backgroundColor: AppColors.backgroundDark,
       foregroundColor: AppColors.textPrimaryDark,
       elevation: 0,
+      systemOverlayStyle: SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+        statusBarBrightness: Brightness.dark,
+      ),
     ),
     textTheme: const TextTheme(
       bodyLarge: TextStyle(color: AppColors.textPrimaryDark),
