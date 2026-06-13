@@ -1,6 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="com.android.vending.BILLING" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
     <application
-        android:label="Math Carnival Kids"
+        android:label="Math Stars: Kids Learning Games"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
@@ -32,7 +37,7 @@
             android:value="2" />
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-2983283750660362~1179887748"/>
+            android:value="ca-app-pub-3807575016898926~5841641734"/>
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and

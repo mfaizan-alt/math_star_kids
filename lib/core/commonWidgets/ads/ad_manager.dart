@@ -1,9 +1,10 @@
-// adUnitId: "ca-app-pub-2983283750660362/3759469533", real id
-
 import 'dart:math';
 
 import 'package:flutter/widgets.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+
+import '../../services/premium_service.dart';
+import 'ad_config.dart';
 
 /// Central interstitial manager with frequency capping.
 ///
@@ -36,9 +37,10 @@ class AdManager {
 
   /// LOAD AD
   void load() {
+    if (PremiumService.active) return; // paid: never load interstitials
     if (_ad != null) return; // already preloaded
     InterstitialAd.load(
-      adUnitId: "ca-app-pub-3940256099942544/1033173712", // TEST ID
+      adUnitId: AdConfig.interstitial,
       request: const AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (ad) {
@@ -71,6 +73,7 @@ class AdManager {
   }
 
   void _showNow() {
+    if (PremiumService.active) return;
     final ad = _ad;
     if (ad == null) {
       load();

@@ -1,0 +1,43 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "math-stars-kids",
+          "appId": "1:796242769776:android:9f3d3196622401a10601b5",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "math-stars-kids",
+          "appId": "1:796242769776:ios:a1723ce62277a7030601b5",
+          "uploadDebugSymbols": true,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "math-stars-kids",
+          "configurations": {
+            "android": "1:796242769776:android:9f3d3196622401a10601b5",
+            "ios": "1:796242769776:ios:a1723ce62277a7030601b5"
+          }
+        }
+      }
+    }
+  },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ]
+    }
+  ]
+}

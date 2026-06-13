@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:math_carnival_kids/core/commonWidgets/ads/banner_ads.dart';
 import '../../core/colors/colors.dart';
+import '../../core/commonWidgets/premium_dialog.dart';
+import '../../core/services/premium_service.dart';
 import '../../core/constants/app_strings.dart';
 import '../../core/constants/app_text_styles.dart';
 import '../../core/commonWidgets/theme.dart';
@@ -91,6 +93,14 @@ class HomeScreenView extends GetView<HomeScreenController> {
             right: 12,
             child: Row(
               children: [
+                // Hidden once premium is owned — nothing left to sell.
+                Obx(() => PremiumService.to.isPremium.value
+                    ? const SizedBox.shrink()
+                    : IconButton(
+                        onPressed: PremiumDialog.show,
+                        icon: const Icon(Icons.workspace_premium_rounded,
+                            size: 28, color: Color(0xFFFFE066)),
+                      )),
                 IconButton(
                   onPressed: () {
                     Navigator.push(

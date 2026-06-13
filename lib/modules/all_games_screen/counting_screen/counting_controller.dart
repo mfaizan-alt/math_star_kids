@@ -94,6 +94,7 @@ class CountingController extends GetxController {
       CountingResultDialog(
         score: score,
         total: totalRounds,
+        stars: stars,
       ),
       barrierDismissible: false,
     );

@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:math_carnival_kids/core/commonWidgets/ads/ad_manager.dart';
 import '../../core/colors/colors.dart';
+import '../../core/services/review_service.dart';
 import '../../core/services/stars_service.dart';
 import 'story_detail_controller.dart';
 import '../../core/commonWidgets/screen_header.dart';
@@ -602,6 +603,9 @@ class StoryDetailView extends GetView<StoryDetailController> {
                   final starsService = Get.find<StarsService>();
                   final starsEarned = controller.story['stars'] ?? 2;
                   await starsService.addStars(starsEarned);
+
+                  // Story completed = very happy moment → ideal for review prompt.
+                  ReviewService.instance.maybeRequestReview();
 
                   AdManager.instance.load();
                   Future.delayed(const Duration(milliseconds: 1800), () {

@@ -7,6 +7,7 @@ import '../../../core/commonWidgets/screen_header.dart';
 import '../../../core/constants/app_strings.dart';
 import 'counting_controller.dart';
 import '../../../core/commonWidgets/ads/ad_manager.dart';
+import '../../../core/commonWidgets/ads/double_stars_button.dart';
 import '../../../core/commonWidgets/ads/banner_ads.dart';
 
 class CountingScreen extends StatelessWidget {
@@ -202,10 +203,12 @@ class CountingResultDialog extends StatelessWidget {
     super.key,
     required this.score,
     required this.total,
+    required this.stars,
   });
 
   final int score;
   final int total;
+  final int stars;
 
   final CountingController controller = Get.find();
 
@@ -238,7 +241,11 @@ class CountingResultDialog extends StatelessWidget {
               style: GoogleFonts.poppins(fontSize: 18),
             ),
 
-            const SizedBox(height: 24),
+            const SizedBox(height: 16),
+
+            DoubleStarsButton(earnedStars: stars),
+
+            const SizedBox(height: 8),
 
             Row(
               children: [

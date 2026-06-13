@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../core/colors/colors.dart';
 import '../../../core/commonWidgets/ads/ad_manager.dart';
 import '../../../core/commonWidgets/ads/banner_ads.dart';
+import '../../../core/commonWidgets/ads/double_stars_button.dart';
 import '../../../core/commonWidgets/screen_header.dart';
 import '../../../core/constants/app_strings.dart';
 import 'math_table_game_controller.dart';
@@ -811,7 +812,15 @@ class MathTablesView extends GetView<MathTableController> {
             ]),
           ),
 
-          const SizedBox(height: 32),
+          const SizedBox(height: 24),
+
+          // Double-stars rewarded upsell (hidden when 0 stars / no ad / premium)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 40),
+            child: DoubleStarsButton(earnedStars: controller.stars),
+          ),
+
+          const SizedBox(height: 8),
 
           // Play Again
           GestureDetector(

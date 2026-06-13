@@ -6,6 +6,7 @@ import '../../../core/commonWidgets/ads/ad_manager.dart';
 import '../../../core/routes/routes.dart';
 import '../../../core/constants/app_strings.dart';
 import '../../../core/commonWidgets/ads/banner_ads.dart';
+import '../../../core/commonWidgets/ads/double_stars_button.dart';
 
 class QuizResultScreen extends StatelessWidget {
   const QuizResultScreen({super.key});
@@ -108,7 +109,13 @@ class QuizResultScreen extends StatelessWidget {
                 )),
               ]),
 
-              const SizedBox(height: 40),
+              const SizedBox(height: 20),
+
+              // Quiz banks the raw score into StarsService (not the 0–3
+              // display stars), so double the banked amount.
+              DoubleStarsButton(earnedStars: score),
+
+              const SizedBox(height: 12),
 
               // Continue to Adventure Map Button
               GestureDetector(

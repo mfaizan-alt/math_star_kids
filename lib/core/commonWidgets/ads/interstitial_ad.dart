@@ -1,17 +1,19 @@
-// adUnitId: "ca-app-pub-2983283750660362/3759469533",
-
 import 'package:flutter/foundation.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+
+import '../../services/premium_service.dart';
+import 'ad_config.dart';
 
 class InterstitialAdService {
   InterstitialAd? _ad;
 
   bool get isReady => _ad != null;
 
-  /// LOAD AD
+  /// LOAD AD — no-op for premium users
   void loadAd() {
+    if (PremiumService.active) return;
     InterstitialAd.load(
-      adUnitId: "ca-app-pub-3940256099942544/1033173712", // TEST ID
+      adUnitId: AdConfig.interstitial,
       request: const AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (ad) {
@@ -40,8 +42,9 @@ class InterstitialAdService {
     );
   }
 
-  /// SHOW AD
+  /// SHOW AD — silently skipped for premium users
   void showAd() {
+    if (PremiumService.active) return;
     if (_ad == null) {
       debugPrint("⚠️ Ad not ready, reloading...");
       loadAd();

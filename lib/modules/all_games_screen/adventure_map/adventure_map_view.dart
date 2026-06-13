@@ -221,10 +221,7 @@ class AdventureMapScreen extends StatelessWidget {
             ],
           ),
         ),
-        bottomNavigationBar: BannerAdWidget(
-            // adUnitId: 'ca-app-pub-3940256099942544/6300978111'), // Banner TEST id
-
-            adUnitId: 'ca-app-pub-2983283750660362/8109778088'), // Banner REAL AD ID
+        bottomNavigationBar: const BannerAdWidget(), // uses default real banner ID
 
       );
     });

@@ -2,7 +2,9 @@
 
 import 'dart:io';
 
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:math_carnival_kids/modules/all_games_screen/frog_jump/frog_jump_controller.dart';
 import 'package:math_carnival_kids/modules/all_games_screen/number_pop/number_pop_controller.dart';
 import 'package:math_carnival_kids/modules/all_games_screen/runner_game/runner_controller.dart';
@@ -12,6 +14,17 @@ import 'package:math_carnival_kids/modules/story_detail_screen/story_detail_cont
 import 'package:math_carnival_kids/modules/story_mode_screen/story_mode_controller.dart';
 
 void main() {
+  // StoryModeController (and other controllers) now create a GetStorage box in
+  // their field initializers, which needs the binding + a storage path. Mock
+  // path_provider so GetStorage can init headlessly in the test runner.
+  setUpAll(() async {
+    TestWidgetsFlutterBinding.ensureInitialized();
+    const channel = MethodChannel('plugins.flutter.io/path_provider');
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(channel, (call) async => '.');
+    await GetStorage.init();
+  });
+
   group('SubtractionController.generateQuestion', () {
     test('produces 4 unique non-negative options including the answer', () {
       final controller = SubtractionController();

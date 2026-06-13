@@ -1,31 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
+import '../../services/premium_service.dart';
+import 'ad_config.dart';
+
 class BannerAdWidget extends StatefulWidget {
-  final String adUnitId;
-
-  const BannerAdWidget({
-    super.key,
-    this.adUnitId = 'ca-app-pub-3940256099942544/6300978111', // TEST Banner Ad id
-
-    // adUnitId: 'ca-app-pub-2983283750660362/8109778088', REAL Banner Unit id
-
-  });
+  const BannerAdWidget({super.key});
 
   @override
   State<BannerAdWidget> createState() => _BannerAdWidgetState();
 }
 
 class _BannerAdWidgetState extends State<BannerAdWidget> {
-  late BannerAd bannerAd;
+  BannerAd? bannerAd;
   bool isLoaded = false;
 
   @override
   void initState() {
     super.initState();
+    if (PremiumService.active) return; // paid: no banner, don't even load
 
     bannerAd = BannerAd(
-      adUnitId: widget.adUnitId,
+      adUnitId: AdConfig.banner, // test in debug, real in release
       size: AdSize.banner,
       request: const AdRequest(),
       listener: BannerAdListener(
@@ -41,20 +37,21 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
       ),
     );
 
-    bannerAd.load();
+    bannerAd!.load();
   }
 
   @override
   Widget build(BuildContext context) {
-    return isLoaded
+    final ad = bannerAd;
+    return (isLoaded && ad != null)
         ? SafeArea(
             top: false,
             child: Center(
               heightFactor: 1,
               child: SizedBox(
-                height: bannerAd.size.height.toDouble(),
-                width: bannerAd.size.width.toDouble(),
-                child: AdWidget(ad: bannerAd),
+                height: ad.size.height.toDouble(),
+                width: ad.size.width.toDouble(),
+                child: AdWidget(ad: ad),
               ),
             ),
           )
@@ -63,7 +60,7 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
 
   @override
   void dispose() {
-    bannerAd.dispose();
+    bannerAd?.dispose();
     super.dispose();
   }
 }

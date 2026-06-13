@@ -126,38 +126,6 @@ class SplashScreenView extends GetView<SplashScreenController> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                // Dots
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.center,
-                //   children: [
-                //     Container(
-                //       width: 28,
-                //       height: 10,
-                //       decoration: BoxDecoration(
-                //         color: Colors.white,
-                //         borderRadius: BorderRadius.circular(5),
-                //       ),
-                //     ),
-                //     const SizedBox(width: 8),
-                //     Container(
-                //       width: 10,
-                //       height: 10,
-                //       decoration: const BoxDecoration(
-                //         color: Colors.white38,
-                //         shape: BoxShape.circle,
-                //       ),
-                //     ),
-                //     const SizedBox(width: 8),
-                //     Container(
-                //       width: 10,
-                //       height: 10,
-                //       decoration: const BoxDecoration(
-                //         color: Colors.white38,
-                //         shape: BoxShape.circle,
-                //       ),
-                //     ),
-                //   ],
-                // ),
               ],
             ),
           ],

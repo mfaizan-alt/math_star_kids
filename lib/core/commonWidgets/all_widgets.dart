@@ -2,16 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../colors/colors.dart';
 
-class AdBannerPlaceholder extends StatelessWidget {
-  const AdBannerPlaceholder({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: Replace with actual ad implementation (e.g., google_mobile_ads)
-    return const SizedBox.shrink();
-  }
-}
-
 class AnimatedScoreCard extends StatelessWidget {
   final int score;
   final int total;

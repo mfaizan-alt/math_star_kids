@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "796242769776",
+    "project_id": "math-stars-kids",
+    "storage_bucket": "math-stars-kids.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:796242769776:android:9f3d3196622401a10601b5",
+        "android_client_info": {
+          "package_name": "com.robbotech.mathlearner"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCI57D3n5Jyt4aIyqiHdLA63AEbQwCM3yE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

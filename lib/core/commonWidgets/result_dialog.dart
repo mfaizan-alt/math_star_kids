@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'ads/double_stars_button.dart';
+
 class ResultDialog extends StatelessWidget {
   final int score;
   final int total;
@@ -59,7 +61,9 @@ class ResultDialog extends StatelessWidget {
                 fontWeight: FontWeight.w500,
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 16),
+            DoubleStarsButton(earnedStars: stars),
+            const SizedBox(height: 8),
             Row(
               children: [
                 Expanded(

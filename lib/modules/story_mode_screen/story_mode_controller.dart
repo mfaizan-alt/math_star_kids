@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:google_fonts/google_fonts.dart';
 
+import '../../core/commonWidgets/ads/reward_ad.dart';
+import '../../core/commonWidgets/premium_dialog.dart';
 import '../../core/routes/routes.dart';
+import '../../core/services/premium_service.dart';
 import '../../core/services/stars_service.dart';
 
 class StoryModeController extends GetxController {
@@ -486,12 +491,45 @@ class StoryModeController extends GetxController {
 
   ].obs;
 
+  final _box = GetStorage();
+
+  /// Story titles unlocked for today only via a rewarded ad ("day pass").
+  final RxSet<String> dayPassStories = <String>{}.obs;
+
+  String get _todayKey {
+    final now = DateTime.now();
+    return '${now.year}-${now.month}-${now.day}';
+  }
+
   @override
   void onInit() {
     super.onInit();
     if (Get.isRegistered<StarsService>()) {
       ever(StarsService.to.totalStars, (_) => stories.refresh());
     }
+    if (Get.isRegistered<PremiumService>()) {
+      ever(PremiumService.to.isPremium, (_) => stories.refresh());
+    }
+    _loadDayPasses();
+    // Preload so the "watch to read it today" button is ready when a locked
+    // story is tapped.
+    RewardedAdService.instance.loadAd();
+  }
+
+  void _loadDayPasses() {
+    final saved = _box.read('storyDayPass');
+    if (saved is Map && saved['date'] == _todayKey) {
+      dayPassStories.addAll(List<String>.from(saved['stories'] ?? []));
+    }
+  }
+
+  void _grantDayPass(Map<String, dynamic> story) {
+    dayPassStories.add(story['title'] as String);
+    _box.write('storyDayPass', {
+      'date': _todayKey,
+      'stories': dayPassStories.toList(),
+    });
+    stories.refresh();
   }
 
   List<Map<String, dynamic>> get filteredStories {
@@ -507,6 +545,8 @@ class StoryModeController extends GetxController {
 
   bool isStoryLocked(Map<String, dynamic> story) {
     if (story["isPremium"] != true) return false;
+    if (PremiumService.active) return false;
+    if (dayPassStories.contains(story["title"])) return false;
     final minStars = story["minStars"] as int? ?? 100;
     final currentStars = Get.isRegistered<StarsService>()
         ? StarsService.to.totalStars.value
@@ -519,27 +559,118 @@ class StoryModeController extends GetxController {
   }
 
   void openStory(Map<String, dynamic> story) {
-    if (story["isPremium"] == true) {
-      final minStars = story["minStars"] as int? ?? 100;
-      final currentStars = Get.isRegistered<StarsService>()
-          ? StarsService.to.totalStars.value
-          : 0;
-      if (currentStars < minStars) {
-        Get.snackbar(
-          '🔒 Story Locked',
-          'Earn $minStars ⭐ stars to unlock this story!',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor:  Colors.red,
-          colorText: Colors.white,
-
-          duration: const Duration(seconds: 3),
-        );
-        return;
-      }
+    if (isStoryLocked(story)) {
+      _showLockedStoryDialog(story);
+      return;
     }
     Get.toNamed(Routes.storyDetail, arguments: story);
   }
 
+  void _showLockedStoryDialog(Map<String, dynamic> story) {
+    final minStars = story["minStars"] as int? ?? 100;
+    final currentStars = Get.isRegistered<StarsService>()
+        ? StarsService.to.totalStars.value
+        : 0;
+
+    Get.dialog(
+      Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('🔒', style: TextStyle(fontSize: 48)),
+              const SizedBox(height: 10),
+              Text(
+                story["title"] as String? ?? 'Locked Story',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.aBeeZee(
+                    fontSize: 18, fontWeight: FontWeight.w900),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Earn $minStars ⭐ to unlock it forever.\nYou have $currentStars ⭐ — keep going!',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.nunito(fontSize: 14, color: Colors.grey[700]),
+              ),
+              const SizedBox(height: 18),
+              Obx(() {
+                if (!RewardedAdService.instance.isLoadedRx.value) {
+                  return const SizedBox.shrink();
+                }
+                return _lockedDialogButton(
+                  icon: Icons.play_circle_fill_rounded,
+                  label: 'Watch a video — read it today!',
+                  color: const Color(0xFFFF9F1C),
+                  onTap: () {
+                    Get.back();
+                    RewardedAdService.instance.showAd(() {
+                      _grantDayPass(story);
+                      Get.toNamed(Routes.storyDetail, arguments: story);
+                    });
+                  },
+                );
+              }),
+              const SizedBox(height: 8),
+              _lockedDialogButton(
+                icon: Icons.workspace_premium_rounded,
+                label: 'Unlock everything (parents)',
+                color: const Color(0xFF7B2FBE),
+                onTap: () {
+                  Get.back();
+                  PremiumDialog.show();
+                },
+              ),
+              const SizedBox(height: 4),
+              TextButton(
+                onPressed: Get.back,
+                child: Text(
+                  'Not now',
+                  style: GoogleFonts.nunito(color: Colors.grey, fontSize: 14),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _lockedDialogButton({
+    required IconData icon,
+    required String label,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 13, horizontal: 12),
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(18),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, color: Colors.white, size: 20),
+            const SizedBox(width: 8),
+            Flexible(
+              child: Text(
+                label,
+                style: GoogleFonts.aBeeZee(
+                    fontSize: 14,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w900),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 

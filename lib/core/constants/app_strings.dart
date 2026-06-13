@@ -7,7 +7,7 @@ class AppStrings {
   AppStrings._();
 
   // ── General ──────────────────────────────────────
-  static const String appName = 'Math Carnival Kids';
+  static const String appName = 'Math Stars: Kids Learning Games';
   static const String back = 'Back';
   static const String home = '🏠 Home';
   static const String retry = '🔄 Retry';
@@ -227,6 +227,6 @@ class AppStrings {
   static const String letsGo = "Let's Go! 🚀";
 
   // ── Splash ───────────────────────────────────────
-  static const String splashTitle = 'LearnQuest';
-  static const String splashTagline = 'Learn · Play · Grow';
+  static const String splashTitle = 'Math Stars';
+  static const String splashTagline = 'Learn · Play · Shine ⭐';
 }

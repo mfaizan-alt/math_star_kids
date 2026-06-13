@@ -3,6 +3,9 @@ import 'dart:ui';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
+import '../../services/premium_service.dart';
+import 'ad_config.dart';
+
 class RewardedAdService {
   static final RewardedAdService instance = RewardedAdService._();
   RewardedAdService._();
@@ -19,11 +22,15 @@ class RewardedAdService {
   final RxBool isLoadedRx = false.obs;
 
   void loadAd() {
+    // Premium perk: reward features (revive, day pass) stay visible and are
+    // granted instantly in [showAd] — no ad is ever loaded or shown.
+    if (PremiumService.active) {
+      isLoadedRx.value = true;
+      return;
+    }
     if (_ad != null) return; // already preloaded
     RewardedAd.load(
-      // adUnitId: "ca-app-pub-2983283750660362/1113959046", //real Unit id
-
-      adUnitId: "ca-app-pub-3940256099942544/5224354917", //test Unit id
+      adUnitId: AdConfig.rewarded,
       request: const AdRequest(),
       rewardedAdLoadCallback: RewardedAdLoadCallback(
         onAdLoaded: (ad) {
@@ -50,6 +57,10 @@ class RewardedAdService {
   /// NOT granted — we just preload for next time. This prevents a free-reward
   /// exploit where revives could be claimed with no ad shown.
   void showAd(VoidCallback onReward) {
+    if (PremiumService.active) {
+      onReward();
+      return;
+    }
     final ad = _ad;
     if (ad == null) {
       _retries = 0;

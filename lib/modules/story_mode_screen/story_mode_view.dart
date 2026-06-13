@@ -145,7 +145,7 @@ class StoryModeView extends GetView<StoryModeController> {
 
   // ── Story Card ───────────────────────────────────
   Widget _buildStoryCard(Map<String, dynamic> story) {
-    final isLocked = (story["isPremium"] == true) && !controller.isStoryUnlocked();
+    final isLocked = controller.isStoryLocked(story);
     
     return GestureDetector(
       onTap: () => controller.openStory(story),

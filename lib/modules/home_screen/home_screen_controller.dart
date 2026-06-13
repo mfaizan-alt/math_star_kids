@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import '../../core/services/stars_service.dart';
+import '../progress/progress_controller.dart';
 
 class HomeScreenController extends GetxController {
   final box = GetStorage();
@@ -40,6 +41,16 @@ class HomeScreenController extends GetxController {
     super.onReady();
     refreshStars();
     loadUserData();
+    _syncStreak();
+  }
+
+  /// Record today's visit and mirror the single source of truth
+  /// (ProgressController.currentStreak) into the home header chip.
+  Future<void> _syncStreak() async {
+    if (!Get.isRegistered<ProgressController>()) return;
+    final p = Get.find<ProgressController>();
+    await p.recordDailyActivity();
+    streakDays.value = p.currentStreak;
   }
 
 // call this every time screen comes into focus

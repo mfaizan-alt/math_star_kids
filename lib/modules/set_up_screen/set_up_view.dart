@@ -45,8 +45,7 @@ class SetupScreenView extends GetView<SetUpScreenController> {
             ),
           ),
         ),
-        bottomNavigationBar: BannerAdWidget(
-            adUnitId: 'ca-app-pub-3940256099942544/6300978111'),
+        bottomNavigationBar: const BannerAdWidget(),
       );
     });
   }

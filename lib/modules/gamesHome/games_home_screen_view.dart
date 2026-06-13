@@ -27,9 +27,10 @@ import '../progress/progress_controller.dart';
 import 'games_home_controller.dart';
 
 class GamesHomeScreenView extends GetView<GamesHomeController>{
-   GamesHomeScreenView({super.key});
+   const GamesHomeScreenView({super.key});
 
-   final HomeScreenController cont = Get.find<HomeScreenController>();
+   // Lazy getter — safe even if smart management hasn't registered it yet.
+   HomeScreenController get cont => Get.find<HomeScreenController>();
   @override
   Widget build(BuildContext context) {
     final isDark = Get.find<ThemeController>().isDarkMode;

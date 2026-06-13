@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/colors/colors.dart';
 import '../../core/commonWidgets/ads/ad_manager.dart';
+import '../../core/commonWidgets/ads/double_stars_button.dart';
 import '../../core/commonWidgets/all_widgets.dart';
 import '../../core/commonWidgets/screen_header.dart';
 import '../progress/progress_controller.dart';
@@ -126,7 +127,9 @@ class _DivisionScreenState extends State<DivisionScreen> {
               ),
               const SizedBox(height: 16),
               Text('${AppStrings.score}: $_score / $_totalQuestions', style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.w600)),
-              const SizedBox(height: 24),
+              const SizedBox(height: 16),
+              DoubleStarsButton(earnedStars: stars),
+              const SizedBox(height: 8),
               Row(
                 children: [
                   Expanded(

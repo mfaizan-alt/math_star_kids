@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Math Carnival Kids</string>
+	<string>Math Stars: Kids Learning</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -15,7 +15,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>Math Carnival Kids</string>
+	<string>Math Stars</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -25,7 +25,7 @@
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>GADApplicationIdentifier</key>
-	<string>ca-app-pub-2983283750660362~1179887748</string>
+	<string>ca-app-pub-3807575016898926~5841641734</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>SKAdNetworkItems</key>
