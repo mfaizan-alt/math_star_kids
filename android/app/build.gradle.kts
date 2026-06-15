@@ -61,6 +61,12 @@ android {
                 signingConfigs.getByName("release")
             else
                 signingConfigs.getByName("debug")
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
 
@@ -75,8 +81,27 @@ android {
                 }
             }
     }
+
+    bundle {
+        language { enableSplit = true }
+        density { enableSplit = true }
+        abi { enableSplit = true }
+    }
 }
 
 flutter {
     source = "../.."
+}
+
+// Rename release AAB to match APK naming convention.
+tasks.whenTaskAdded {
+    if (name == "bundleRelease") {
+        doLast {
+            val versionName = android.defaultConfig.versionName ?: "unknown"
+            val aabDir = file("${layout.buildDirectory.get()}/outputs/bundle/release")
+            val original = File(aabDir, "app-release.aab")
+            val renamed = File(aabDir, "Kids_Learning_Games_v${versionName}.aab")
+            if (original.exists()) original.renameTo(renamed)
+        }
+    }
 }
