@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
@@ -25,32 +27,22 @@ import 'modules/progress/progress_controller.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // ── Firebase ──────────────────────────────────────
+  // ── Firebase core (fast — reads google-services.json, no network) ────────
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // Crashlytics — catch all Flutter framework errors.
+  // Crashlytics error handlers must be wired up before any UI runs.
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
-  // Catch async errors outside Flutter (e.g. in isolates).
   PlatformDispatcher.instance.onError = (error, stack) {
     FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
     return true;
   };
-  // Disable Crashlytics in debug so test crashes don't pollute dashboard.
-  await FirebaseCrashlytics.instance
-      .setCrashlyticsCollectionEnabled(!kDebugMode);
+  // Fire-and-forget — doesn't need to block launch.
+  unawaited(FirebaseCrashlytics.instance
+      .setCrashlyticsCollectionEnabled(!kDebugMode));
 
-  // Record install date for review prompt eligibility.
-  await ReviewService.instance.recordInstall();
-
-  // Remote Config — fetch latest values before app renders.
-  await RemoteConfigService.instance.init();
-
-  // Push Notifications
-  await NotificationService.instance.init();
-
-  // ── System UI ────────────────────────────────────
+  // ── System UI (synchronous) ───────────────────────────────────────────────
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
@@ -59,9 +51,11 @@ void main() async {
     ),
   );
 
-  // ── AdMob ────────────────────────────────────────
+  // ── Local storage (fast — no network) ────────────────────────────────────
+  await GetStorage.init();
+
+  // ── AdMob init (local SDK init, fast) ────────────────────────────────────
   await MobileAds.instance.initialize();
-  // Kids app: child-directed, G-rated ads (Play Families policy).
   MobileAds.instance.updateRequestConfiguration(
     RequestConfiguration(
       tagForChildDirectedTreatment: TagForChildDirectedTreatment.yes,
@@ -69,9 +63,7 @@ void main() async {
     ),
   );
 
-  await GetStorage.init();
-
-  // ── GetX services ────────────────────────────────
+  // ── GetX services ─────────────────────────────────────────────────────────
   Get.put(StarsService());
   Get.put(PremiumService(), permanent: true);
   Get.put(ThemeController());
@@ -81,7 +73,25 @@ void main() async {
   // After PremiumService so a paid device never preloads an interstitial.
   AdManager.instance.load();
 
+  // ── Launch the app immediately ────────────────────────────────────────────
   runApp(const MyApp());
+
+  // ── Deferred network-dependent init (runs after first frame) ─────────────
+  // These are safe to run after launch — all have sensible defaults.
+  unawaited(_initAfterLaunch());
+}
+
+/// Network-dependent services that must NOT block the initial frame render.
+/// Remote Config uses local defaults until fetch completes; Notifications and
+/// Review service have no visible effect until the user reaches the home screen.
+Future<void> _initAfterLaunch() async {
+  try {
+    await ReviewService.instance.recordInstall();
+    await RemoteConfigService.instance.init();
+    await NotificationService.instance.init();
+  } catch (e) {
+    if (kDebugMode) debugPrint('Post-launch init error: $e');
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -100,7 +110,7 @@ class MyApp extends StatelessWidget {
           getPages: Routes.getPage,
           navigatorObservers: [
             AdNavigationObserver(),
-            AnalyticsService.instance.observer, // auto screen tracking
+            AnalyticsService.instance.observer,
           ],
         ));
   }
