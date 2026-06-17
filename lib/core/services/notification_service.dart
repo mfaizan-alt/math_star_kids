@@ -33,7 +33,27 @@ class NotificationService {
   // Rotating foreground notification ID counter.
   int _foregroundId = _kForegroundId;
 
+  // Init state. [init] runs deferred after first frame (see main.dart), while the
+  // public scheduling methods can be triggered from the progress screen the moment
+  // it gains focus — potentially BEFORE init finishes. _ready/_initFuture let those
+  // methods await a single shared init instead of touching tz.local / the plugin
+  // before the timezone DB and plugin are ready (which crashed in production).
+  bool _ready = false;
+  Future<void>? _initFuture;
+
+  /// Idempotent. Concurrent callers share one in-flight init; a failed init is
+  /// cleared so the next call can retry rather than caching the error forever.
   Future<void> init() async {
+    if (_ready) return;
+    try {
+      await (_initFuture ??= _init());
+    } catch (e) {
+      _initFuture = null;
+      if (kDebugMode) debugPrint('NotificationService init failed: $e');
+    }
+  }
+
+  Future<void> _init() async {
     // Timezone database — needed for zonedSchedule.
     tz.initializeTimeZones();
 
@@ -95,6 +115,8 @@ class NotificationService {
       final token = await _messaging.getToken();
       if (token != null) debugPrint('FCM Token: $token');
     }
+
+    _ready = true;
   }
 
   // ── Public scheduling API ─────────────────────────────────────────────────
@@ -109,6 +131,8 @@ class NotificationService {
     required int streak,
     int hour = 18, // 6 PM device local time
   }) async {
+    await init(); // safe before the deferred init() in main.dart completes
+    if (!_ready) return;
     await _local.cancel(_kStreakReminderId);
 
     final now = tz.TZDateTime.now(tz.local);
@@ -144,6 +168,8 @@ class NotificationService {
   /// Schedules a weekly challenge notification for the coming Monday at [hour].
   /// Called once per app open — safe to call repeatedly (cancels old one first).
   Future<void> rescheduleWeeklyChallenge({int hour = 9}) async {
+    await init();
+    if (!_ready) return;
     await _local.cancel(_kWeeklyChallengeId);
 
     final now = tz.TZDateTime.now(tz.local);
@@ -183,6 +209,8 @@ class NotificationService {
     required String childName,
     required int stars,
   }) async {
+    await init();
+    if (!_ready) return;
     final milestones = {
       10: ('⭐ 10 Stars Earned!',
           'Amazing $childName! You unlocked new games — keep going!'),
@@ -233,7 +261,10 @@ class NotificationService {
           presentSound: true,
         ),
       ),
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      // Inexact: avoids the SCHEDULE_EXACT_ALARM/USE_EXACT_ALARM permissions that
+      // Play rejects for kids apps. Reminders may fire within a batching window
+      // rather than to the second — fine for streak/weekly nudges.
+      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
       payload: payload,

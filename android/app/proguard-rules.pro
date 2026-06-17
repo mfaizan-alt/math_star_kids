@@ -19,13 +19,27 @@
 -keepattributes EnclosingMethod
 -keepattributes InnerClasses
 
-# Gson TypeToken — flutter_local_notifications uses TypeToken<ArrayList<NotificationDetails>>
-# R8 strips the generic signature without these rules, causing "Missing type parameter"
+# Gson (used by flutter_local_notifications to (de)serialise scheduled notifications).
+# Canonical rule set from google/gson. The last two lines are the critical fix for
+# R8 3.0+ (AGP 8): they retain the GENERIC SIGNATURE of TypeToken subclasses, without
+# which Gson throws "Missing type parameter." in TypeToken.<init>.
 -keep class com.google.gson.** { *; }
--keep class * extends com.google.gson.reflect.TypeToken
+-dontwarn sun.misc.**
+
+# Prevent stripping of TypeAdapter / serializer interfaces used via @JsonAdapter
+-keep class * extends com.google.gson.TypeAdapter
 -keep class * implements com.google.gson.TypeAdapterFactory
 -keep class * implements com.google.gson.JsonSerializer
 -keep class * implements com.google.gson.JsonDeserializer
+
+# Keep fields annotated with @SerializedName so R8 doesn't leave them null
+-keepclassmembers,allowobfuscation class * {
+  @com.google.gson.annotations.SerializedName <fields>;
+}
+
+# Retain generic signatures of TypeToken and its subclasses with R8 3.0+.
+-keep,allowobfuscation,allowshrinking class com.google.gson.reflect.TypeToken
+-keep,allowobfuscation,allowshrinking class * extends com.google.gson.reflect.TypeToken
 
 # Kotlin
 -keep class kotlin.** { *; }

@@ -6,7 +6,16 @@ class StarsService extends GetxService {
   static StarsService get to => Get.find();
 
   final box = GetStorage();
-  late SharedPreferences _prefs;
+
+  // _prefs is resolved asynchronously. onInit() is async, but GetX runs dependent
+  // controllers' onReady() on the same frame WITHOUT awaiting it — so methods like
+  // loadTotalStars() can run before _prefs is assigned (this crashed in production
+  // with a LateInitializationError). _getPrefs() resolves it once and lazily; every
+  // accessor awaits it, so call order no longer matters.
+  Future<SharedPreferences>? _prefsFuture;
+
+  Future<SharedPreferences> _getPrefs() =>
+      _prefsFuture ??= SharedPreferences.getInstance();
 
   final RxInt totalStars = 0.obs;
   final RxBool premiumStoriesUnlocked = false.obs;
@@ -18,15 +27,15 @@ class StarsService extends GetxService {
   @override
   Future<void> onInit() async {
     super.onInit();
-    _prefs = await SharedPreferences.getInstance();
     await loadTotalStars();
   }
 
   Future<void> loadTotalStars() async {
+    final prefs = await _getPrefs();
     final starsFromGetStorage = box.read('totalStars') as int?;
-    final starsFromPrefs = _prefs.getInt('totalStars');
+    final starsFromPrefs = prefs.getInt('totalStars');
     final unlockedFromBox = box.read('premiumStoriesUnlocked') as bool?;
-    final unlockedFromPrefs = _prefs.getBool('premiumStoriesUnlocked');
+    final unlockedFromPrefs = prefs.getBool('premiumStoriesUnlocked');
 
     int maxStars = 0;
     if (starsFromGetStorage != null) maxStars = starsFromGetStorage;
@@ -46,13 +55,14 @@ class StarsService extends GetxService {
   Future<void> addStars(int earnedStars, {String? sourceName}) async {
     if (earnedStars <= 0) return;
 
+    final prefs = await _getPrefs();
     final previousTotal = totalStars.value;
     final newTotal = totalStars.value + earnedStars;
 
     totalStars.value = newTotal;
 
     await box.write('totalStars', newTotal);
-    await _prefs.setInt('totalStars', newTotal);
+    await prefs.setInt('totalStars', newTotal);
 
     if (previousTotal < masteryThreshold && newTotal >= masteryThreshold) {
       await unlockPremiumStories();
@@ -64,9 +74,10 @@ class StarsService extends GetxService {
     if (requiredStars <= 0) return true;
     if (totalStars.value < requiredStars) return false;
 
+    final prefs = await _getPrefs();
     totalStars.value -= requiredStars;
     await box.write('totalStars', totalStars.value);
-    await _prefs.setInt('totalStars', totalStars.value);
+    await prefs.setInt('totalStars', totalStars.value);
     return true;
   }
 
@@ -75,17 +86,19 @@ class StarsService extends GetxService {
   bool arePremiumStoriesUnlocked() => premiumStoriesUnlocked.value;
 
   Future<void> unlockPremiumStories() async {
+    final prefs = await _getPrefs();
     premiumStoriesUnlocked.value = true;
     await box.write('premiumStoriesUnlocked', true);
-    await _prefs.setBool('premiumStoriesUnlocked', true);
+    await prefs.setBool('premiumStoriesUnlocked', true);
   }
 
   Future<void> resetStars() async {
+    final prefs = await _getPrefs();
     totalStars.value = 0;
     premiumStoriesUnlocked.value = false;
     await box.write('totalStars', 0);
-    await _prefs.setInt('totalStars', 0);
+    await prefs.setInt('totalStars', 0);
     await box.write('premiumStoriesUnlocked', false);
-    await _prefs.setBool('premiumStoriesUnlocked', false);
+    await prefs.setBool('premiumStoriesUnlocked', false);
   }
 }

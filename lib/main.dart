@@ -56,9 +56,12 @@ void main() async {
 
   // ── AdMob init (local SDK init, fast) ────────────────────────────────────
   await MobileAds.instance.initialize();
+  // Kids-compliant ad config: COPPA child-directed + GDPR under-age-of-consent,
+  // G-rated content only. Forces non-personalized ads and no Advertising ID use.
   MobileAds.instance.updateRequestConfiguration(
     RequestConfiguration(
       tagForChildDirectedTreatment: TagForChildDirectedTreatment.yes,
+      tagForUnderAgeOfConsent: TagForUnderAgeOfConsent.yes,
       maxAdContentRating: MaxAdContentRating.g,
     ),
   );

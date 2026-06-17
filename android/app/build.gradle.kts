@@ -101,7 +101,10 @@ tasks.whenTaskAdded {
             val aabDir = file("${layout.buildDirectory.get()}/outputs/bundle/release")
             val original = File(aabDir, "app-release.aab")
             val renamed = File(aabDir, "Kids_Learning_Games_v${versionName}.aab")
-            if (original.exists()) original.renameTo(renamed)
+            if (original.exists()) {
+                if (renamed.exists()) renamed.delete()
+                original.renameTo(renamed)
+            }
         }
     }
 }
