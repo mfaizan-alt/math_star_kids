@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 import '../../core/routes/routes.dart';
+import '../home_screen/home_screen_controller.dart';
 
 class SetUpScreenController extends GetxController {
 
@@ -44,16 +45,22 @@ class SetUpScreenController extends GetxController {
 
     box.write('avatar', selectedAvatar.value); // always save avatar
 
+    if (name.isNotEmpty) {
+      box.write('childName', name);
+      if (!isAlreadySetup) box.write('setupDone', true);
+    }
+
+    // HomeScreenController is permanent and was created at app start with the
+    // default name, so its onReady/loadUserData already ran before this setup.
+    // Refresh it now so the freshly-saved name/avatar show immediately on the
+    // very first navigation to home (otherwise it shows the default until relaunch).
+    if (Get.isRegistered<HomeScreenController>()) {
+      Get.find<HomeScreenController>().loadUserData();
+    }
+
     if (isAlreadySetup) {
-      if (name.isNotEmpty) {
-        box.write('childName', name);
-      }
       Get.back();
     } else {
-      if (name.isNotEmpty) {
-        box.write('childName', name);
-        box.write('setupDone', true);
-      }
       Get.offNamed(Routes.homeScreen);
     }
   }

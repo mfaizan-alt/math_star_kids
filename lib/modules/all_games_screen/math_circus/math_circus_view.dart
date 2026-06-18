@@ -39,8 +39,7 @@ class _MathCircusScreenState extends State<MathCircusScreen> {
         Future.microtask(() => confetti.play());
       }
 
-      return SafeArea(
-        child: Scaffold(
+      return Scaffold(
           bottomNavigationBar: const BannerAdWidget(),
           body: Stack(
             children: [
@@ -118,8 +117,7 @@ class _MathCircusScreenState extends State<MathCircusScreen> {
               )
             ],
           ),
-        ),
-      );
+        );
     });
   }
 

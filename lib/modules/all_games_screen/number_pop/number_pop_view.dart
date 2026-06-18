@@ -269,7 +269,38 @@ class _NumberPopScreenState extends State<NumberPopScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text('🫧', style: TextStyle(fontSize: 80)),
+          // Drawn bubble (not an emoji) so it renders identically on every
+          // device — the 🫧 glyph (Emoji 14.0) is missing on many phones
+          // such as Infinix/XOS and showed as an empty box.
+          Container(
+            width: 90,
+            height: 90,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: const RadialGradient(
+                center: Alignment(-0.3, -0.3),
+                colors: [Color(0xFF80DEEA), Color(0xFF26C6DA)],
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFF26C6DA).withValues(alpha: 0.45),
+                  blurRadius: 18,
+                  spreadRadius: 2,
+                ),
+              ],
+            ),
+            child: Align(
+              alignment: const Alignment(-0.4, -0.4),
+              child: Container(
+                width: 24,
+                height: 24,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white.withValues(alpha: 0.65),
+                ),
+              ),
+            ),
+          ),
           const SizedBox(height: 24),
           Text(
             AppStrings.numberPopTitle,

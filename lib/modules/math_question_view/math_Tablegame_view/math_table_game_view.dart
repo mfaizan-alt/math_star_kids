@@ -123,7 +123,6 @@ class MathTablesView extends GetView<MathTableController> {
           ),
         ),
         const SizedBox(height: 16),
-        const BannerAdWidget(),
       ],
     );
 
