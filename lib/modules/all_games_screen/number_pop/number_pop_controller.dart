@@ -52,6 +52,12 @@ class NumberPopController extends GetxController {
   var bubbles = <Bubble>[].obs;
   double _spawnRate = 1200;
 
+  // Spawns are random, but we never let the player go more than this many
+  // bubbles without the correct answer appearing — guarantees the answer
+  // always comes while keeping each bubble (including the first) random.
+  int _spawnsSinceCorrect = 0;
+  static const int _maxSpawnsWithoutCorrect = 3;
+
   // ── Screen size (set by UI before startGame) ──
   double screenWidth = 400;
   var level = 1.obs;
@@ -94,11 +100,15 @@ class NumberPopController extends GetxController {
     isGameOver.value = false;
     isGameStarted.value = true;
     _spawnRate = 1200;
+    _spawnsSinceCorrect = 0;
     bubbles.clear();
 
     generateQuestion();
     _startSpawning();
     _startMoving();
+    // Spawn one bubble immediately so play begins without an empty pause; the
+    // forced-correct rule in _spawnBubble guarantees it is the answer.
+    _spawnBubble();
   }
 
   void generateQuestion() {
@@ -129,22 +139,37 @@ class NumberPopController extends GetxController {
 
   void popBubble(Bubble bubble) {
     if (isGameOver.value) return;
+    // Ignore taps on a bubble that is no longer on screen. Taps are queued on
+    // the event loop, so a tap can arrive a frame after the bubble escaped or
+    // was cleared by a question change; without this guard that stale tap
+    // would be processed against the wrong state.
+    if (!bubbles.contains(bubble)) return;
 
-    if (bubble.value == correctAnswer.value) {
-      score.value += 10;
-      questionsAnswered.value++;
-      bubbles.remove(bubble);
+    // Wrong taps are harmless — no life lost, nothing happens. A life is only
+    // ever lost when the CORRECT bubble drifts off the top of the screen
+    // (handled in _startMoving), so kids are never punished for a misjudged tap.
+    if (bubble.value != correctAnswer.value) return;
 
-      if (score.value % 50 == 0) confettiController.play();
+    score.value += 10;
+    questionsAnswered.value++;
 
-      _spawnRate = (_spawnRate * 0.95).clamp(600, 1200);
-      _startSpawning();
-      generateQuestion();
-    } else {
-      lives.value--;
-      bubbles.remove(bubble);
-      if (lives.value <= 0) _gameOver();
-    }
+    if (score.value % 50 == 0) confettiController.play();
+
+    _nextQuestion();
+  }
+
+  /// Advance to a fresh question: drop the now-stale bubbles (they belonged to
+  /// the previous equation), pick a new question, speed up slightly, and make
+  /// sure a correct-answer bubble is immediately available. Used by both the
+  /// correct-pop path and the missed-bubble path so the screen always reflects
+  /// the equation currently shown.
+  void _nextQuestion() {
+    bubbles.clear();
+    generateQuestion();
+    _spawnsSinceCorrect = 0;
+    _spawnRate = (_spawnRate * 0.95).clamp(600, 1200);
+    _startSpawning();
+    _spawnBubble();
   }
 
   // ── Computed getters ──
@@ -170,22 +195,35 @@ class NumberPopController extends GetxController {
     lives.value = 1;
     isGameOver.value = false;
     isGameStarted.value = true;
+    _spawnsSinceCorrect = 0;
     bubbles.clear();
     generateQuestion();
     _startSpawning();
     _startMoving();
+    _spawnBubble();
   }
 
   void _spawnBubble() {
     final x = random.nextDouble() * (screenWidth - 80) + 20;
 
+    // Each bubble's value is random (the first one is NOT automatically the
+    // answer). To still guarantee the answer always shows up, we force a correct
+    // bubble only when none is on screen AND we've already spawned
+    // _maxSpawnsWithoutCorrect bubbles without one.
+    final hasCorrectOnScreen =
+        bubbles.any((b) => b.value == correctAnswer.value);
+    final mustForceCorrect = !hasCorrectOnScreen &&
+        _spawnsSinceCorrect >= _maxSpawnsWithoutCorrect;
+
     int value;
-    if (random.nextDouble() < 0.3) {
+    if (mustForceCorrect || random.nextDouble() < 0.3) {
       value = correctAnswer.value;
+      _spawnsSinceCorrect = 0;
     } else {
       value = correctAnswer.value + random.nextInt(21) - 10;
       if (value <= 0) value = correctAnswer.value + random.nextInt(10) + 1;
       if (value == correctAnswer.value) value += 1;
+      _spawnsSinceCorrect++;
     }
 
     bubbles.add(Bubble(
@@ -209,22 +247,28 @@ class NumberPopController extends GetxController {
       }
 
       final escaped = bubbles.where((b) => b.y < -80).toList();
-      for (var b in escaped) {
-        if (b.value == correctAnswer.value) {
-          lives.value--;
-          if (lives.value <= 0) {
-            _gameOver();
-            return;
-          }
-          bubbles.clear();
-          generateQuestion();
-          _spawnRate = (_spawnRate * 0.95).clamp(600, 1200);
-          _startSpawning();
-        }
+      if (escaped.isEmpty) {
+        bubbles.refresh(); // notify UI of position changes
+        return;
       }
 
+      // A missed correct bubble costs exactly ONE life per frame, no matter how
+      // many escape together — the old loop could deduct several lives in a
+      // single tick (the "had lives left but game suddenly ended" bug).
+      final missedCorrect =
+          escaped.any((b) => b.value == correctAnswer.value);
       bubbles.removeWhere((b) => b.y < -80);
-      bubbles.refresh(); // notify UI of position changes
+
+      if (missedCorrect) {
+        lives.value--;
+        if (lives.value <= 0) {
+          _gameOver();
+          return;
+        }
+        _nextQuestion();
+      }
+
+      bubbles.refresh();
     });
   }
 

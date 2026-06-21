@@ -172,7 +172,7 @@ class AppStrings {
   static const String circusHowTo3 =
       'Make both sides equal to balance the scale! ⚖️';
   static const String circusHowTo4 =
-      'Tap a placed weight to remove it if needed';
+      'Added too much? Tap Reset to clear the scale and try again';
   static const String target = 'Target';
   static const String now = 'Now';
 

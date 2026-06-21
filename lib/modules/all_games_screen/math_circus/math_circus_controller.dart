@@ -92,6 +92,20 @@ class MathCircusController extends GetxController {
     updateTilt();
   }
 
+  /// Return every placed weight to the tray and zero the scale, so a child who
+  /// overshot the target (which can never balance) can start the level over
+  /// instead of getting stuck.
+  void resetWeights() {
+    if (isBalanced.value) return;
+    if (placedWeights.isEmpty) return;
+
+    availableWeights.addAll(placedWeights);
+    placedWeights.clear();
+    currentWeight.value = 0;
+
+    updateTilt();
+  }
+
   void updateTilt() {
     tiltAngle.value =
         ((currentWeight.value - targetWeight.value) /

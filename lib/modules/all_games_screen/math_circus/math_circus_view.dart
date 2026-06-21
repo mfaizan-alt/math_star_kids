@@ -131,10 +131,50 @@ class _MathCircusScreenState extends State<MathCircusScreen> {
             onPressed: () => Get.back(),
             icon: const Icon(Icons.arrow_back, color: Colors.white),
           ),
-          Obx(() => Text(
-            "⭐ ${controller.score.value}",
-            style: const TextStyle(color: Colors.white, fontSize: 18),
-          ))
+          Row(
+            children: [
+              // Reset — lets a child who overshot the target clear the scale and
+              // try again instead of being stuck. Only shown while there is
+              // something to reset and the level isn't already balanced.
+              Obx(() => (controller.placedWeights.isNotEmpty &&
+                          !controller.isBalanced.value)
+                  ? Padding(
+                      padding: const EdgeInsets.only(right: 12),
+                      child: GestureDetector(
+                        onTap: controller.resetWeights,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 14, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(Icons.refresh,
+                                  size: 18, color: Color(0xFF8B0000)),
+                              const SizedBox(width: 4),
+                              Text(
+                                AppStrings.reset,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: const Color(0xFF8B0000),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    )
+                  : const SizedBox.shrink()),
+              Obx(() => Text(
+                    "⭐ ${controller.score.value}",
+                    style: const TextStyle(color: Colors.white, fontSize: 18),
+                  )),
+            ],
+          ),
         ],
       ),
     );
