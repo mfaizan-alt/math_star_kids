@@ -33,8 +33,19 @@ void main() async {
   );
 
   // Crashlytics error handlers must be wired up before any UI runs.
-  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+  FlutterError.onError = (details) {
+    if (_isBenignFontFetchError(details.exception)) return;
+    FirebaseCrashlytics.instance.recordFlutterFatalError(details);
+  };
   PlatformDispatcher.instance.onError = (error, stack) {
+    // google_fonts downloads typefaces from fonts.gstatic.com the first time
+    // they're used. On an offline device that download throws — but the text
+    // simply falls back to a system font, so it is NOT a crash and must not be
+    // reported as fatal (it was previously the top "Fatal Exception").
+    if (_isBenignFontFetchError(error)) {
+      if (kDebugMode) debugPrint('Ignored offline google_fonts fetch: $error');
+      return true;
+    }
     FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
     return true;
   };
@@ -82,6 +93,21 @@ void main() async {
   // ── Deferred network-dependent init (runs after first frame) ─────────────
   // These are safe to run after launch — all have sensible defaults.
   unawaited(_initAfterLaunch());
+}
+
+/// True for the harmless "couldn't download a Google font while offline" error.
+/// google_fonts throws a plain [Exception] whose message begins with
+/// "Failed to load font", wrapping a SocketException/ClientException. When this
+/// happens the text just renders in a fallback system font, so it should never
+/// be recorded as a fatal crash.
+bool _isBenignFontFetchError(Object? error) {
+  if (error == null) return false;
+  final message = error.toString();
+  return message.contains('Failed to load font') ||
+      (message.contains('fonts.gstatic.com') &&
+          (message.contains('SocketException') ||
+              message.contains('ClientException') ||
+              message.contains('Failed host lookup')));
 }
 
 /// Network-dependent services that must NOT block the initial frame render.

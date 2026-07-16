@@ -92,7 +92,9 @@ class SplashScreenView extends GetView<SplashScreenController> {
                 const SizedBox(height: 8),
                 Text(
                   AppStrings.splashTagline,
-                  style: GoogleFonts.googleSans(
+                  // Poppins (bundled) — Google Sans is proprietary and can't be
+                  // bundled, and fetching it at runtime was crashing offline.
+                  style: GoogleFonts.poppins(
                     fontSize: 16,
                     color: Colors.white.withValues(alpha: 0.85),
                     fontWeight: FontWeight.w700,
