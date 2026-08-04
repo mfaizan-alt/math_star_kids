@@ -7,6 +7,7 @@ import 'package:confetti/confetti.dart';
 import 'package:get/get.dart';
 import 'package:math_carnival_kids/modules/all_games_screen/runner_game/runner_controller.dart';
 import '../../../core/colors/colors.dart';
+import '../../../core/commonWidgets/ads/ad_badge.dart';
 import '../../../core/commonWidgets/ads/ad_manager.dart';
 import '../../../core/commonWidgets/ads/reward_ad.dart';
 import '../../../core/commonWidgets/theme.dart';
@@ -695,7 +696,6 @@ class _RunnerGameScreenState extends State<RunnerGameScreen>
                     child: _buildRewardedButton(
                       emoji: '❤️',
                       label: AppStrings.watchAdGetLife,
-                      color: Colors.red.shade400,
                       onTap: () {
                         RewardedAdService.instance.showAd(() {
                           controller.reviveWithLife();
@@ -732,7 +732,6 @@ class _RunnerGameScreenState extends State<RunnerGameScreen>
   Widget _buildRewardedButton({
     required String emoji,
     required String label,
-    required Color color,
     required VoidCallback onTap,
   }) {
     return GestureDetector(
@@ -740,28 +739,28 @@ class _RunnerGameScreenState extends State<RunnerGameScreen>
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 14),
+        // Neutral ad styling + "Ad" badge — an ad entry point must never look
+        // like a game reward button (Play Families ad-format requirement).
         decoration: BoxDecoration(
-          color: color,
+          color: AdSurfaceStyle.background,
           borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: color.withValues(alpha: 0.4),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
+          border: Border.all(color: AdSurfaceStyle.border, width: 1.5),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(emoji, style: const TextStyle(fontSize: 20)),
+            const AdBadge(),
             const SizedBox(width: 10),
-            Text(
-              label,
-              style: GoogleFonts.poppins(
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-                color: Colors.white,
+            Text(emoji, style: const TextStyle(fontSize: 18)),
+            const SizedBox(width: 6),
+            Flexible(
+              child: Text(
+                label,
+                style: GoogleFonts.poppins(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: AdSurfaceStyle.foreground,
+                ),
               ),
             ),
           ],

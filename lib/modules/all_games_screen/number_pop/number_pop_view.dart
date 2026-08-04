@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:confetti/confetti.dart';
 import 'package:get/get.dart';
 import '../../../core/colors/colors.dart';
+import '../../../core/commonWidgets/ads/ad_badge.dart';
 import '../../../core/commonWidgets/ads/ad_manager.dart';
 import '../../../core/commonWidgets/ads/reward_ad.dart';
 import '../../../core/services/stars_service.dart';
@@ -454,30 +455,28 @@ class _NumberPopScreenState extends State<NumberPopScreen> {
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 14),
+        // Neutral ad styling + "Ad" badge — an ad entry point must never look
+        // like a game reward button (Play Families ad-format requirement).
         decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [Colors.redAccent, Colors.deepOrange],
-          ),
+          color: AdSurfaceStyle.background,
           borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.redAccent.withValues(alpha: 0.4),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
+          border: Border.all(color: AdSurfaceStyle.border, width: 1.5),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(emoji, style: const TextStyle(fontSize: 20)),
+            const AdBadge(),
             const SizedBox(width: 10),
-            Text(
-              label,
-              style: GoogleFonts.poppins(
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-                color: Colors.white,
+            Text(emoji, style: const TextStyle(fontSize: 18)),
+            const SizedBox(width: 6),
+            Flexible(
+              child: Text(
+                label,
+                style: GoogleFonts.poppins(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: AdSurfaceStyle.foreground,
+                ),
               ),
             ),
           ],

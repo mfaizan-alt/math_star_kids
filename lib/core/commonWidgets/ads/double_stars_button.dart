@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../constants/app_strings.dart';
 import '../../services/premium_service.dart';
 import '../../services/stars_service.dart';
+import 'ad_badge.dart';
 import 'reward_ad.dart';
 
 /// "Watch a short video to DOUBLE your stars" button for game-end screens.
@@ -54,37 +56,37 @@ class _DoubleStarsButtonState extends State<DoubleStarsButton> {
       if (!RewardedAdService.instance.isLoadedRx.value) {
         return const SizedBox.shrink();
       }
+      // Google Play Families "Ad format requirements": an ad entry point must
+      // never look like a game reward. So this is deliberately NOT styled like
+      // the game's bright gradient buttons — neutral grey tray, no glow, an
+      // explicit "Ad" badge, and wording that says an ad will play.
       return GestureDetector(
         onTap: _watchAndDouble,
         child: Container(
           width: double.infinity,
           margin: const EdgeInsets.symmetric(vertical: 6),
-          padding: const EdgeInsets.symmetric(vertical: 14),
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
           decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [Color(0xFFFF9F1C), Color(0xFFFFD200)],
-            ),
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: const Color(0xFFFF9F1C).withValues(alpha: 0.4),
-                blurRadius: 14,
-                offset: const Offset(0, 6),
-              ),
-            ],
+            color: AdSurfaceStyle.background,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: AdSurfaceStyle.border, width: 1.5),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.play_circle_fill_rounded,
-                  color: Colors.white, size: 22),
-              const SizedBox(width: 8),
-              Text(
-                'Double your ⭐ ×2',
-                style: GoogleFonts.aBeeZee(
-                  fontSize: 16,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w900,
+              const AdBadge(),
+              const SizedBox(width: 10),
+              const Icon(Icons.play_circle_outline_rounded,
+                  color: AdSurfaceStyle.foreground, size: 20),
+              const SizedBox(width: 6),
+              Flexible(
+                child: Text(
+                  AppStrings.watchAdDoubleStars,
+                  style: GoogleFonts.nunito(
+                    fontSize: 15,
+                    color: AdSurfaceStyle.foreground,
+                    fontWeight: FontWeight.w800,
+                  ),
                 ),
               ),
             ],

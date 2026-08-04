@@ -16,7 +16,15 @@ class AppStrings {
   static const String nextLevel = 'Next Level';
   static const String submitAnswer = 'Submit Answer';
   static const String gameOver = 'Game Over';
+
+  // ── Ad disclosure (Google Play Families ad-format requirements) ──
+  // Every ad surface must be clearly labelled and visually distinct from game
+  // content. Never soften these to "video"/"bonus" — the word "Ad" must appear.
+  static const String advertisement = 'ADVERTISEMENT';
+  static const String adBadge = 'Ad';
   static const String watchAdGetLife = 'Watch Ad → Get 1 Life';
+  static const String watchAdDoubleStars = 'Watch Ad → Double Stars';
+  static const String watchAdReadToday = 'Watch Ad → Read it today';
   static const String score = 'Score';
   static const String stars = 'Stars';
   static const String bestScore = 'Best Score';

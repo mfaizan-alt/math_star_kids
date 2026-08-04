@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../core/commonWidgets/ads/reward_ad.dart';
 import '../../core/commonWidgets/premium_dialog.dart';
+import '../../core/constants/app_strings.dart';
 import '../../core/routes/routes.dart';
 import '../../core/services/premium_service.dart';
 import '../../core/services/stars_service.dart';
@@ -600,9 +601,11 @@ class StoryModeController extends GetxController {
                   return const SizedBox.shrink();
                 }
                 return _lockedDialogButton(
-                  icon: Icons.play_circle_fill_rounded,
-                  label: 'Watch a video — read it today!',
-                  color: const Color(0xFFFF9F1C),
+                  // Must say "Ad" — "watch a video" hides that this launches an
+                  // advertisement (Play Families ad-format requirement).
+                  icon: Icons.play_circle_outline_rounded,
+                  label: AppStrings.watchAdReadToday,
+                  color: const Color(0xFF546E7A),
                   onTap: () {
                     Get.back();
                     RewardedAdService.instance.showAd(() {
