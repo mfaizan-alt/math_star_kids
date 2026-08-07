@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:math';
-import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:confetti/confetti.dart';
 import 'package:get/get.dart';
 
@@ -41,6 +41,10 @@ class NumberPopController extends GetxController {
   var isGameStarted = false.obs;
   var isGameOver = false.obs;
   var questionsAnswered = 0.obs;
+
+  // Brief red vignette shown whenever a life is lost, so the kid can see why a
+  // heart disappeared instead of just noticing the count drop.
+  var wrongFlash = false.obs;
 
   // ── Question state ──
   var num1 = 0.obs;
@@ -99,6 +103,7 @@ class NumberPopController extends GetxController {
     questionsAnswered.value = 0;
     isGameOver.value = false;
     isGameStarted.value = true;
+    wrongFlash.value = false;
     _spawnRate = 1200;
     _spawnsSinceCorrect = 0;
     bubbles.clear();
@@ -145,10 +150,14 @@ class NumberPopController extends GetxController {
     // would be processed against the wrong state.
     if (!bubbles.contains(bubble)) return;
 
-    // Wrong taps are harmless — no life lost, nothing happens. A life is only
-    // ever lost when the CORRECT bubble drifts off the top of the screen
-    // (handled in _startMoving), so kids are never punished for a misjudged tap.
-    if (bubble.value != correctAnswer.value) return;
+    if (bubble.value != correctAnswer.value) {
+      // Pop the wrong bubble first so the tap visibly registers and a frantic
+      // double-tap on the same bubble can't spend two lives, then charge one
+      // life. The question stays up — the answer bubble is still out there.
+      bubbles.remove(bubble);
+      _loseLife();
+      return;
+    }
 
     score.value += 10;
     questionsAnswered.value++;
@@ -156,6 +165,24 @@ class NumberPopController extends GetxController {
     if (score.value % 50 == 0) confettiController.play();
 
     _nextQuestion();
+  }
+
+  /// The single place a life is spent — a wrong tap or a missed correct
+  /// bubble. Returns false once that was the last life (the game is already
+  /// over), so callers know to stop touching game state.
+  bool _loseLife() {
+    HapticFeedback.mediumImpact();
+    wrongFlash.value = true;
+    Future.delayed(const Duration(milliseconds: 350), () {
+      if (!isClosed) wrongFlash.value = false;
+    });
+
+    lives.value--;
+    if (lives.value <= 0) {
+      _gameOver();
+      return false;
+    }
+    return true;
   }
 
   /// Advance to a fresh question: drop the now-stale bubbles (they belonged to
@@ -195,6 +222,7 @@ class NumberPopController extends GetxController {
     lives.value = 1;
     isGameOver.value = false;
     isGameStarted.value = true;
+    wrongFlash.value = false;
     _spawnsSinceCorrect = 0;
     bubbles.clear();
     generateQuestion();
@@ -260,11 +288,7 @@ class NumberPopController extends GetxController {
       bubbles.removeWhere((b) => b.y < -80);
 
       if (missedCorrect) {
-        lives.value--;
-        if (lives.value <= 0) {
-          _gameOver();
-          return;
-        }
+        if (!_loseLife()) return;
         _nextQuestion();
       }
 

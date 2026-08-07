@@ -18,8 +18,8 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace = "com.example.kids_edu"
-    compileSdk = flutter.compileSdkVersion
+    namespace = "com.robbotech.mathlearner"
+    compileSdk = 37
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
@@ -46,7 +46,7 @@ android {
     defaultConfig {
         applicationId = "com.robbotech.mathlearner"
         minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
+        targetSdk = 37
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
@@ -77,7 +77,7 @@ android {
             .forEach { output ->
                 if (variant.buildType.name == "release") {
                     output.outputFileName =
-                        "Kids_Learning_Games_v${variant.versionName}.apk"
+                        "Math_Stars_v${variant.versionName}.apk"
                 }
             }
     }
@@ -100,7 +100,7 @@ tasks.whenTaskAdded {
             val versionName = android.defaultConfig.versionName ?: "unknown"
             val aabDir = file("${layout.buildDirectory.get()}/outputs/bundle/release")
             val original = File(aabDir, "app-release.aab")
-            val renamed = File(aabDir, "Kids_Learning_Games_v${versionName}.aab")
+            val renamed = File(aabDir, "Math_Stars_v${versionName}.aab")
             if (original.exists()) {
                 if (renamed.exists()) renamed.delete()
                 original.renameTo(renamed)

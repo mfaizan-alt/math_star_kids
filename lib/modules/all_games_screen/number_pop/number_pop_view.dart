@@ -22,7 +22,7 @@ class NumberPopScreen extends StatefulWidget {
 // StatefulWidget kept only for _buildStars() — random positions
 // must be generated once and never regenerated on rebuild
 class _NumberPopScreenState extends State<NumberPopScreen> {
-  final NumberPopController controller = Get.put(NumberPopController());
+  late final NumberPopController controller;
   late final StarsService starsService;
 
   // Generated once; purely decorative, needs no reactivity
@@ -31,11 +31,34 @@ class _NumberPopScreenState extends State<NumberPopScreen> {
   @override
   void initState() {
     super.initState();
+
+    // This screen is reached with a plain Navigator.push, so GetX never ties
+    // the controller to a route and never auto-disposes it. Drop any instance
+    // left behind by a previous visit before creating ours — otherwise
+    // Get.put() silently returns the stale one and the game resumes mid-play
+    // (or straight on the game-over dialog) instead of starting fresh. A brand
+    // new controller means default state: start screen, 3 lives, score 0.
+    if (Get.isRegistered<NumberPopController>()) {
+      Get.delete<NumberPopController>(force: true);
+    }
+    controller = Get.put(NumberPopController());
+
     starsService = Get.find<StarsService>();
     _starPositions = List.generate(20, (_) => (
     x: (controller.random.nextDouble() * 400),
     y: (controller.random.nextDouble() * 800),
     ));
+  }
+
+  @override
+  void dispose() {
+    // Tear down on the way out so the spawn/move timers stop immediately —
+    // left running they keep draining lives (and can fire an interstitial)
+    // while the player is already on another screen.
+    if (Get.isRegistered<NumberPopController>()) {
+      Get.delete<NumberPopController>(force: true);
+    }
+    super.dispose();
   }
 
   void _onStartGame(Size size) {
@@ -98,7 +121,28 @@ class _NumberPopScreenState extends State<NumberPopScreen> {
           // 5. Top bar — always on top
           SafeArea(child: Obx(() => _buildTopBar())),
 
-          // 6. Confetti — always on top
+          // 6. Life-lost flash — a red edge glow so a wrong tap reads as a
+          // mistake straight away. IgnorePointer so it never eats a bubble tap.
+          Obx(() => IgnorePointer(
+            child: AnimatedOpacity(
+              opacity: controller.wrongFlash.value ? 1 : 0,
+              duration: const Duration(milliseconds: 120),
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: RadialGradient(
+                    radius: 0.9,
+                    colors: [
+                      Colors.transparent,
+                      Colors.red.withValues(alpha: 0.45),
+                    ],
+                    stops: const [0.55, 1.0],
+                  ),
+                ),
+              ),
+            ),
+          )),
+
+          // 7. Confetti — always on top
           Align(
             alignment: Alignment.topCenter,
             child: ConfettiWidget(

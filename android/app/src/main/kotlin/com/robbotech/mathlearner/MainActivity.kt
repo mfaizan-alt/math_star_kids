@@ -1,4 +1,4 @@
-package com.example.kids_edu
+package com.robbotech.mathlearner
 
 import io.flutter.embedding.android.FlutterActivity
 
